@@ -1,0 +1,31 @@
+{
+    "folders": [
+        {
+            "path": ".",
+            "name": "Home LLM"
+        }
+    ],
+    "settings": {
+        "files.exclude": {
+            "**/__pycache__": true,
+            "**/node_modules": true,
+            "runners/stable-diffusion-webui/venv": true,
+            "runners/stable-diffusion-webui/repositories": true
+        },
+        "python.defaultInterpreterPath": "C:\\Users\\jimla\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+        "terminal.integrated.defaultProfile.windows": "PowerShell"
+    },
+    "extensions": {
+        "recommendations": [
+            "ms-python.python",
+            "ms-python.vscode-pylance",
+            "ms-vscode.powershell",
+            "bierner.markdown-mermaid",
+            "yzhang.markdown-all-in-one"
+        ]
+    },
+    "launch": {
+        "version": "0.2.0",
+        "configurations": []
+    }
+}

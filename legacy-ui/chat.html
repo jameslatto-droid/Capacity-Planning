@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemma-3 12B Heretic Chat</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .header {
+            background: #2d2d2d;
+            padding: 15px 20px;
+            border-bottom: 2px solid #444;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            color: #fff;
+        }
+
+        .status {
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            background: #2ecc71;
+            color: #fff;
+        }
+
+        .status.error {
+            background: #e74c3c;
+        }
+
+        #chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
+
+        .user {
+            align-self: flex-end;
+            background: #007AFF;
+            color: white;
+        }
+
+        .assistant {
+            align-self: flex-start;
+            background: #2d2d2d;
+            color: #e0e0e0;
+            border: 1px solid #444;
+        }
+
+        .assistant p {
+            margin: 0 0 10px 0;
+        }
+
+        .assistant p:last-child {
+            margin-bottom: 0;
+        }
+
+        .assistant ul,
+        .assistant ol {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+
+        .assistant li {
+            margin: 4px 0;
+        }
+
+        .assistant code {
+            background: #1a1a1a;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .assistant pre {
+            background: #1a1a1a;
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .assistant pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .assistant strong {
+            color: #fff;
+        }
+
+        .assistant em {
+            color: #aaa;
+        }
+
+        .thinking {
+            font-style: italic;
+            color: #888;
+            font-size: 14px;
+            padding: 8px 12px;
+            background: #252525;
+            border-left: 3px solid #555;
+            margin: 5px 0;
+        }
+
+        .input-area {
+            padding: 15px 20px;
+            background: #2d2d2d;
+            border-top: 2px solid #444;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .image-btn {
+            padding: 10px 14px;
+            background: #444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .image-btn:hover {
+            background: #555;
+        }
+
+        #image-input {
+            display: none;
+        }
+
+        .image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 12px;
+            margin-top: 8px;
+        }
+
+        .message img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #444;
+            border-radius: 24px;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            font-size: 16px;
+            outline: none;
+        }
+
+        #user-input:focus {
+            border-color: #007AFF;
+        }
+
+        #send-btn {
+            padding: 12px 24px;
+            background: #007AFF;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        #send-btn:hover {
+            background: #0056b3;
+        }
+
+        #send-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+
+        .settings {
+            position: fixed;
+            top: 60px;
+            right: 10px;
+            background: #2d2d2d;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 15px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .settings.show {
+            display: block;
+        }
+
+        .settings label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .settings input {
+            width: 100%;
+            padding: 8px;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: #e0e0e0;
+            margin-bottom: 10px;
+        }
+
+        .settings button {
+            width: 100%;
+            padding: 8px;
+            background: #007AFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .gear-icon {
+            cursor: pointer;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>🤖 Gemma-3 12B Heretic</h1>
+        <div>
+            <span id="status" class="status">Ready</span>
+            <span class="gear-icon" onclick="toggleSettings()">⚙️</span>
+        </div>
+    </div>
+
+    <div id="settings" class="settings">
+        <label>LLM Server URL:</label>
+        <input type="text" id="server-url" placeholder="http://192.168.1.66:8080/ollama">
+        <label>Stable Diffusion URL:</label>
+        <input type="text" id="sd-url" placeholder="http://192.168.1.66:8080/sd">
+        <button onclick="saveSettings()">Save</button>
+    </div>
+
+    <div id="chat-container"></div>
+
+    <div class="input-area">
+        <input type="file" id="image-input" accept="image/*" capture="environment" onchange="handleImageSelect(event)">
+        <button class="image-btn" onclick="document.getElementById('image-input').click()">📷</button>
+        <input type="text" id="user-input" placeholder="Type your message..." />
+        <button id="send-btn" onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        const defaultServerUrl = `${window.location.origin}/ollama`;
+        const defaultSdUrl = `${window.location.origin}/sd`;
+        let serverUrl = localStorage.getItem('serverUrl') || defaultServerUrl;
+        let sdUrl = localStorage.getItem('sdUrl') || defaultSdUrl;
+        if (serverUrl.includes(':11434')) {
+            serverUrl = defaultServerUrl;
+        }
+        if (sdUrl.includes(':7860')) {
+            sdUrl = defaultSdUrl;
+        }
+        document.getElementById('server-url').value = serverUrl;
+        document.getElementById('sd-url').value = sdUrl;
+        let currentImage = null;
+
+        function toggleSettings() {
+            document.getElementById('settings').classList.toggle('show');
+        }
+
+        function saveSettings() {
+            serverUrl = document.getElementById('server-url').value;
+            sdUrl = document.getElementById('sd-url').value;
+            localStorage.setItem('serverUrl', serverUrl);
+            localStorage.setItem('sdUrl', sdUrl);
+            document.getElementById('settings').classList.remove('show');
+            updateStatus('Settings saved', false);
+        }
+
+        function updateStatus(text, isError = false) {
+            const status = document.getElementById('status');
+            status.textContent = text;
+            status.className = 'status' + (isError ? ' error' : '');
+        }
+
+        function handleImageSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                currentImage = e.target.result;
+                updateStatus('Image ready! Type your question and send.');
+
+                // Show preview in input area
+                const container = document.getElementById('chat-container');
+                const preview = document.createElement('div');
+                preview.className = 'message user';
+                preview.innerHTML = `<img src="${currentImage}" class="image-preview" alt="Selected image">`;
+                container.appendChild(preview);
+                container.scrollTop = container.scrollHeight;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function addMessage(content, isUser = false, isThinking = false, imageUrl = null) {
+            const container = document.getElementById('chat-container');
+            const div = document.createElement('div');
+
+            if (isThinking) {
+                div.className = 'thinking';
+                div.textContent = content;
+            } else {
+                div.className = 'message ' + (isUser ? 'user' : 'assistant');
+                if (imageUrl && isUser) {
+                    div.innerHTML = `<img src="${imageUrl}" alt="User image">${content}`;
+                } else if (imageUrl && !isUser) {
+                    // Generated image from SD
+                    div.innerHTML = `${content}<br><img src="${imageUrl}" alt="Generated image">`;
+                } else if (!isUser) {
+                    // Parse markdown for assistant messages
+                    div.innerHTML = marked.parse(content);
+                } else {
+                    div.textContent = content;
+                }
+            }
+
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function detectImageGeneration(message) {
+            const patterns = [
+                /generate (?:an? )?image/i,
+                /create (?:an? )?image/i,
+                /draw (?:an? )?(?:image|picture|illustration)/i,
+                /make (?:an? )?(?:image|picture|illustration)/i,
+                /paint (?:an? )?(?:image|picture)/i,
+                /generate.*picture/i,
+                /create.*picture/i,
+                /show me (?:an? )?(?:image|picture) of/i
+            ];
+            return patterns.some(pattern => pattern.test(message));
+        }
+
+        function extractPromptForImageGen(message) {
+            // Remove the generation keywords to get the actual prompt
+            const cleaned = message
+                .replace(/^(?:please |can you |could you )?(?:generate|create|draw|make|paint|show me) (?:an? )?(?:image|picture|illustration) (?:of |showing )?/i, '')
+                .replace(/^(?:please )?(?:generate|create|draw|make|paint)/i, '')
+                .trim();
+            return cleaned || message;
+        }
+
+        async function generateImage(prompt) {
+            try {
+                updateStatus('Generating image...');
+
+                const response = await fetch(`${sdUrl}/sdapi/v1/txt2img`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        prompt: prompt,
+                        negative_prompt: 'blurry, low quality, distorted, deformed',
+                        steps: 25,
+                        cfg_scale: 7,
+                        width: 512,
+                        height: 512,
+                        sampler_name: 'DPM++ 2M Karras'
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    const details = errorText ? ` ${errorText}` : '';
+                    throw new Error(`SD API error: ${response.status}.${details}`);
+                }
+
+                const data = await response.json();
+                const base64Image = data.images[0];
+                return `data:image/png;base64,${base64Image}`;
+
+            } catch (error) {
+                console.error('Image generation error:', error);
+                throw error;
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-btn');
+            const message = input.value.trim();
+
+            if (!message && !currentImage) return;
+
+            const displayMessage = message || "What's in this image?";
+
+            if (!currentImage) {
+                addMessage(displayMessage, true);
+            } else {
+                addMessage(displayMessage, true);
+            }
+
+            input.value = '';
+            sendBtn.disabled = true;
+
+            // Check if this is an image generation request
+            if (detectImageGeneration(message) && !currentImage) {
+                updateStatus('Generating image...');
+                try {
+                    const imagePrompt = extractPromptForImageGen(message);
+                    const imageUrl = await generateImage(imagePrompt);
+                    addMessage(`Here's your generated image for: "${imagePrompt}"`, false, false, imageUrl);
+                    updateStatus('Ready');
+                } catch (error) {
+                    console.error('Error:', error);
+                    addMessage(`Error generating image: ${error.message}. Make sure Stable Diffusion is running.`, false);
+                    updateStatus('Error', true);
+                } finally {
+                    sendBtn.disabled = false;
+                    input.focus();
+                }
+                return;
+            }
+
+            // Normal LLM chat or vision analysis
+            updateStatus('Thinking...');
+
+            try {
+                let requestBody;
+
+                if (currentImage) {
+                    // Ollama vision request
+                    requestBody = {
+                        model: 'gemma3-heretic',
+                        messages: [
+                            {
+                                role: 'user',
+                                content: displayMessage,
+                                images: [currentImage.split(',')[1]] // Send base64 without data:image prefix
+                            }
+                        ],
+                        stream: false,
+                        options: {
+                            temperature: 0.7,
+                            num_predict: 500
+                        }
+                    };
+                } else {
+                    // Text-only request
+                    requestBody = {
+                        model: 'gemma3-heretic',
+                        messages: [
+                            {
+                                role: 'user',
+                                content: displayMessage
+                            }
+                        ],
+                        stream: false,
+                        options: {
+                            temperature: 0.7,
+                            num_predict: 500
+                        }
+                    };
+                }
+
+                const response = await fetch(`${serverUrl}/api/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                currentImage = null;
+                document.getElementById('image-input').value = '';
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    const details = errorText ? ` ${errorText}` : '';
+                    throw new Error(`Server error: ${response.status}.${details}`);
+                }
+
+                const data = await response.json();
+                const reply = data.message.content;
+
+                // Check for thinking tags
+                const thinkMatch = reply.match(/<think>([\s\S]*?)<\/think>/);
+                if (thinkMatch) {
+                    addMessage(thinkMatch[1].trim(), false, true);
+                    const cleanReply = reply.replace(/<think>[\s\S]*?<\/think>/, '').trim();
+                    if (cleanReply) {
+                        addMessage(cleanReply, false);
+                    }
+                } else {
+                    addMessage(reply, false);
+                }
+
+                updateStatus('Ready');
+            } catch (error) {
+                console.error('Error:', error);
+                addMessage(`Error: ${error.message}. Check server URL in settings (⚙️).`, false);
+                updateStatus('Error', true);
+                currentImage = null;
+            } finally {
+                sendBtn.disabled = false;
+                input.focus();
+            }
+        }
+
+        document.getElementById('user-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Initial message
+        addMessage('Hello! I\'m Gemma-3 12B Heretic. How can I help you today?', false);
+    </script>
+</body>
+
+</html>

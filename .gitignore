@@ -1,0 +1,52 @@
+# Environment
+.env
+data/
+*.env.local
+
+# Docker artifacts
+**/docker-compose.override.yml
+**/node_modules/
+**/dist/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Models (large files)
+models/
+models/*.gguf
+runners/stable-diffusion-webui/models/
+
+# Stable Diffusion
+runners/stable-diffusion-webui/
+runners/stable-diffusion-webui/venv/
+runners/stable-diffusion-webui/repositories/
+runners/stable-diffusion-webui/outputs/
+runners/stable-diffusion-webui/log/
+runners/stable-diffusion-webui/embeddings/
+runners/stable-diffusion-webui/extensions/
+runners/stable-diffusion-webui/*.log
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# VS Code
+.vscode/*.log
+.history/
+
+# Ollama
+.ollama/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~

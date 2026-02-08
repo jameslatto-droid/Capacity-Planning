@@ -1,0 +1,52 @@
+services:
+  librechat:
+    image: ghcr.io/danny-avila/librechat:v0.8.2
+    container_name: librechat
+    env_file: .env
+    ports:
+      - "3080:3080"
+    volumes:
+      - ./.env:/app/.env:ro
+      - ./librechat.yaml:/app/librechat.yaml:ro
+      - ./configs/librechat-ui/registerSW.js:/app/client/dist/registerSW.js:ro
+      - ./configs/librechat-ui/sw.js:/app/client/dist/sw.js:ro
+      - ./data/librechat/uploads:/app/uploads
+      - ./data/librechat/logs:/app/api/logs
+      - ./data/librechat/cache:/app/cache
+      - ./data/librechat/userdata:/app/userdata
+    depends_on:
+      - mongo
+      - redis
+      - meilisearch
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:6
+    container_name: librechat-mongo
+    volumes:
+      - ./data/mongo:/data/db
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: librechat-redis
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - ./data/redis:/data
+    restart: unless-stopped
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.8
+    container_name: librechat-meili
+    environment:
+      MEILI_NO_ANALYTICS: "true"
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
+    volumes:
+      - ./data/meili:/meili_data
+    restart: unless-stopped
+
+networks:
+  default:
+    name: librechat-net

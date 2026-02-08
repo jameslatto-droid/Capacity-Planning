@@ -1,0 +1,84 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Start All Services",
+            "type": "shell",
+            "command": "${workspaceFolder}\\START-HOME-LLM.ps1",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Start Ollama",
+            "type": "shell",
+            "command": "cmd /c \"set OLLAMA_HOST=0.0.0.0:11434 && set OLLAMA_ORIGINS=* && start /B ollama serve\"",
+            "problemMatcher": [],
+            "isBackground": true,
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
+            "label": "Start Web Server",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "scripts\\start-web-server.py"
+            ],
+            "problemMatcher": [],
+            "isBackground": true,
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
+            "label": "Start Stable Diffusion",
+            "type": "shell",
+            "command": "cmd",
+            "args": [
+                "/c",
+                "cd runners\\stable-diffusion-webui && set PYTHON=C:\\Users\\jimla\\AppData\\Local\\Programs\\Python\\Python310\\python.exe && webui.bat --api --listen --skip-prepare-environment"
+            ],
+            "problemMatcher": [],
+            "isBackground": true,
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "Stop All Services",
+            "type": "shell",
+            "command": "Stop-Process -Name ollama,python -Force -ErrorAction SilentlyContinue",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent"
+            }
+        },
+        {
+            "label": "Open Chat Interface",
+            "type": "shell",
+            "command": "Start-Process",
+            "args": [
+                "http://192.168.1.66:8080/chat.html"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Check Service Status",
+            "type": "shell",
+            "command": "Write-Host 'Ollama:' -NoNewline; Test-NetConnection -ComputerName 192.168.1.66 -Port 11434 -InformationLevel Quiet; Write-Host 'Web Server:' -NoNewline; Test-NetConnection -ComputerName 192.168.1.66 -Port 8080 -InformationLevel Quiet; Write-Host 'Stable Diffusion:' -NoNewline; Test-NetConnection -ComputerName 192.168.1.66 -Port 7860 -InformationLevel Quiet",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always"
+            }
+        }
+    ]
+}
