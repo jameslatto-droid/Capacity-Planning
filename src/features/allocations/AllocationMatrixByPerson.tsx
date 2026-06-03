@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { usePlannerStore } from '../../store/plannerStore'
 import { generateMonthRange, formatMonth } from '../../utils/months'
-import { calculateMonthlyProductiveCapacity } from '../../domain/capacity/capacityCalculations'
+import { calculateMonthlyCapacityWithLeave } from '../../domain/capacity/leaveCalculations'
 import { utilisationColor, utilisationTextColor } from '../../utils/format'
 import { ROLE_LABELS } from '../../types'
 
@@ -16,7 +16,7 @@ const ROW = { borderBottom: '1px solid var(--row-divider)' }
 const HEAD = { borderBottom: '1px solid var(--border)' }
 
 export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, viewMode }: Props) {
-  const { resources, projects, allocations, scenarios } = usePlannerStore()
+  const { resources, projects, allocations, scenarios, leaveEntries } = usePlannerStore()
   const months = generateMonthRange(startMonth, endMonth)
   const scenario = scenarios.find((s) => s.id === scenarioId)
   const assumptions = scenario?.assumptions
@@ -44,13 +44,13 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
           </thead>
           <tbody>
             {resources.filter((r) => r.active).map((r) => {
-              const capacity = calculateMonthlyProductiveCapacity(r, assumptions)
               const personAllocs = filteredAllocations.filter((a) => a.resourceId === r.id)
               const projectIds = [...new Set(personAllocs.map((a) => a.projectId))]
               return [
                 <tr key={`${r.id}-cap`} style={{ ...ROW, background: 'rgba(124,58,237,0.06)' }}>
                   <td className="py-2.5 font-semibold text-violet-300" style={{ color: 'var(--text)' }}>{r.displayName}</td>
                   {months.map((m) => {
+                    const capacity = calculateMonthlyCapacityWithLeave(r, m, leaveEntries, assumptions)
                     const allocated = personAllocs.filter((a) => a.month === m).reduce((s, a) => s + a.hours, 0)
                     const util = allocated / capacity
                     return (
@@ -153,7 +153,7 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
                   {ROLE_LABELS[role]}
                 </td>
                 {months.map((m) => {
-                  const totalCap = roleResources.reduce((s, r) => s + calculateMonthlyProductiveCapacity(r, assumptions), 0)
+                  const totalCap = roleResources.reduce((s, r) => s + calculateMonthlyCapacityWithLeave(r, m, leaveEntries, assumptions), 0)
                   const totalAlloc = roleAllocs.filter((a) => a.month === m).reduce((s, a) => s + a.hours, 0)
                   const util = totalCap > 0 ? totalAlloc / totalCap : 0
                   return (

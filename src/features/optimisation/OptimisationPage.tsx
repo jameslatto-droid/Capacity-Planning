@@ -20,7 +20,7 @@ const MONTHS = generateMonthRange('2026-01', '2026-12')
 const ROW = { borderBottom: '1px solid var(--row-divider)' }
 
 export function OptimisationPage() {
-  const { resources, allocations, scenarios, activeScenarioId } = usePlannerStore()
+  const { resources, allocations, scenarios, activeScenarioId, leaveEntries } = usePlannerStore()
   const [scenarioId, setScenarioId] = useState(activeScenarioId)
   const [startMonth, setStartMonth] = useState('2026-06')
   const [endMonth, setEndMonth] = useState('2026-12')
@@ -38,7 +38,7 @@ export function OptimisationPage() {
   const allPersonResults = useMemo(() => {
     if (!assumptions) return []
     return activeResources.flatMap((r) =>
-      filteredMonths.map((m) => calculatePersonUtilisation(r, scenarioAllocations, assumptions, m))
+      filteredMonths.map((m) => calculatePersonUtilisation(r, scenarioAllocations, assumptions, m, leaveEntries))
     )
   }, [activeResources, scenarioAllocations, assumptions, filteredMonths])
 

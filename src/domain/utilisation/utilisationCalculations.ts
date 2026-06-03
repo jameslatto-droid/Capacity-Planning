@@ -7,8 +7,10 @@ import type {
   TeamUtilisationResult,
   UtilisationStatus,
   ResourceRole,
+  LeaveEntry,
 } from '../../types'
 import { calculateMonthlyProductiveCapacity } from '../capacity/capacityCalculations'
+import { calculateMonthlyCapacityWithLeave } from '../capacity/leaveCalculations'
 
 export function getUtilisationStatus(utilisation: number): UtilisationStatus {
   if (utilisation < 0.6) return 'underused'
@@ -18,13 +20,27 @@ export function getUtilisationStatus(utilisation: number): UtilisationStatus {
   return 'critical'
 }
 
+/** Resolve capacity for a resource in a month, using actual leave when available. */
+function resolveCapacity(
+  resource: Resource,
+  month: string,
+  assumptions: CapacityAssumptions,
+  leaveEntries?: LeaveEntry[]
+): number {
+  if (leaveEntries && leaveEntries.length > 0) {
+    return calculateMonthlyCapacityWithLeave(resource, month, leaveEntries, assumptions)
+  }
+  return calculateMonthlyProductiveCapacity(resource, assumptions)
+}
+
 export function calculatePersonUtilisation(
   resource: Resource,
   allocations: Allocation[],
   assumptions: CapacityAssumptions,
-  month: string
+  month: string,
+  leaveEntries?: LeaveEntry[]
 ): PersonUtilisationResult {
-  const capacityHours = calculateMonthlyProductiveCapacity(resource, assumptions)
+  const capacityHours = resolveCapacity(resource, month, assumptions, leaveEntries)
   const allocatedHours = allocations
     .filter((a) => a.resourceId === resource.id && a.month === month)
     .reduce((sum, a) => sum + a.hours, 0)
@@ -47,10 +63,11 @@ export function calculatePersonUtilisationAllMonths(
   resource: Resource,
   allocations: Allocation[],
   assumptions: CapacityAssumptions,
-  months: string[]
+  months: string[],
+  leaveEntries?: LeaveEntry[]
 ): PersonUtilisationResult[] {
   return months.map((month) =>
-    calculatePersonUtilisation(resource, allocations, assumptions, month)
+    calculatePersonUtilisation(resource, allocations, assumptions, month, leaveEntries)
   )
 }
 
@@ -59,14 +76,15 @@ export function calculateRoleUtilisation(
   resources: Resource[],
   allocations: Allocation[],
   assumptions: CapacityAssumptions,
-  month: string
+  month: string,
+  leaveEntries?: LeaveEntry[]
 ): RoleUtilisationResult {
   const roleResources = resources.filter(
     (r) => r.active && (r.role === role || r.secondaryRoles?.includes(role))
   )
 
   const capacityHours = roleResources.reduce(
-    (sum, r) => sum + calculateMonthlyProductiveCapacity(r, assumptions),
+    (sum, r) => sum + resolveCapacity(r, month, assumptions, leaveEntries),
     0
   )
 
@@ -92,11 +110,12 @@ export function calculateTeamUtilisation(
   resources: Resource[],
   allocations: Allocation[],
   assumptions: CapacityAssumptions,
-  month: string
+  month: string,
+  leaveEntries?: LeaveEntry[]
 ): TeamUtilisationResult {
   const activeResources = resources.filter((r) => r.active)
   const capacityHours = activeResources.reduce(
-    (sum, r) => sum + calculateMonthlyProductiveCapacity(r, assumptions),
+    (sum, r) => sum + resolveCapacity(r, month, assumptions, leaveEntries),
     0
   )
 

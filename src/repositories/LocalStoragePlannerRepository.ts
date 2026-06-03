@@ -1,19 +1,20 @@
 import type { PlannerRepository } from './PlannerRepository'
-import type { Resource, Project, Allocation, Scenario } from '../types'
+import type { Resource, Project, Allocation, Scenario, LeaveEntry } from '../types'
 import { seedResources } from '../data/seed/resources'
 import { seedProjects } from '../data/seed/projects'
 import { seedAllocations } from '../data/seed/allocations'
 import { seedScenarios } from '../data/seed/scenarios'
 
 // Bump this when seed data changes to force a reload of fresh data in the browser.
-const SEED_VERSION = '3'
+const SEED_VERSION = '4'
 
 const KEYS = {
-  version: 'erp:seed-version',
+  version:  'erp:seed-version',
   resources: 'erp:resources',
-  projects: 'erp:projects',
+  projects:  'erp:projects',
   allocations: 'erp:allocations',
   scenarios: 'erp:scenarios',
+  leave:     'erp:leave',
 } as const
 
 function clearAll(): void {
@@ -21,6 +22,7 @@ function clearAll(): void {
   localStorage.removeItem(KEYS.projects)
   localStorage.removeItem(KEYS.allocations)
   localStorage.removeItem(KEYS.scenarios)
+  localStorage.removeItem(KEYS.leave)
 }
 
 function migrateIfNeeded(): void {
@@ -82,6 +84,15 @@ export class LocalStoragePlannerRepository implements PlannerRepository {
 
   saveScenarios(scenarios: Scenario[]): Promise<void> {
     writeKey(KEYS.scenarios, scenarios)
+    return Promise.resolve()
+  }
+
+  loadLeaveEntries(): Promise<LeaveEntry[]> {
+    return Promise.resolve(readKey<LeaveEntry[]>(KEYS.leave, []))
+  }
+
+  saveLeaveEntries(entries: LeaveEntry[]): Promise<void> {
+    writeKey(KEYS.leave, entries)
     return Promise.resolve()
   }
 

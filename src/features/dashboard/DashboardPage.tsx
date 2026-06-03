@@ -14,7 +14,7 @@ import type { FrontendBrand } from '../../types'
 const MONTHS = generateMonthRange('2026-01', '2026-12')
 
 export function DashboardPage() {
-  const { resources, projects, allocations, scenarios, activeScenarioId } = usePlannerStore()
+  const { resources, projects, allocations, scenarios, leaveEntries, activeScenarioId } = usePlannerStore()
 
   const [scenarioId, setScenarioId] = useState(activeScenarioId)
   const [startMonth, setStartMonth] = useState('2026-06')
@@ -44,7 +44,7 @@ export function DashboardPage() {
   if (!assumptions) return <PageLayout title="Dashboard"><div style={{ color: 'var(--text-muted)' }}>No scenario.</div></PageLayout>
 
   const teamByMonth = filteredMonths.map((m) =>
-    calculateTeamUtilisation(activeResources, filteredAllocations, assumptions, m)
+    calculateTeamUtilisation(activeResources, filteredAllocations, assumptions, m, leaveEntries)
   )
 
   const totalCapacity = teamByMonth.reduce((s, m) => s + m.capacityHours, 0)
@@ -57,7 +57,7 @@ export function DashboardPage() {
   const personResults = activeResources.flatMap((r) =>
     filteredMonths.map((m) => ({
       resource: r,
-      result: calculatePersonUtilisation(r, filteredAllocations, assumptions, m),
+      result: calculatePersonUtilisation(r, filteredAllocations, assumptions, m, leaveEntries),
     }))
   )
   const overloads = personResults

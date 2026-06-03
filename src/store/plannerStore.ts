@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { Resource, Project, Allocation, Scenario } from '../types'
+import type { Resource, Project, Allocation, Scenario, LeaveEntry } from '../types'
 import type { PlannerRepository } from '../repositories/PlannerRepository'
 import { LocalStoragePlannerRepository } from '../repositories/LocalStoragePlannerRepository'
 import { ApiPlannerRepository } from '../repositories/ApiPlannerRepository'
@@ -20,6 +20,7 @@ interface PlannerState {
   projects: Project[]
   allocations: Allocation[]
   scenarios: Scenario[]
+  leaveEntries: LeaveEntry[]
   activeScenarioId: string
   isLoading: boolean
   error: string | null
@@ -47,6 +48,11 @@ interface PlannerState {
   deleteScenario(id: string): Promise<void>
   setActiveScenario(id: string): void
 
+  setLeaveEntries(entries: LeaveEntry[]): Promise<void>
+  addLeaveEntry(entry: LeaveEntry): Promise<void>
+  updateLeaveEntry(entry: LeaveEntry): Promise<void>
+  deleteLeaveEntry(id: string): Promise<void>
+
   resetToSeedData(): Promise<void>
 }
 
@@ -55,6 +61,7 @@ export const usePlannerStore = create<PlannerState>((set, get) => ({
   projects: [],
   allocations: [],
   scenarios: [],
+  leaveEntries: [],
   activeScenarioId: 's-baseline',
   isLoading: false,
   error: null,
@@ -62,13 +69,14 @@ export const usePlannerStore = create<PlannerState>((set, get) => ({
   async loadAll() {
     set({ isLoading: true, error: null })
     try {
-      const [resources, projects, allocations, scenarios] = await Promise.all([
+      const [resources, projects, allocations, scenarios, leaveEntries] = await Promise.all([
         repository.loadResources(),
         repository.loadProjects(),
         repository.loadAllocations(),
         repository.loadScenarios(),
+        repository.loadLeaveEntries(),
       ])
-      set({ resources, projects, allocations, scenarios, isLoading: false })
+      set({ resources, projects, allocations, scenarios, leaveEntries, isLoading: false })
     } catch (e) {
       set({ error: String(e), isLoading: false })
     }
@@ -155,6 +163,26 @@ export const usePlannerStore = create<PlannerState>((set, get) => ({
   },
   setActiveScenario(id) {
     set({ activeScenarioId: id })
+  },
+
+  async setLeaveEntries(entries) {
+    await repository.saveLeaveEntries(entries)
+    set({ leaveEntries: entries })
+  },
+  async addLeaveEntry(entry) {
+    const leaveEntries = [...get().leaveEntries, entry]
+    await repository.saveLeaveEntries(leaveEntries)
+    set({ leaveEntries })
+  },
+  async updateLeaveEntry(entry) {
+    const leaveEntries = get().leaveEntries.map((e) => (e.id === entry.id ? entry : e))
+    await repository.saveLeaveEntries(leaveEntries)
+    set({ leaveEntries })
+  },
+  async deleteLeaveEntry(id) {
+    const leaveEntries = get().leaveEntries.filter((e) => e.id !== id)
+    await repository.saveLeaveEntries(leaveEntries)
+    set({ leaveEntries })
   },
 
   async resetToSeedData() {

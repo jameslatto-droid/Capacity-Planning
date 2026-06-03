@@ -51,7 +51,7 @@ const ROLE_COLORS: Record<string, string> = {
 }
 
 export function ReportsPage() {
-  const { resources, projects, allocations, scenarios, activeScenarioId } = usePlannerStore()
+  const { resources, projects, allocations, scenarios, activeScenarioId, leaveEntries } = usePlannerStore()
   const [scenarioId, setScenarioId] = useState(activeScenarioId)
   const [startMonth, setStartMonth] = useState('2026-06')
   const [endMonth, setEndMonth] = useState('2026-12')
@@ -83,7 +83,7 @@ export function ReportsPage() {
       id: r.id,
       label: r.displayName,
       values: filteredMonths.map((m) => {
-        const res = calculatePersonUtilisation(r, filteredAllocations, assumptions, m)
+        const res = calculatePersonUtilisation(r, filteredAllocations, assumptions, m, leaveEntries)
         return { month: m, utilisation: res.utilisation, allocatedHours: res.allocatedHours }
       }),
     }))
@@ -97,7 +97,7 @@ export function ReportsPage() {
         id: role,
         label: ROLE_LABELS[role],
         values: filteredMonths.map((m) => {
-          const res = calculateRoleUtilisation(role, activeResources, filteredAllocations, assumptions, m)
+          const res = calculateRoleUtilisation(role, activeResources, filteredAllocations, assumptions, m, leaveEntries)
           return { month: m, utilisation: res.utilisation, allocatedHours: res.allocatedHours }
         }),
       }))
@@ -145,7 +145,7 @@ export function ReportsPage() {
   const personResults = useMemo(() => {
     if (!assumptions) return []
     return activeResources.flatMap((r) =>
-      filteredMonths.map((m) => ({ resource: r, result: calculatePersonUtilisation(r, filteredAllocations, assumptions, m) }))
+      filteredMonths.map((m) => ({ resource: r, result: calculatePersonUtilisation(r, filteredAllocations, assumptions, m, leaveEntries) }))
     )
   }, [activeResources, filteredAllocations, assumptions, filteredMonths])
 
@@ -268,7 +268,7 @@ export function ReportsPage() {
               <BarChart data={filteredMonths.map((m) => {
                 const row: Record<string, number | string> = { month: formatMonth(m) }
                 ALL_ROLES.forEach((role) => {
-                  const res = calculateRoleUtilisation(role, activeResources, filteredAllocations, assumptions, m)
+                  const res = calculateRoleUtilisation(role, activeResources, filteredAllocations, assumptions, m, leaveEntries)
                   if (res.allocatedHours > 0) row[ROLE_LABELS[role]] = Math.round(res.allocatedHours)
                 })
                 return row

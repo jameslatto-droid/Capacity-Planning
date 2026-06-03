@@ -1,5 +1,5 @@
 import type { PlannerRepository } from './PlannerRepository'
-import type { Resource, Project, Allocation, Scenario } from '../types'
+import type { Resource, Project, Allocation, Scenario, LeaveEntry } from '../types'
 
 export class ApiPlannerRepository implements PlannerRepository {
   private baseUrl: string
@@ -53,5 +53,13 @@ export class ApiPlannerRepository implements PlannerRepository {
 
   saveScenarios(scenarios: Scenario[]): Promise<void> {
     return this.put('/api/scenarios', scenarios)
+  }
+
+  loadLeaveEntries(): Promise<LeaveEntry[]> {
+    return this.get<LeaveEntry[]>('/api/leave')
+  }
+
+  saveLeaveEntries(entries: LeaveEntry[]): Promise<void> {
+    return this.put('/api/leave', entries)
   }
 }

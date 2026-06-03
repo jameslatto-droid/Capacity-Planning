@@ -1,4 +1,4 @@
-import type { Resource, Project, Allocation, Scenario } from '../types'
+import type { Resource, Project, Allocation, Scenario, LeaveEntry } from '../types'
 
 export interface PlannerRepository {
   loadResources(): Promise<Resource[]>
@@ -12,4 +12,7 @@ export interface PlannerRepository {
 
   loadScenarios(): Promise<Scenario[]>
   saveScenarios(scenarios: Scenario[]): Promise<void>
+
+  loadLeaveEntries(): Promise<LeaveEntry[]>
+  saveLeaveEntries(entries: LeaveEntry[]): Promise<void>
 }

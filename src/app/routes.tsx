@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import { DashboardPage } from '../features/dashboard/DashboardPage'
 import { ResourcesPage } from '../features/resources/ResourcesPage'
+import { LeavePage } from '../features/leave/LeavePage'
 import { ProjectsPage } from '../features/projects/ProjectsPage'
 import { ProjectAllocationEditor } from '../features/projects/ProjectAllocationEditor'
 import { AllocationsPage } from '../features/allocations/AllocationsPage'
@@ -13,6 +14,7 @@ export function AppRoutes() {
     <Routes>
       <Route path="/" element={<DashboardPage />} />
       <Route path="/resources" element={<ResourcesPage />} />
+      <Route path="/leave" element={<LeavePage />} />
       <Route path="/projects" element={<ProjectsPage />} />
       <Route path="/projects/:projectId/allocations" element={<ProjectAllocationEditor />} />
       <Route path="/allocations" element={<AllocationsPage />} />

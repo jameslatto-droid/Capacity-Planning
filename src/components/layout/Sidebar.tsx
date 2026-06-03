@@ -4,6 +4,7 @@ import { motion } from 'motion/react'
 const navItems = [
   { to: '/', label: 'Dashboard', icon: '▦' },
   { to: '/resources', label: 'Team', icon: '◎' },
+  { to: '/leave', label: 'Leave', icon: '◷' },
   { to: '/projects', label: 'Projects', icon: '◈' },
   { to: '/allocations', label: 'Planning', icon: '▤' },
   { to: '/scenarios', label: 'Scenarios', icon: '⊕' },

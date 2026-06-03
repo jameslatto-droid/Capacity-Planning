@@ -64,6 +64,26 @@ export interface Allocation {
   lastModifiedAt?: string
 }
 
+export type LeaveType = 'annual' | 'sick' | 'public-holiday' | 'unpaid' | 'other'
+
+export interface LeaveEntry {
+  id: string
+  resourceId: string
+  type: LeaveType
+  startDate: string   // YYYY-MM-DD
+  endDate: string     // YYYY-MM-DD
+  notes?: string
+  createdAt: string
+}
+
+export const LEAVE_TYPE_LABELS: Record<LeaveType, string> = {
+  'annual': 'Annual Leave',
+  'sick': 'Sick Leave',
+  'public-holiday': 'Public Holiday',
+  'unpaid': 'Unpaid Leave',
+  'other': 'Other',
+}
+
 export interface CapacityAssumptions {
   fullTimeHoursPerWeek: number
   defaultLeaveDaysPerYear: number
