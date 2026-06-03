@@ -20,6 +20,7 @@ export function ProjectsPage() {
   const { projects, allocations, resources, addProject, updateProject, deleteProject } = usePlannerStore()
   const [editingProject, setEditingProject] = useState<Project | null>(null)
   const [showForm, setShowForm] = useState(false)
+  const [hoveredId, setHoveredId] = useState<string | null>(null)
 
   function handleSave(data: Omit<Project, 'id'>) {
     if (editingProject) updateProject({ ...data, id: editingProject.id })
@@ -64,9 +65,11 @@ export function ProjectsPage() {
         <thead>
           <tr style={{ borderBottom: '1px solid var(--border)' }}>
             {['Code', 'Project', 'Brand', 'Status', 'Period', 'Hours', ''].map((h, i) => (
-              <th key={h + i}
+              <th
+                key={h + i}
                 className={`pb-3 text-[10px] uppercase tracking-widest font-semibold ${i <= 1 ? 'text-left' : i < 6 ? 'text-right' : ''}`}
-                style={{ color: 'var(--text-faint)' }}>
+                style={{ color: 'var(--text-faint)' }}
+              >
                 {h}
               </th>
             ))}
@@ -79,14 +82,21 @@ export function ProjectsPage() {
             const lastSaved = allocations
               .filter((a) => a.projectId === p.id && a.lastModifiedAt)
               .sort((a, b) => (b.lastModifiedAt ?? '').localeCompare(a.lastModifiedAt ?? ''))[0]?.lastModifiedAt
+            const isHovered = hoveredId === p.id
+
             return (
               <motion.tr
                 key={p.id}
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03, duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                style={{ borderBottom: '1px solid var(--row-divider)' }}
-                className="group"
+                style={{
+                  borderBottom: '1px solid var(--row-divider)',
+                  background: isHovered ? 'var(--row-hover)' : 'transparent',
+                  transition: 'background 0.1s ease',
+                }}
+                onMouseEnter={() => setHoveredId(p.id)}
+                onMouseLeave={() => setHoveredId(null)}
               >
                 <td className="py-3 font-mono text-xs" style={{ color: 'var(--text-muted)' }}>{p.code}</td>
                 <td className="py-3 font-medium" style={{ color: 'var(--text)' }}>
@@ -98,7 +108,7 @@ export function ProjectsPage() {
                   )}
                   {lastSaved && (
                     <div className="text-[10px] mt-0.5" style={{ color: 'var(--text-faint)' }}>
-                      Saved {new Date(lastSaved).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+                      Saved {new Date(lastSaved).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                     </div>
                   )}
                 </td>
@@ -114,8 +124,11 @@ export function ProjectsPage() {
                 <td className="py-3 text-right font-semibold tabular" style={{ color: 'var(--text)' }}>
                   {totalHours > 0 ? formatHours(totalHours) : <span style={{ color: 'var(--text-faint)' }}>—</span>}
                 </td>
-                <td className="py-3 text-right">
-                  <div className="flex gap-1 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+                <td className="py-3 text-right" style={{ minWidth: 160 }}>
+                  <div
+                    className="flex gap-1.5 justify-end transition-opacity duration-150"
+                    style={{ opacity: isHovered ? 1 : 0 }}
+                  >
                     <Button
                       size="sm"
                       variant="primary"
@@ -123,8 +136,12 @@ export function ProjectsPage() {
                     >
                       Allocate →
                     </Button>
-                    <Button size="sm" variant="ghost" onClick={() => { setEditingProject(p); setShowForm(true) }}>Edit</Button>
-                    <Button size="sm" variant="danger" onClick={() => { if (confirm('Delete project?')) deleteProject(p.id) }}>Del</Button>
+                    <Button size="sm" variant="ghost" onClick={() => { setEditingProject(p); setShowForm(true) }}>
+                      Edit
+                    </Button>
+                    <Button size="sm" variant="danger" onClick={() => { if (confirm('Delete project?')) deleteProject(p.id) }}>
+                      Del
+                    </Button>
                   </div>
                 </td>
               </motion.tr>

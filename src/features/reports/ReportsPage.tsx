@@ -57,6 +57,7 @@ export function ReportsPage() {
   const [endMonth, setEndMonth] = useState('2026-12')
   const [brandFilter, setBrandFilter] = useState<'DCT' | 'PLK' | 'both'>('both')
   const [activeTab, setActiveTab] = useState<Tab>('person')
+  const [displayMode, setDisplayMode] = useState<'percent' | 'hours'>('percent')
 
   const scenario = scenarios.find((s) => s.id === scenarioId)
   const assumptions = scenario?.assumptions
@@ -203,33 +204,54 @@ export function ReportsPage() {
         <Select label="Brand" value={brandFilter} onChange={(e) => setBrandFilter(e.target.value as typeof brandFilter)} options={[{ value: 'both', label: 'Both' }, { value: 'DCT', label: 'DCT' }, { value: 'PLK', label: 'PLK' }]} />
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-1 mb-8">
-        {tabs.map((t) => (
-          <motion.button
-            key={t.key}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => setActiveTab(t.key)}
-            className="px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-150"
-            style={{
-              background: activeTab === t.key ? 'var(--accent-light)' : 'var(--surface-2)',
-              border: activeTab === t.key ? '1px solid rgba(139,92,246,0.4)' : '1px solid rgba(139,92,246,0.15)',
-              color: activeTab === t.key ? 'var(--accent-text)' : 'var(--text-muted)',
-              boxShadow: activeTab === t.key ? '0 0 16px rgba(139,92,246,0.2)' : 'none',
-            }}
-          >
-            {t.label}
-          </motion.button>
-        ))}
+      {/* Tabs + display mode toggle */}
+      <div className="flex items-center justify-between gap-3 mb-8 flex-wrap">
+        <div className="flex gap-1 flex-wrap">
+          {tabs.map((t) => (
+            <motion.button
+              key={t.key}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => setActiveTab(t.key)}
+              className="px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-150"
+              style={{
+                background: activeTab === t.key ? 'var(--accent-light)' : 'var(--surface-2)',
+                border: activeTab === t.key ? '1px solid rgba(139,92,246,0.4)' : '1px solid rgba(139,92,246,0.15)',
+                color: activeTab === t.key ? 'var(--accent-text)' : 'var(--text-muted)',
+                boxShadow: activeTab === t.key ? '0 0 16px rgba(139,92,246,0.2)' : 'none',
+              }}
+            >
+              {t.label}
+            </motion.button>
+          ))}
+        </div>
+
+        {/* Hours / % toggle — only shown on heatmap tabs */}
+        {(activeTab === 'person' || activeTab === 'role' || activeTab === 'overload') && (
+          <div className="flex rounded-lg overflow-hidden" style={{ border: '1px solid var(--border)' }}>
+            {(['percent', 'hours'] as const).map((mode) => (
+              <button
+                key={mode}
+                onClick={() => setDisplayMode(mode)}
+                className="px-3 py-1.5 text-xs font-semibold transition-all"
+                style={{
+                  background: displayMode === mode ? 'var(--accent-light)' : 'var(--surface-2)',
+                  color: displayMode === mode ? 'var(--accent-text)' : 'var(--text-muted)',
+                }}
+              >
+                {mode === 'percent' ? '%' : 'h'}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ── Person utilisation heatmap ── */}
       {activeTab === 'person' && (
         <div className="space-y-8">
           {chartWrapper(
-            <UtilisationHeatmap rows={personHeatmapRows} months={filteredMonths} />,
-            'Person Utilisation — Colour Spectrum'
+            <UtilisationHeatmap rows={personHeatmapRows} months={filteredMonths} displayMode={displayMode} />,
+            'Person Utilisation'
           )}
         </div>
       )}
@@ -238,8 +260,8 @@ export function ReportsPage() {
       {activeTab === 'role' && (
         <div className="space-y-8">
           {chartWrapper(
-            <UtilisationHeatmap rows={roleHeatmapRows} months={filteredMonths} />,
-            'Role Utilisation — Colour Spectrum'
+            <UtilisationHeatmap rows={roleHeatmapRows} months={filteredMonths} displayMode={displayMode} />,
+            'Role Utilisation'
           )}
           {chartWrapper(
             <ResponsiveContainer width="100%" height={280}>
@@ -335,8 +357,9 @@ export function ReportsPage() {
             <UtilisationHeatmap
               rows={personHeatmapRows.filter((row) => row.values.some((v) => v.utilisation > 1))}
               months={filteredMonths}
+              displayMode={displayMode}
             />,
-            'Overloaded People — Heatmap'
+            'Overloaded People'
           )}
           <div>
             <div className="text-[10px] uppercase tracking-widest mb-4" style={{ color: 'var(--text-faint)' }}>All Overloads</div>

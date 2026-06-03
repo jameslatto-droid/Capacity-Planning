@@ -8,6 +8,7 @@ import { formatHours, formatPercent, utilisationTextColor, utilisationGlow } fro
 import { formatMonth, generateMonthRange } from '../../utils/months'
 import { calculatePersonUtilisation, calculateTeamUtilisation } from '../../domain/utilisation/utilisationCalculations'
 import { CapacityDemandChart } from './CapacityDemandChart'
+import { PlanGantt } from './PlanGantt'
 import type { FrontendBrand } from '../../types'
 
 const MONTHS = generateMonthRange('2026-01', '2026-12')
@@ -19,6 +20,7 @@ export function DashboardPage() {
   const [startMonth, setStartMonth] = useState('2026-06')
   const [endMonth, setEndMonth] = useState('2026-12')
   const [brandFilter, setBrandFilter] = useState<'DCT' | 'PLK' | 'both'>('both')
+  const [chartTab, setChartTab] = useState<'capacity' | 'portfolio'>('capacity')
 
   const scenario = scenarios.find((s) => s.id === scenarioId)
   const assumptions = scenario?.assumptions
@@ -87,7 +89,7 @@ export function DashboardPage() {
           accent={overallUtil > 1 ? 'red' : overallUtil > 0.85 ? 'amber' : 'emerald'} />
       </div>
 
-      {/* Chart */}
+      {/* Chart block — tabbed */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -95,17 +97,46 @@ export function DashboardPage() {
         className="rounded-2xl p-6 mb-10"
         style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
       >
+        {/* Tab row */}
         <div className="flex items-center justify-between mb-5">
-          <div className="text-[10px] uppercase tracking-widest font-semibold" style={{ color: 'var(--text-faint)' }}>
-            Capacity vs Demand
+          <div className="flex gap-1">
+            {([['capacity', 'Capacity & Demand'], ['portfolio', 'Portfolio']] as const).map(([key, label]) => (
+              <button
+                key={key}
+                onClick={() => setChartTab(key)}
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
+                style={{
+                  background: chartTab === key ? 'var(--accent-light)' : 'transparent',
+                  color: chartTab === key ? 'var(--accent-text)' : 'var(--text-muted)',
+                  border: chartTab === key ? '1px solid rgba(124,58,237,0.25)' : '1px solid transparent',
+                }}
+              >
+                {label}
+              </button>
+            ))}
           </div>
-          <div className="flex items-center gap-5 text-[10px]" style={{ color: 'var(--text-muted)' }}>
-            <span className="flex items-center gap-1.5"><span className="inline-block w-5 border-t-2 border-dashed border-violet-500/40" /> Capacity</span>
-            <span className="flex items-center gap-1.5"><span className="inline-block w-5 border-t-2 border-violet-500" /> Demand</span>
-            <span className="flex items-center gap-1.5"><span className="inline-block w-5 border-t-2 border-red-500" /> Overload</span>
-          </div>
+          {chartTab === 'capacity' && (
+            <div className="flex items-center gap-5 text-[10px]" style={{ color: 'var(--text-muted)' }}>
+              <span className="flex items-center gap-1.5"><span className="inline-block w-5 border-t-2 border-dashed border-violet-500/40" /> Capacity</span>
+              <span className="flex items-center gap-1.5"><span className="inline-block w-5 border-t-2 border-violet-500" /> Demand</span>
+              <span className="flex items-center gap-1.5"><span className="inline-block w-5 border-t-2 border-red-500" /> Overload</span>
+            </div>
+          )}
         </div>
-        <CapacityDemandChart data={teamByMonth} months={filteredMonths} />
+
+        {chartTab === 'capacity' && (
+          <CapacityDemandChart data={teamByMonth} months={filteredMonths} />
+        )}
+
+        {chartTab === 'portfolio' && (
+          <PlanGantt
+            projects={projects}
+            allocations={allocations}
+            brandFilter={brandFilter}
+            startMonth={startMonth}
+            endMonth={endMonth}
+          />
+        )}
       </motion.div>
 
       {/* Overloads — only shown when they exist */}

@@ -22,6 +22,7 @@ export function ResourcesPage() {
   const { resources, scenarios, activeScenarioId, addResource, updateResource, deleteResource } = usePlannerStore()
   const [editingResource, setEditingResource] = useState<Resource | null>(null)
   const [showForm, setShowForm] = useState(false)
+  const [hoveredId, setHoveredId] = useState<string | null>(null)
 
   const scenario = scenarios.find((s) => s.id === activeScenarioId)
   const assumptions = scenario?.assumptions
@@ -81,14 +82,20 @@ export function ResourcesPage() {
         <tbody>
           {resources.map((r, i) => {
             const capacity = assumptions ? calculateMonthlyProductiveCapacity(r, assumptions) : null
+            const isHovered = hoveredId === r.id
             return (
               <motion.tr
                 key={r.id}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03, duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                style={{ borderBottom: '1px solid var(--row-divider)' }}
-                className="group"
+                style={{
+                  borderBottom: '1px solid var(--row-divider)',
+                  background: isHovered ? 'var(--row-hover)' : 'transparent',
+                  transition: 'background 0.1s ease',
+                }}
+                onMouseEnter={() => setHoveredId(r.id)}
+                onMouseLeave={() => setHoveredId(null)}
               >
                 <td className="py-3 font-medium" style={{ color: 'var(--text)' }}>
                   {r.displayName}
@@ -112,8 +119,8 @@ export function ResourcesPage() {
                   <span className={`inline-block w-2 h-2 rounded-full ${r.active ? 'bg-emerald-500' : 'bg-slate-700'}`}
                     style={r.active ? { boxShadow: '0 0 6px rgba(16,185,129,0.6)' } : {}} />
                 </td>
-                <td className="py-3 text-right opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="flex gap-1 justify-end">
+                <td className="py-3 text-right">
+                  <div className="flex gap-1 justify-end transition-opacity duration-150" style={{ opacity: isHovered ? 1 : 0 }}>
                     <Button size="sm" variant="ghost" onClick={() => { setEditingResource(r); setShowForm(true) }}>Edit</Button>
                     <Button size="sm" variant="danger" onClick={() => { if (confirm('Delete?')) deleteResource(r.id) }}>Del</Button>
                   </div>
