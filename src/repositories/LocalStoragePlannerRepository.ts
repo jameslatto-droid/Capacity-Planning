@@ -6,7 +6,7 @@ import { seedAllocations } from '../data/seed/allocations'
 import { seedScenarios } from '../data/seed/scenarios'
 
 // Bump this when seed data changes to force a reload of fresh data in the browser.
-const SEED_VERSION = '2'
+const SEED_VERSION = '3'
 
 const KEYS = {
   version: 'erp:seed-version',
