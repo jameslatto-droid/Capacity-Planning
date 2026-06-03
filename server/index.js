@@ -1,24 +1,26 @@
 /**
- * Engineering Resource Planner — Portable Server
- *
- * Serves the built React app and persists planning data to a local JSON file.
- * Run from the project root: node server/index.js
+ * Engineering Resource Planner — Portable Server (ESM)
+ * Run: node server/index.js
  */
 
-const express  = require('express')
-const path     = require('path')
-const fs       = require('fs')
-const os       = require('os')
-const { exec } = require('child_process')
+import express   from 'express'
+import path      from 'path'
+import fs        from 'fs'
+import os        from 'os'
+import { exec }  from 'child_process'
+import { fileURLToPath } from 'url'
 
-const app      = express()
-const PORT     = process.env.PORT || 3001
-const DATA_DIR = path.join(__dirname, '..', 'data')
+const __filename = fileURLToPath(import.meta.url)
+const __dirname  = path.dirname(__filename)
+
+const app       = express()
+const PORT      = process.env.PORT || 3001
+const DATA_DIR  = path.join(__dirname, '..', 'data')
 const DATA_FILE = path.join(DATA_DIR, 'plan.json')
 const SEED_FILE = path.join(DATA_DIR, 'plan.seed.json')
 const DIST_DIR  = path.join(__dirname, '..', 'dist')
 
-// ── Helpers ─────────────────────────────────────────────────────────────────
+// ── Helpers ──────────────────────────────────────────────────────────────────
 
 function readData() {
   try {
@@ -26,9 +28,8 @@ function readData() {
       return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'))
     }
   } catch (e) {
-    console.warn('Warning: could not read plan.json, returning seed data.', e.message)
+    console.warn('Warning: could not read plan.json — falling back to seed.', e.message)
   }
-  // Fall back to seed data on first run or corruption
   return JSON.parse(fs.readFileSync(SEED_FILE, 'utf8'))
 }
 
@@ -37,15 +38,13 @@ function writeKey(key, value) {
   data[key] = value
   data.lastModified = new Date().toISOString()
   fs.mkdirSync(DATA_DIR, { recursive: true })
-  // Write atomically: write to temp file then rename
   const tmp = DATA_FILE + '.tmp'
   fs.writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf8')
   fs.renameSync(tmp, DATA_FILE)
 }
 
 function getNetworkAddress() {
-  const interfaces = os.networkInterfaces()
-  for (const iface of Object.values(interfaces)) {
+  for (const iface of Object.values(os.networkInterfaces())) {
     for (const alias of iface ?? []) {
       if (alias.family === 'IPv4' && !alias.internal) return alias.address
     }
@@ -53,87 +52,65 @@ function getNetworkAddress() {
   return null
 }
 
-// ── Middleware ───────────────────────────────────────────────────────────────
+// ── Middleware ────────────────────────────────────────────────────────────────
 
 app.use(express.json({ limit: '20mb' }))
 
-// Serve the built React app
 if (fs.existsSync(DIST_DIR)) {
   app.use(express.static(DIST_DIR))
 } else {
-  console.error('\n  ERROR: dist/ folder not found. Run "npm run build:server" first.\n')
+  console.error('\n  ERROR: dist/ not found. Run "npm run build" first.\n')
 }
 
-// ── API routes ───────────────────────────────────────────────────────────────
+// ── API ───────────────────────────────────────────────────────────────────────
 
-const KEYS = ['resources', 'projects', 'allocations', 'scenarios']
-
-for (const key of KEYS) {
-  // GET /api/:key → returns array
-  app.get(`/api/${key}`, (req, res) => {
-    try {
-      const data = readData()
-      res.json(data[key] ?? [])
-    } catch (e) {
-      res.status(500).json({ error: e.message })
-    }
+for (const key of ['resources', 'projects', 'allocations', 'scenarios']) {
+  app.get(`/api/${key}`, (_req, res) => {
+    try { res.json(readData()[key] ?? []) }
+    catch (e) { res.status(500).json({ error: e.message }) }
   })
-
-  // PUT /api/:key → replaces array
   app.put(`/api/${key}`, (req, res) => {
-    try {
-      writeKey(key, req.body)
-      res.json({ ok: true, savedAt: new Date().toISOString() })
-    } catch (e) {
-      res.status(500).json({ error: e.message })
-    }
+    try { writeKey(key, req.body); res.json({ ok: true, savedAt: new Date().toISOString() }) }
+    catch (e) { res.status(500).json({ error: e.message }) }
   })
 }
 
-// Reset to seed data
-app.post('/api/reset', (req, res) => {
+app.post('/api/reset', (_req, res) => {
   try {
     fs.copyFileSync(SEED_FILE, DATA_FILE)
     res.json({ ok: true, message: 'Data reset to seed.' })
-  } catch (e) {
-    res.status(500).json({ error: e.message })
-  }
+  } catch (e) { res.status(500).json({ error: e.message }) }
 })
 
-// Health check
-app.get('/api/health', (req, res) => {
+app.get('/api/health', (_req, res) =>
   res.json({ ok: true, dataFile: DATA_FILE, exists: fs.existsSync(DATA_FILE) })
-})
+)
 
-// SPA fallback — send index.html for all non-API routes
-app.get('*', (req, res) => {
+// SPA fallback — catch all non-API routes and serve index.html
+app.use((_req, res) => {
   const index = path.join(DIST_DIR, 'index.html')
-  if (fs.existsSync(index)) {
-    res.sendFile(index)
-  } else {
-    res.status(503).send('App not built yet. Run "npm run build:server" first.')
-  }
+  fs.existsSync(index)
+    ? res.sendFile(index)
+    : res.status(503).send('App not built. Run "npm run build" first.')
 })
 
-// ── Start ────────────────────────────────────────────────────────────────────
+// ── Start ─────────────────────────────────────────────────────────────────────
 
 app.listen(PORT, '0.0.0.0', () => {
-  const network = getNetworkAddress()
-  const local   = `http://localhost:${PORT}`
-  const net     = network ? `http://${network}:${PORT}` : null
+  const net   = getNetworkAddress()
+  const local = `http://localhost:${PORT}`
+  const netUrl = net ? `http://${net}:${PORT}` : null
 
   console.log('\n ╔══════════════════════════════════════════╗')
   console.log(' ║   Engineering Resource Planner           ║')
   console.log(' ╚══════════════════════════════════════════╝')
   console.log(`\n  Local:    ${local}`)
-  if (net) console.log(`  Network:  ${net}  ← share with your team`)
+  if (netUrl) console.log(`  Network:  ${netUrl}  <- share with your team`)
   console.log(`\n  Data:     ${DATA_FILE}`)
   console.log('\n  Press Ctrl+C to stop.\n')
 
-  // Open browser on the host machine automatically
-  const url = local
-  const cmd = process.platform === 'win32' ? `start ${url}`
-            : process.platform === 'darwin' ? `open ${url}`
-            : `xdg-open ${url}`
-  setTimeout(() => exec(cmd), 800)
+  const openCmd = process.platform === 'win32' ? `start ${local}`
+                : process.platform === 'darwin' ? `open ${local}`
+                : `xdg-open ${local}`
+  setTimeout(() => exec(openCmd), 800)
 })
