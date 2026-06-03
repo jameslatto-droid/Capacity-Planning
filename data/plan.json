@@ -1,0 +1,1833 @@
+{
+  "resources": [
+    {
+      "id": "r-onur",
+      "displayName": "Onur Kavakli",
+      "role": "process-engineering",
+      "secondaryRoles": [
+        "technical-review"
+      ],
+      "employmentType": "employee",
+      "contractHoursPerWeek": 40,
+      "workingDaysPerWeek": 5,
+      "fullTimeHoursPerWeek": 40,
+      "active": true,
+      "notes": "Principal Engineer — Process / Technical"
+    },
+    {
+      "id": "r-maria",
+      "displayName": "Maria Alonzo",
+      "role": "project-management",
+      "employmentType": "employee",
+      "contractHoursPerWeek": 40,
+      "workingDaysPerWeek": 5,
+      "fullTimeHoursPerWeek": 40,
+      "active": true,
+      "notes": "LATAM PM"
+    },
+    {
+      "id": "r-jacobo",
+      "displayName": "Jacobo Ramirez",
+      "role": "project-management",
+      "employmentType": "employee",
+      "contractHoursPerWeek": 40,
+      "workingDaysPerWeek": 5,
+      "fullTimeHoursPerWeek": 40,
+      "active": true,
+      "notes": "LATAM PM (In-Country)"
+    },
+    {
+      "id": "r-boris",
+      "displayName": "Boris Welzen",
+      "role": "procurement",
+      "employmentType": "employee",
+      "contractHoursPerWeek": 40,
+      "workingDaysPerWeek": 5,
+      "fullTimeHoursPerWeek": 40,
+      "active": true,
+      "notes": "Procurement Manager"
+    },
+    {
+      "id": "r-rutger",
+      "displayName": "Rutger Reij",
+      "role": "mechanical-engineering",
+      "employmentType": "employee",
+      "contractHoursPerWeek": 32,
+      "workingDaysPerWeek": 4,
+      "fullTimeHoursPerWeek": 40,
+      "active": true,
+      "notes": "4-day week"
+    },
+    {
+      "id": "r-anwar",
+      "displayName": "Anwar Hassan",
+      "role": "mechanical-engineering",
+      "employmentType": "employee",
+      "contractHoursPerWeek": 40,
+      "workingDaysPerWeek": 5,
+      "fullTimeHoursPerWeek": 40,
+      "active": true
+    },
+    {
+      "id": "r-neville",
+      "displayName": "Neville Cory",
+      "role": "process-engineering",
+      "employmentType": "employee",
+      "contractHoursPerWeek": 40,
+      "workingDaysPerWeek": 5,
+      "fullTimeHoursPerWeek": 40,
+      "active": true
+    },
+    {
+      "id": "r-fatemeh",
+      "displayName": "Fatemeh Rashidashmagh",
+      "role": "process-engineering",
+      "employmentType": "employee",
+      "contractHoursPerWeek": 40,
+      "workingDaysPerWeek": 5,
+      "fullTimeHoursPerWeek": 40,
+      "active": true
+    },
+    {
+      "id": "r-william",
+      "displayName": "William Garcia",
+      "role": "process-engineering",
+      "employmentType": "employee",
+      "contractHoursPerWeek": 40,
+      "workingDaysPerWeek": 5,
+      "fullTimeHoursPerWeek": 40,
+      "active": true
+    },
+    {
+      "id": "r-ajitha",
+      "displayName": "Ajitha Karuppiah",
+      "role": "drafting",
+      "employmentType": "employee",
+      "contractHoursPerWeek": 40,
+      "workingDaysPerWeek": 5,
+      "fullTimeHoursPerWeek": 40,
+      "active": true,
+      "notes": "Draughtsperson"
+    }
+  ],
+  "projects": [
+    {
+      "id": "p-adoc",
+      "code": "P250001",
+      "name": "ADOC",
+      "frontendBrand": "PLK",
+      "status": "active",
+      "priority": "high",
+      "flexibility": "limited",
+      "startMonth": "2025-01",
+      "endMonth": "2026-12",
+      "notes": "PM: Tim"
+    },
+    {
+      "id": "p-oxy",
+      "code": "P230195",
+      "name": "OXY Oman",
+      "frontendBrand": "PLK",
+      "client": "OXY",
+      "status": "active",
+      "priority": "high",
+      "flexibility": "limited",
+      "startMonth": "2023-01",
+      "endMonth": "2026-09",
+      "notes": "PM: Dion. Wind-down in Q3 2026."
+    },
+    {
+      "id": "p-almansoori",
+      "code": "P230073",
+      "name": "Almansoori",
+      "frontendBrand": "PLK",
+      "client": "Almansoori",
+      "status": "active",
+      "priority": "medium",
+      "flexibility": "limited",
+      "startMonth": "2023-01",
+      "endMonth": "2026-07",
+      "notes": "Near close-out."
+    },
+    {
+      "id": "p-zeeland",
+      "code": "P260002",
+      "name": "Spare Parts Zeeland",
+      "frontendBrand": "PLK",
+      "status": "on-hold",
+      "priority": "low",
+      "flexibility": "flexible",
+      "startMonth": "2026-01",
+      "endMonth": "2026-12",
+      "notes": "No allocations yet."
+    },
+    {
+      "id": "p-taqa",
+      "code": "P260001",
+      "name": "TAQA",
+      "frontendBrand": "PLK",
+      "client": "TAQA",
+      "status": "active",
+      "priority": "critical",
+      "flexibility": "fixed",
+      "startMonth": "2026-01",
+      "endMonth": "2027-06",
+      "notes": "Major ongoing project."
+    },
+    {
+      "id": "p-cancun",
+      "code": "P250002",
+      "name": "Cancun CISEC",
+      "frontendBrand": "DCT",
+      "client": "CISEC",
+      "projectManager": "r-maria",
+      "status": "active",
+      "priority": "high",
+      "flexibility": "limited",
+      "startMonth": "2025-01",
+      "endMonth": "2027-06",
+      "notes": "LATAM project. Maria PM, Jacobo in-country."
+    },
+    {
+      "id": "p-sarat",
+      "code": "QDG2600002",
+      "name": "SARAT",
+      "frontendBrand": "DCT",
+      "status": "active",
+      "priority": "medium",
+      "flexibility": "limited",
+      "startMonth": "2026-04",
+      "endMonth": "2026-09",
+      "notes": "Ending September 2026."
+    }
+  ],
+  "allocations": [
+    {
+      "id": "a-0001",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-boris",
+      "role": "procurement",
+      "month": "2026-06",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0002",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-rutger",
+      "role": "mechanical-engineering",
+      "month": "2026-06",
+      "hours": 83,
+      "locked": false
+    },
+    {
+      "id": "a-0003",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-rutger",
+      "role": "mechanical-engineering",
+      "month": "2026-07",
+      "hours": 21,
+      "locked": false
+    },
+    {
+      "id": "a-0004",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-rutger",
+      "role": "mechanical-engineering",
+      "month": "2026-08",
+      "hours": 41,
+      "locked": false
+    },
+    {
+      "id": "a-0005",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-rutger",
+      "role": "mechanical-engineering",
+      "month": "2026-09",
+      "hours": 21,
+      "locked": false
+    },
+    {
+      "id": "a-0006",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-rutger",
+      "role": "mechanical-engineering",
+      "month": "2026-10",
+      "hours": 21,
+      "locked": false
+    },
+    {
+      "id": "a-0007",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-rutger",
+      "role": "mechanical-engineering",
+      "month": "2026-11",
+      "hours": 21,
+      "locked": false
+    },
+    {
+      "id": "a-0008",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-fatemeh",
+      "role": "process-engineering",
+      "month": "2026-06",
+      "hours": 13,
+      "locked": false
+    },
+    {
+      "id": "a-0009",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-ajitha",
+      "role": "drafting",
+      "month": "2026-06",
+      "hours": 13,
+      "locked": false
+    },
+    {
+      "id": "a-0010",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-ajitha",
+      "role": "drafting",
+      "month": "2026-07",
+      "hours": 13,
+      "locked": false
+    },
+    {
+      "id": "a-0011",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-ajitha",
+      "role": "drafting",
+      "month": "2026-08",
+      "hours": 7,
+      "locked": false
+    },
+    {
+      "id": "a-0012",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-anwar",
+      "role": "mechanical-engineering",
+      "month": "2026-06",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0013",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-anwar",
+      "role": "mechanical-engineering",
+      "month": "2026-07",
+      "hours": 13,
+      "locked": false
+    },
+    {
+      "id": "a-0014",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-anwar",
+      "role": "mechanical-engineering",
+      "month": "2026-08",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0015",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-anwar",
+      "role": "mechanical-engineering",
+      "month": "2026-09",
+      "hours": 20,
+      "locked": false
+    },
+    {
+      "id": "a-0016",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-anwar",
+      "role": "mechanical-engineering",
+      "month": "2026-10",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0017",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-anwar",
+      "role": "mechanical-engineering",
+      "month": "2026-11",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0018",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-neville",
+      "role": "process-engineering",
+      "month": "2026-06",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0019",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-neville",
+      "role": "process-engineering",
+      "month": "2026-07",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0020",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-neville",
+      "role": "process-engineering",
+      "month": "2026-08",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0021",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-neville",
+      "role": "process-engineering",
+      "month": "2026-09",
+      "hours": 13,
+      "locked": false
+    },
+    {
+      "id": "a-0022",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-neville",
+      "role": "process-engineering",
+      "month": "2026-10",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0023",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-neville",
+      "role": "process-engineering",
+      "month": "2026-11",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0024",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-06",
+      "hours": 13,
+      "locked": false
+    },
+    {
+      "id": "a-0025",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-07",
+      "hours": 13,
+      "locked": false
+    },
+    {
+      "id": "a-0026",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-08",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0027",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-09",
+      "hours": 13,
+      "locked": false
+    },
+    {
+      "id": "a-0028",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-10",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0029",
+      "scenarioId": "s-baseline",
+      "projectId": "p-adoc",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-11",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0030",
+      "scenarioId": "s-baseline",
+      "projectId": "p-oxy",
+      "resourceId": "r-boris",
+      "role": "procurement",
+      "month": "2026-06",
+      "hours": 7,
+      "locked": false
+    },
+    {
+      "id": "a-0031",
+      "scenarioId": "s-baseline",
+      "projectId": "p-oxy",
+      "resourceId": "r-boris",
+      "role": "procurement",
+      "month": "2026-07",
+      "hours": 7,
+      "locked": false
+    },
+    {
+      "id": "a-0032",
+      "scenarioId": "s-baseline",
+      "projectId": "p-oxy",
+      "resourceId": "r-rutger",
+      "role": "mechanical-engineering",
+      "month": "2026-06",
+      "hours": 21,
+      "locked": false
+    },
+    {
+      "id": "a-0033",
+      "scenarioId": "s-baseline",
+      "projectId": "p-oxy",
+      "resourceId": "r-rutger",
+      "role": "mechanical-engineering",
+      "month": "2026-07",
+      "hours": 10,
+      "locked": false
+    },
+    {
+      "id": "a-0034",
+      "scenarioId": "s-baseline",
+      "projectId": "p-oxy",
+      "resourceId": "r-rutger",
+      "role": "mechanical-engineering",
+      "month": "2026-08",
+      "hours": 21,
+      "locked": false
+    },
+    {
+      "id": "a-0035",
+      "scenarioId": "s-baseline",
+      "projectId": "p-oxy",
+      "resourceId": "r-rutger",
+      "role": "mechanical-engineering",
+      "month": "2026-09",
+      "hours": 5,
+      "locked": false
+    },
+    {
+      "id": "a-0036",
+      "scenarioId": "s-baseline",
+      "projectId": "p-oxy",
+      "resourceId": "r-ajitha",
+      "role": "drafting",
+      "month": "2026-06",
+      "hours": 13,
+      "locked": false
+    },
+    {
+      "id": "a-0037",
+      "scenarioId": "s-baseline",
+      "projectId": "p-oxy",
+      "resourceId": "r-neville",
+      "role": "process-engineering",
+      "month": "2026-06",
+      "hours": 13,
+      "locked": false
+    },
+    {
+      "id": "a-0038",
+      "scenarioId": "s-baseline",
+      "projectId": "p-oxy",
+      "resourceId": "r-neville",
+      "role": "process-engineering",
+      "month": "2026-07",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0039",
+      "scenarioId": "s-baseline",
+      "projectId": "p-oxy",
+      "resourceId": "r-neville",
+      "role": "process-engineering",
+      "month": "2026-08",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0040",
+      "scenarioId": "s-baseline",
+      "projectId": "p-oxy",
+      "resourceId": "r-neville",
+      "role": "process-engineering",
+      "month": "2026-09",
+      "hours": 7,
+      "locked": false
+    },
+    {
+      "id": "a-0041",
+      "scenarioId": "s-baseline",
+      "projectId": "p-oxy",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-06",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0042",
+      "scenarioId": "s-baseline",
+      "projectId": "p-oxy",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-07",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0043",
+      "scenarioId": "s-baseline",
+      "projectId": "p-oxy",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-08",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0044",
+      "scenarioId": "s-baseline",
+      "projectId": "p-oxy",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-09",
+      "hours": 7,
+      "locked": false
+    },
+    {
+      "id": "a-0045",
+      "scenarioId": "s-baseline",
+      "projectId": "p-almansoori",
+      "resourceId": "r-boris",
+      "role": "procurement",
+      "month": "2026-06",
+      "hours": 7,
+      "locked": false
+    },
+    {
+      "id": "a-0046",
+      "scenarioId": "s-baseline",
+      "projectId": "p-almansoori",
+      "resourceId": "r-boris",
+      "role": "procurement",
+      "month": "2026-07",
+      "hours": 7,
+      "locked": false
+    },
+    {
+      "id": "a-0047",
+      "scenarioId": "s-baseline",
+      "projectId": "p-almansoori",
+      "resourceId": "r-neville",
+      "role": "process-engineering",
+      "month": "2026-06",
+      "hours": 33,
+      "locked": false
+    },
+    {
+      "id": "a-0048",
+      "scenarioId": "s-baseline",
+      "projectId": "p-almansoori",
+      "resourceId": "r-neville",
+      "role": "process-engineering",
+      "month": "2026-07",
+      "hours": 7,
+      "locked": false
+    },
+    {
+      "id": "a-0049",
+      "scenarioId": "s-baseline",
+      "projectId": "p-almansoori",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-06",
+      "hours": 67,
+      "locked": false
+    },
+    {
+      "id": "a-0050",
+      "scenarioId": "s-baseline",
+      "projectId": "p-almansoori",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-07",
+      "hours": 33,
+      "locked": false
+    },
+    {
+      "id": "a-0051",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-boris",
+      "role": "procurement",
+      "month": "2026-06",
+      "hours": 53,
+      "locked": false
+    },
+    {
+      "id": "a-0052",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-boris",
+      "role": "procurement",
+      "month": "2026-07",
+      "hours": 67,
+      "locked": false
+    },
+    {
+      "id": "a-0053",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-boris",
+      "role": "procurement",
+      "month": "2026-08",
+      "hours": 67,
+      "locked": false
+    },
+    {
+      "id": "a-0054",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-boris",
+      "role": "procurement",
+      "month": "2026-09",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0055",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-boris",
+      "role": "procurement",
+      "month": "2026-10",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0056",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-boris",
+      "role": "procurement",
+      "month": "2026-11",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0057",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-boris",
+      "role": "procurement",
+      "month": "2026-12",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0058",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-fatemeh",
+      "role": "process-engineering",
+      "month": "2026-06",
+      "hours": 67,
+      "locked": false
+    },
+    {
+      "id": "a-0059",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-fatemeh",
+      "role": "process-engineering",
+      "month": "2026-07",
+      "hours": 67,
+      "locked": false
+    },
+    {
+      "id": "a-0060",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-fatemeh",
+      "role": "process-engineering",
+      "month": "2026-08",
+      "hours": 67,
+      "locked": false
+    },
+    {
+      "id": "a-0061",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-fatemeh",
+      "role": "process-engineering",
+      "month": "2026-09",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0062",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-fatemeh",
+      "role": "process-engineering",
+      "month": "2026-10",
+      "hours": 13,
+      "locked": false
+    },
+    {
+      "id": "a-0063",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-fatemeh",
+      "role": "process-engineering",
+      "month": "2026-11",
+      "hours": 7,
+      "locked": false
+    },
+    {
+      "id": "a-0064",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-fatemeh",
+      "role": "process-engineering",
+      "month": "2026-12",
+      "hours": 20,
+      "locked": false
+    },
+    {
+      "id": "a-0065",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-william",
+      "role": "process-engineering",
+      "month": "2026-06",
+      "hours": 67,
+      "locked": false
+    },
+    {
+      "id": "a-0066",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-william",
+      "role": "process-engineering",
+      "month": "2026-07",
+      "hours": 67,
+      "locked": false
+    },
+    {
+      "id": "a-0067",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-william",
+      "role": "process-engineering",
+      "month": "2026-08",
+      "hours": 67,
+      "locked": false
+    },
+    {
+      "id": "a-0068",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-william",
+      "role": "process-engineering",
+      "month": "2026-09",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0069",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-william",
+      "role": "process-engineering",
+      "month": "2026-10",
+      "hours": 13,
+      "locked": false
+    },
+    {
+      "id": "a-0070",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-william",
+      "role": "process-engineering",
+      "month": "2026-11",
+      "hours": 7,
+      "locked": false
+    },
+    {
+      "id": "a-0071",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-william",
+      "role": "process-engineering",
+      "month": "2026-12",
+      "hours": 20,
+      "locked": false
+    },
+    {
+      "id": "a-0072",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-ajitha",
+      "role": "drafting",
+      "month": "2026-06",
+      "hours": 93,
+      "locked": false
+    },
+    {
+      "id": "a-0073",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-ajitha",
+      "role": "drafting",
+      "month": "2026-07",
+      "hours": 93,
+      "locked": false
+    },
+    {
+      "id": "a-0074",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-ajitha",
+      "role": "drafting",
+      "month": "2026-08",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0075",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-ajitha",
+      "role": "drafting",
+      "month": "2026-09",
+      "hours": 13,
+      "locked": false
+    },
+    {
+      "id": "a-0076",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-anwar",
+      "role": "mechanical-engineering",
+      "month": "2026-06",
+      "hours": 93,
+      "locked": false
+    },
+    {
+      "id": "a-0077",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-anwar",
+      "role": "mechanical-engineering",
+      "month": "2026-07",
+      "hours": 93,
+      "locked": false
+    },
+    {
+      "id": "a-0078",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-anwar",
+      "role": "mechanical-engineering",
+      "month": "2026-08",
+      "hours": 67,
+      "locked": false
+    },
+    {
+      "id": "a-0079",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-anwar",
+      "role": "mechanical-engineering",
+      "month": "2026-09",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0080",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-anwar",
+      "role": "mechanical-engineering",
+      "month": "2026-10",
+      "hours": 20,
+      "locked": false
+    },
+    {
+      "id": "a-0081",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-anwar",
+      "role": "mechanical-engineering",
+      "month": "2026-11",
+      "hours": 20,
+      "locked": false
+    },
+    {
+      "id": "a-0082",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-anwar",
+      "role": "mechanical-engineering",
+      "month": "2026-12",
+      "hours": 20,
+      "locked": false
+    },
+    {
+      "id": "a-0083",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-06",
+      "hours": 53,
+      "locked": false
+    },
+    {
+      "id": "a-0084",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-07",
+      "hours": 53,
+      "locked": false
+    },
+    {
+      "id": "a-0085",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-08",
+      "hours": 53,
+      "locked": false
+    },
+    {
+      "id": "a-0086",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-09",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0087",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-10",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0088",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-11",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0089",
+      "scenarioId": "s-baseline",
+      "projectId": "p-taqa",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-12",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0090",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-maria",
+      "role": "project-management",
+      "month": "2026-06",
+      "hours": 80,
+      "locked": false
+    },
+    {
+      "id": "a-0091",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-maria",
+      "role": "project-management",
+      "month": "2026-07",
+      "hours": 80,
+      "locked": false
+    },
+    {
+      "id": "a-0092",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-maria",
+      "role": "project-management",
+      "month": "2026-08",
+      "hours": 80,
+      "locked": false
+    },
+    {
+      "id": "a-0093",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-maria",
+      "role": "project-management",
+      "month": "2026-09",
+      "hours": 80,
+      "locked": false
+    },
+    {
+      "id": "a-0094",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-maria",
+      "role": "project-management",
+      "month": "2026-10",
+      "hours": 80,
+      "locked": false
+    },
+    {
+      "id": "a-0095",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-maria",
+      "role": "project-management",
+      "month": "2026-11",
+      "hours": 80,
+      "locked": false
+    },
+    {
+      "id": "a-0096",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-maria",
+      "role": "project-management",
+      "month": "2026-12",
+      "hours": 80,
+      "locked": false
+    },
+    {
+      "id": "a-0097",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-jacobo",
+      "role": "project-management",
+      "month": "2026-06",
+      "hours": 133,
+      "locked": false
+    },
+    {
+      "id": "a-0098",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-jacobo",
+      "role": "project-management",
+      "month": "2026-07",
+      "hours": 133,
+      "locked": false
+    },
+    {
+      "id": "a-0099",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-jacobo",
+      "role": "project-management",
+      "month": "2026-08",
+      "hours": 133,
+      "locked": false
+    },
+    {
+      "id": "a-0100",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-jacobo",
+      "role": "project-management",
+      "month": "2026-09",
+      "hours": 133,
+      "locked": false
+    },
+    {
+      "id": "a-0101",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-jacobo",
+      "role": "project-management",
+      "month": "2026-10",
+      "hours": 133,
+      "locked": false
+    },
+    {
+      "id": "a-0102",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-jacobo",
+      "role": "project-management",
+      "month": "2026-11",
+      "hours": 133,
+      "locked": false
+    },
+    {
+      "id": "a-0103",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-jacobo",
+      "role": "project-management",
+      "month": "2026-12",
+      "hours": 133,
+      "locked": false
+    },
+    {
+      "id": "a-0104",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-boris",
+      "role": "procurement",
+      "month": "2026-06",
+      "hours": 13,
+      "locked": false
+    },
+    {
+      "id": "a-0105",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-boris",
+      "role": "procurement",
+      "month": "2026-07",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0106",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-boris",
+      "role": "procurement",
+      "month": "2026-08",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0107",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-boris",
+      "role": "procurement",
+      "month": "2026-09",
+      "hours": 53,
+      "locked": false
+    },
+    {
+      "id": "a-0108",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-boris",
+      "role": "procurement",
+      "month": "2026-10",
+      "hours": 53,
+      "locked": false
+    },
+    {
+      "id": "a-0109",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-boris",
+      "role": "procurement",
+      "month": "2026-11",
+      "hours": 53,
+      "locked": false
+    },
+    {
+      "id": "a-0110",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-boris",
+      "role": "procurement",
+      "month": "2026-12",
+      "hours": 53,
+      "locked": false
+    },
+    {
+      "id": "a-0111",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-fatemeh",
+      "role": "process-engineering",
+      "month": "2026-06",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0112",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-fatemeh",
+      "role": "process-engineering",
+      "month": "2026-07",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0113",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-fatemeh",
+      "role": "process-engineering",
+      "month": "2026-08",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0114",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-fatemeh",
+      "role": "process-engineering",
+      "month": "2026-09",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0115",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-fatemeh",
+      "role": "process-engineering",
+      "month": "2026-10",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0116",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-fatemeh",
+      "role": "process-engineering",
+      "month": "2026-11",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0117",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-fatemeh",
+      "role": "process-engineering",
+      "month": "2026-12",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0118",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-william",
+      "role": "process-engineering",
+      "month": "2026-06",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0119",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-william",
+      "role": "process-engineering",
+      "month": "2026-07",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0120",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-william",
+      "role": "process-engineering",
+      "month": "2026-08",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0121",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-william",
+      "role": "process-engineering",
+      "month": "2026-09",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0122",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-william",
+      "role": "process-engineering",
+      "month": "2026-10",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0123",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-william",
+      "role": "process-engineering",
+      "month": "2026-11",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0124",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-william",
+      "role": "process-engineering",
+      "month": "2026-12",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0125",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-ajitha",
+      "role": "drafting",
+      "month": "2026-06",
+      "hours": 13,
+      "locked": false
+    },
+    {
+      "id": "a-0126",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-ajitha",
+      "role": "drafting",
+      "month": "2026-07",
+      "hours": 13,
+      "locked": false
+    },
+    {
+      "id": "a-0127",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-ajitha",
+      "role": "drafting",
+      "month": "2026-08",
+      "hours": 13,
+      "locked": false
+    },
+    {
+      "id": "a-0128",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-ajitha",
+      "role": "drafting",
+      "month": "2026-09",
+      "hours": 13,
+      "locked": false
+    },
+    {
+      "id": "a-0129",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-ajitha",
+      "role": "drafting",
+      "month": "2026-10",
+      "hours": 13,
+      "locked": false
+    },
+    {
+      "id": "a-0130",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-ajitha",
+      "role": "drafting",
+      "month": "2026-11",
+      "hours": 13,
+      "locked": false
+    },
+    {
+      "id": "a-0131",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-ajitha",
+      "role": "drafting",
+      "month": "2026-12",
+      "hours": 13,
+      "locked": false
+    },
+    {
+      "id": "a-0132",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-06",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0133",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-07",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0134",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-08",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0135",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-09",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0136",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-10",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0137",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-11",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0138",
+      "scenarioId": "s-baseline",
+      "projectId": "p-cancun",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-12",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0139",
+      "scenarioId": "s-baseline",
+      "projectId": "p-sarat",
+      "resourceId": "r-boris",
+      "role": "procurement",
+      "month": "2026-06",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0140",
+      "scenarioId": "s-baseline",
+      "projectId": "p-sarat",
+      "resourceId": "r-boris",
+      "role": "procurement",
+      "month": "2026-07",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0141",
+      "scenarioId": "s-baseline",
+      "projectId": "p-sarat",
+      "resourceId": "r-boris",
+      "role": "procurement",
+      "month": "2026-08",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0142",
+      "scenarioId": "s-baseline",
+      "projectId": "p-sarat",
+      "resourceId": "r-boris",
+      "role": "procurement",
+      "month": "2026-09",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0143",
+      "scenarioId": "s-baseline",
+      "projectId": "p-sarat",
+      "resourceId": "r-fatemeh",
+      "role": "process-engineering",
+      "month": "2026-06",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0144",
+      "scenarioId": "s-baseline",
+      "projectId": "p-sarat",
+      "resourceId": "r-fatemeh",
+      "role": "process-engineering",
+      "month": "2026-07",
+      "hours": 53,
+      "locked": false
+    },
+    {
+      "id": "a-0145",
+      "scenarioId": "s-baseline",
+      "projectId": "p-sarat",
+      "resourceId": "r-fatemeh",
+      "role": "process-engineering",
+      "month": "2026-08",
+      "hours": 53,
+      "locked": false
+    },
+    {
+      "id": "a-0146",
+      "scenarioId": "s-baseline",
+      "projectId": "p-sarat",
+      "resourceId": "r-fatemeh",
+      "role": "process-engineering",
+      "month": "2026-09",
+      "hours": 53,
+      "locked": false
+    },
+    {
+      "id": "a-0147",
+      "scenarioId": "s-baseline",
+      "projectId": "p-sarat",
+      "resourceId": "r-william",
+      "role": "process-engineering",
+      "month": "2026-06",
+      "hours": 40,
+      "locked": false
+    },
+    {
+      "id": "a-0148",
+      "scenarioId": "s-baseline",
+      "projectId": "p-sarat",
+      "resourceId": "r-william",
+      "role": "process-engineering",
+      "month": "2026-07",
+      "hours": 53,
+      "locked": false
+    },
+    {
+      "id": "a-0149",
+      "scenarioId": "s-baseline",
+      "projectId": "p-sarat",
+      "resourceId": "r-william",
+      "role": "process-engineering",
+      "month": "2026-08",
+      "hours": 53,
+      "locked": false
+    },
+    {
+      "id": "a-0150",
+      "scenarioId": "s-baseline",
+      "projectId": "p-sarat",
+      "resourceId": "r-william",
+      "role": "process-engineering",
+      "month": "2026-09",
+      "hours": 53,
+      "locked": false
+    },
+    {
+      "id": "a-0151",
+      "scenarioId": "s-baseline",
+      "projectId": "p-sarat",
+      "resourceId": "r-neville",
+      "role": "process-engineering",
+      "month": "2026-06",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0152",
+      "scenarioId": "s-baseline",
+      "projectId": "p-sarat",
+      "resourceId": "r-neville",
+      "role": "process-engineering",
+      "month": "2026-07",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0153",
+      "scenarioId": "s-baseline",
+      "projectId": "p-sarat",
+      "resourceId": "r-neville",
+      "role": "process-engineering",
+      "month": "2026-08",
+      "hours": 13,
+      "locked": false
+    },
+    {
+      "id": "a-0154",
+      "scenarioId": "s-baseline",
+      "projectId": "p-sarat",
+      "resourceId": "r-neville",
+      "role": "process-engineering",
+      "month": "2026-09",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0155",
+      "scenarioId": "s-baseline",
+      "projectId": "p-sarat",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-06",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0156",
+      "scenarioId": "s-baseline",
+      "projectId": "p-sarat",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-07",
+      "hours": 27,
+      "locked": false
+    },
+    {
+      "id": "a-0157",
+      "scenarioId": "s-baseline",
+      "projectId": "p-sarat",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-08",
+      "hours": 13,
+      "locked": false
+    },
+    {
+      "id": "a-0158",
+      "scenarioId": "s-baseline",
+      "projectId": "p-sarat",
+      "resourceId": "r-onur",
+      "role": "process-engineering",
+      "month": "2026-09",
+      "hours": 27,
+      "locked": false
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "s-baseline",
+      "name": "Baseline (Spreadsheet)",
+      "description": "Matches v1 spreadsheet: 1598 h/yr FT, 1244 h/yr 4-day. Fixed leave, no public holidays.",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "assumptions": {
+        "fullTimeHoursPerWeek": 40,
+        "defaultLeaveDaysPerYear": 25,
+        "leaveModel": "fixed-days",
+        "publicHolidayDaysPerYear": 0,
+        "adminManagementAllowancePercent": 15,
+        "defaultMaxUtilisationPercent": 100
+      }
+    },
+    {
+      "id": "s-conservative",
+      "name": "Conservative (incl. Public Holidays)",
+      "description": "Adds 7 public holidays pro-rated: ~1550 h/yr, ~129 h/mo. More conservative planning basis.",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "basedOnScenarioId": "s-baseline",
+      "assumptions": {
+        "fullTimeHoursPerWeek": 40,
+        "defaultLeaveDaysPerYear": 25,
+        "leaveModel": "pro-rated",
+        "publicHolidayDaysPerYear": 7,
+        "adminManagementAllowancePercent": 15,
+        "defaultMaxUtilisationPercent": 100
+      }
+    },
+    {
+      "id": "s-lean",
+      "name": "Lean (10% Admin)",
+      "description": "Reduces admin/management allowance to 10% — team running lean on overhead.",
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "basedOnScenarioId": "s-baseline",
+      "assumptions": {
+        "fullTimeHoursPerWeek": 40,
+        "defaultLeaveDaysPerYear": 25,
+        "leaveModel": "fixed-days",
+        "publicHolidayDaysPerYear": 0,
+        "adminManagementAllowancePercent": 10,
+        "defaultMaxUtilisationPercent": 100
+      }
+    }
+  ],
+  "lastModified": "2026-06-03T11:57:12.445Z"
+}

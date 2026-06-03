@@ -5,9 +5,11 @@ import { LocalStoragePlannerRepository } from '../repositories/LocalStoragePlann
 import { ApiPlannerRepository } from '../repositories/ApiPlannerRepository'
 
 function createRepository(): PlannerRepository {
-  const mode = import.meta.env['VITE_STORAGE_MODE'] ?? 'local'
+  const mode    = import.meta.env['VITE_STORAGE_MODE'] ?? 'local'
   const apiBase = import.meta.env['VITE_API_BASE_URL'] ?? ''
-  if (mode === 'api' && apiBase) {
+  // api mode: use ApiPlannerRepository regardless of whether baseUrl is set.
+  // Empty baseUrl → relative URLs (works when served by the same Express process).
+  if (mode === 'api') {
     return new ApiPlannerRepository(apiBase)
   }
   return new LocalStoragePlannerRepository()

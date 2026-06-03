@@ -9,9 +9,14 @@ build/
 out/
 
 # Environment
-.env
 .env.local
 .env.*.local
+
+# Build outputs — included on server branch so the app runs without npm run build
+# dist/
+
+# Data — plan.json is the live data file; plan.seed.json is the reset backup
+# data/plan.json is committed on the server branch
 
 # Logs
 *.log

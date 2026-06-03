@@ -1,57 +1,44 @@
 import type { PlannerRepository } from './PlannerRepository'
 import type { Resource, Project, Allocation, Scenario } from '../types'
 
+/**
+ * Repository that talks to the Express server (server/index.js).
+ * When baseUrl is empty, uses relative URLs — works when the React app
+ * is served by the same Express process.
+ */
 export class ApiPlannerRepository implements PlannerRepository {
-  private baseUrl: string
+  private base: string
 
   constructor(baseUrl: string) {
-    this.baseUrl = baseUrl.replace(/\/$/, '')
+    this.base = baseUrl.replace(/\/$/, '')
   }
 
   private async get<T>(path: string): Promise<T> {
-    const res = await fetch(`${this.baseUrl}${path}`)
-    if (!res.ok) throw new Error(`GET ${path} failed: ${res.status}`)
+    const url = this.base ? `${this.base}${path}` : path
+    const res = await fetch(url)
+    if (!res.ok) throw new Error(`GET ${path} → ${res.status} ${res.statusText}`)
     return res.json() as Promise<T>
   }
 
   private async put<T>(path: string, body: T): Promise<void> {
-    const res = await fetch(`${this.baseUrl}${path}`, {
+    const url = this.base ? `${this.base}${path}` : path
+    const res = await fetch(url, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     })
-    if (!res.ok) throw new Error(`PUT ${path} failed: ${res.status}`)
+    if (!res.ok) throw new Error(`PUT ${path} → ${res.status} ${res.statusText}`)
   }
 
-  loadResources(): Promise<Resource[]> {
-    return this.get<Resource[]>('/api/resources')
-  }
+  loadResources(): Promise<Resource[]>     { return this.get('/api/resources') }
+  saveResources(r: Resource[]): Promise<void> { return this.put('/api/resources', r) }
 
-  saveResources(resources: Resource[]): Promise<void> {
-    return this.put('/api/resources', resources)
-  }
+  loadProjects(): Promise<Project[]>       { return this.get('/api/projects') }
+  saveProjects(p: Project[]): Promise<void>  { return this.put('/api/projects', p) }
 
-  loadProjects(): Promise<Project[]> {
-    return this.get<Project[]>('/api/projects')
-  }
+  loadAllocations(): Promise<Allocation[]>     { return this.get('/api/allocations') }
+  saveAllocations(a: Allocation[]): Promise<void> { return this.put('/api/allocations', a) }
 
-  saveProjects(projects: Project[]): Promise<void> {
-    return this.put('/api/projects', projects)
-  }
-
-  loadAllocations(): Promise<Allocation[]> {
-    return this.get<Allocation[]>('/api/allocations')
-  }
-
-  saveAllocations(allocations: Allocation[]): Promise<void> {
-    return this.put('/api/allocations', allocations)
-  }
-
-  loadScenarios(): Promise<Scenario[]> {
-    return this.get<Scenario[]>('/api/scenarios')
-  }
-
-  saveScenarios(scenarios: Scenario[]): Promise<void> {
-    return this.put('/api/scenarios', scenarios)
-  }
+  loadScenarios(): Promise<Scenario[]>     { return this.get('/api/scenarios') }
+  saveScenarios(s: Scenario[]): Promise<void>  { return this.put('/api/scenarios', s) }
 }
