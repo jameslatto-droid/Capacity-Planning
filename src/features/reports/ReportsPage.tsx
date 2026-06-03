@@ -9,13 +9,13 @@ import { calculatePersonUtilisation, calculateRoleUtilisation } from '../../doma
 import { exportCsv, exportJson } from '../../utils/export'
 import { ROLE_LABELS, ALL_ROLES } from '../../types'
 
-const MONTHS = generateMonthRange('2025-01', '2025-12')
+const MONTHS = generateMonthRange('2026-01', '2026-12')
 
 export function ReportsPage() {
   const { resources, projects, allocations, scenarios, activeScenarioId } = usePlannerStore()
   const [scenarioId, setScenarioId] = useState(activeScenarioId)
-  const [startMonth, setStartMonth] = useState('2025-04')
-  const [endMonth, setEndMonth] = useState('2025-09')
+  const [startMonth, setStartMonth] = useState('2026-06')
+  const [endMonth, setEndMonth] = useState('2026-12')
   const [brandFilter, setBrandFilter] = useState<'DCT' | 'PLK' | 'both'>('both')
   const [activeReport, setActiveReport] = useState<'person' | 'role' | 'brand' | 'project' | 'overload'>('person')
 

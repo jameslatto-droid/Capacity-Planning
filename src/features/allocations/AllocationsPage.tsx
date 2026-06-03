@@ -7,14 +7,14 @@ import { AllocationMatrixByPerson } from './AllocationMatrixByPerson'
 
 type ViewMode = 'person' | 'project' | 'role'
 
-const MONTHS = generateMonthRange('2025-01', '2025-12')
+const MONTHS = generateMonthRange('2026-01', '2026-12')
 
 export function AllocationsPage() {
   const { scenarios, activeScenarioId } = usePlannerStore()
   const [scenarioId, setScenarioId] = useState(activeScenarioId)
   const [viewMode, setViewMode] = useState<ViewMode>('person')
-  const [startMonth, setStartMonth] = useState('2025-04')
-  const [endMonth, setEndMonth] = useState('2025-09')
+  const [startMonth, setStartMonth] = useState('2026-06')
+  const [endMonth, setEndMonth] = useState('2026-12')
 
   const scenarioOptions = scenarios.map((s) => ({ value: s.id, label: s.name }))
   const monthOptions = MONTHS.map((m) => ({ value: m, label: formatMonth(m) }))

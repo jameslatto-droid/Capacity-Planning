@@ -5,12 +5,31 @@ import { seedProjects } from '../data/seed/projects'
 import { seedAllocations } from '../data/seed/allocations'
 import { seedScenarios } from '../data/seed/scenarios'
 
+// Bump this when seed data changes to force a reload of fresh data in the browser.
+const SEED_VERSION = '2'
+
 const KEYS = {
+  version: 'erp:seed-version',
   resources: 'erp:resources',
   projects: 'erp:projects',
   allocations: 'erp:allocations',
   scenarios: 'erp:scenarios',
 } as const
+
+function clearAll(): void {
+  localStorage.removeItem(KEYS.resources)
+  localStorage.removeItem(KEYS.projects)
+  localStorage.removeItem(KEYS.allocations)
+  localStorage.removeItem(KEYS.scenarios)
+}
+
+function migrateIfNeeded(): void {
+  const stored = localStorage.getItem(KEYS.version)
+  if (stored !== SEED_VERSION) {
+    clearAll()
+    localStorage.setItem(KEYS.version, SEED_VERSION)
+  }
+}
 
 function readKey<T>(key: string, fallback: T): T {
   try {
@@ -26,6 +45,10 @@ function writeKey<T>(key: string, value: T): void {
 }
 
 export class LocalStoragePlannerRepository implements PlannerRepository {
+  constructor() {
+    migrateIfNeeded()
+  }
+
   loadResources(): Promise<Resource[]> {
     return Promise.resolve(readKey<Resource[]>(KEYS.resources, seedResources))
   }
@@ -63,10 +86,8 @@ export class LocalStoragePlannerRepository implements PlannerRepository {
   }
 
   resetToSeedData(): Promise<void> {
-    localStorage.removeItem(KEYS.resources)
-    localStorage.removeItem(KEYS.projects)
-    localStorage.removeItem(KEYS.allocations)
-    localStorage.removeItem(KEYS.scenarios)
+    clearAll()
+    localStorage.setItem(KEYS.version, SEED_VERSION)
     return Promise.resolve()
   }
 }

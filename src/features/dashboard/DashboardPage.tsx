@@ -14,14 +14,14 @@ import { CapacityDemandChart } from './CapacityDemandChart'
 import type { FrontendBrand, ResourceRole } from '../../types'
 import { ALL_ROLES, ROLE_LABELS } from '../../types'
 
-const MONTHS = generateMonthRange('2025-01', '2025-12')
+const MONTHS = generateMonthRange('2026-01', '2026-12')
 
 export function DashboardPage() {
   const { resources, projects, allocations, scenarios, activeScenarioId } = usePlannerStore()
 
   const [scenarioId, setScenarioId] = useState(activeScenarioId)
-  const [startMonth, setStartMonth] = useState('2025-04')
-  const [endMonth, setEndMonth] = useState('2025-09')
+  const [startMonth, setStartMonth] = useState('2026-06')
+  const [endMonth, setEndMonth] = useState('2026-12')
   const [brandFilter, setBrandFilter] = useState<'DCT' | 'PLK' | 'both'>('both')
   const [roleFilter, setRoleFilter] = useState<ResourceRole | 'all'>('all')
   const [statusFilter, setStatusFilter] = useState<string>('all')
