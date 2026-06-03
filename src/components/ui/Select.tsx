@@ -5,24 +5,26 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   options: { value: string; label: string }[]
 }
 
-export function Select({ label, options, className = '', ...props }: SelectProps) {
+export function Select({ label, options, className = '', style: extStyle, ...props }: SelectProps) {
   return (
     <label className="flex flex-col gap-1.5">
       {label && (
-        <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-600">
+        <span className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-faint)' }}>
           {label}
         </span>
       )}
       <select
         {...props}
-        className={`rounded-lg px-3 py-2 text-sm text-slate-300 transition-all duration-150 appearance-none ${className}`}
+        className={`rounded-lg px-3 py-2 text-sm transition-all appearance-none ${className}`}
         style={{
-          background: 'rgba(255,255,255,0.04)',
-          border: '1px solid rgba(255,255,255,0.08)',
+          background: 'var(--input-bg)',
+          border: '1px solid var(--border)',
+          color: 'var(--text)',
+          ...extStyle,
         }}
       >
         {options.map((o) => (
-          <option key={o.value} value={o.value} style={{ background: '#0e0e1a' }}>
+          <option key={o.value} value={o.value} style={{ background: 'var(--surface)' }}>
             {o.label}
           </option>
         ))}

@@ -12,8 +12,8 @@ interface Props {
   viewMode: 'person' | 'project' | 'role'
 }
 
-const ROW = { borderBottom: '1px solid rgba(255,255,255,0.03)' }
-const HEAD = { borderBottom: '1px solid rgba(255,255,255,0.06)' }
+const ROW = { borderBottom: '1px solid var(--row-divider)' }
+const HEAD = { borderBottom: '1px solid var(--border)' }
 
 export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, viewMode }: Props) {
   const { resources, projects, allocations, scenarios } = usePlannerStore()
@@ -26,10 +26,11 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
     [allocations, scenarioId, months]
   )
 
-  if (!assumptions) return <div className="text-slate-600">No scenario found.</div>
+  if (!assumptions) return <div style={{ color: 'var(--text-faint)' }}>No scenario found.</div>
 
-  const thCls = 'text-right pb-3 text-[10px] uppercase tracking-widest font-semibold text-slate-600 whitespace-nowrap px-2'
-  const thLeft = 'text-left pb-3 text-[10px] uppercase tracking-widest font-semibold text-slate-600'
+  const thCls = 'text-right pb-3 text-[10px] uppercase tracking-widest font-semibold whitespace-nowrap px-2'
+  const thLeft = 'text-left pb-3 text-[10px] uppercase tracking-widest font-semibold'
+  const thStyle = { color: 'var(--text-faint)' }
 
   if (viewMode === 'person') {
     return (
@@ -37,8 +38,8 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
         <table className="text-xs w-full">
           <thead>
             <tr style={HEAD}>
-              <th className={thLeft}>Person / Project</th>
-              {months.map((m) => <th key={m} className={thCls}>{formatMonth(m)}</th>)}
+              <th className={thLeft} style={thStyle}>Person / Project</th>
+              {months.map((m) => <th key={m} className={thCls} style={thStyle}>{formatMonth(m)}</th>)}
             </tr>
           </thead>
           <tbody>
@@ -47,8 +48,8 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
               const personAllocs = filteredAllocations.filter((a) => a.resourceId === r.id)
               const projectIds = [...new Set(personAllocs.map((a) => a.projectId))]
               return [
-                <tr key={`${r.id}-cap`} style={{ ...ROW, background: 'rgba(139,92,246,0.04)' }}>
-                  <td className="py-2.5 font-semibold text-violet-300">{r.displayName}</td>
+                <tr key={`${r.id}-cap`} style={{ ...ROW, background: 'rgba(124,58,237,0.06)' }}>
+                  <td className="py-2.5 font-semibold text-violet-300" style={{ color: 'var(--text)' }}>{r.displayName}</td>
                   {months.map((m) => {
                     const allocated = personAllocs.filter((a) => a.month === m).reduce((s, a) => s + a.hours, 0)
                     const util = allocated / capacity
@@ -68,10 +69,10 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
                   const proj = projects.find((p) => p.id === pid)
                   return (
                     <tr key={`${r.id}-${pid}`} style={ROW}>
-                      <td className="py-1.5 pl-6 text-slate-600">{proj?.code} — {proj?.name}</td>
+                      <td className="py-1.5 pl-6" style={{ color: 'var(--text-faint)' }}>{proj?.code} — {proj?.name}</td>
                       {months.map((m) => {
                         const hrs = personAllocs.filter((a) => a.projectId === pid && a.month === m).reduce((s, a) => s + a.hours, 0)
-                        return <td key={m} className="px-2 py-1.5 text-right tabular text-slate-500">{hrs > 0 ? `${hrs}h` : <span className="text-slate-800">—</span>}</td>
+                        return <td key={m} className="px-2 py-1.5 text-right tabular" style={{ color: 'var(--text-muted)' }}>{hrs > 0 ? `${hrs}h` : <span style={{ color: 'var(--text-faint)' }}>—</span>}</td>
                       })}
                     </tr>
                   )
@@ -90,8 +91,8 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
         <table className="text-xs w-full">
           <thead>
             <tr style={HEAD}>
-              <th className={thLeft}>Project / Person</th>
-              {months.map((m) => <th key={m} className={thCls}>{formatMonth(m)}</th>)}
+              <th className={thLeft} style={thStyle}>Project / Person</th>
+              {months.map((m) => <th key={m} className={thCls} style={thStyle}>{formatMonth(m)}</th>)}
             </tr>
           </thead>
           <tbody>
@@ -104,17 +105,17 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
                   <td className="py-2.5 font-semibold text-emerald-400">{proj.code} — {proj.name}</td>
                   {months.map((m) => {
                     const hrs = projAllocs.filter((a) => a.month === m).reduce((s, a) => s + a.hours, 0)
-                    return <td key={m} className="px-2 py-2.5 text-right tabular font-semibold text-emerald-400/70">{hrs > 0 ? `${hrs}h` : <span className="text-slate-800">—</span>}</td>
+                    return <td key={m} className="px-2 py-2.5 text-right tabular font-semibold text-emerald-400/70">{hrs > 0 ? `${hrs}h` : <span style={{ color: 'var(--text-faint)' }}>—</span>}</td>
                   })}
                 </tr>,
                 ...resourceIds.map((rid) => {
                   const res = resources.find((r) => r.id === rid)
                   return (
                     <tr key={`${proj.id}-${rid}`} style={ROW}>
-                      <td className="py-1.5 pl-6 text-slate-600">{res?.displayName ?? rid}</td>
+                      <td className="py-1.5 pl-6" style={{ color: 'var(--text-faint)' }}>{res?.displayName ?? rid}</td>
                       {months.map((m) => {
                         const hrs = projAllocs.filter((a) => a.resourceId === rid && a.month === m).reduce((s, a) => s + a.hours, 0)
-                        return <td key={m} className="px-2 py-1.5 text-right tabular text-slate-500">{hrs > 0 ? `${hrs}h` : <span className="text-slate-800">—</span>}</td>
+                        return <td key={m} className="px-2 py-1.5 text-right tabular" style={{ color: 'var(--text-muted)' }}>{hrs > 0 ? `${hrs}h` : <span style={{ color: 'var(--text-faint)' }}>—</span>}</td>
                       })}
                     </tr>
                   )
@@ -134,8 +135,8 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
       <table className="text-xs w-full">
         <thead>
           <tr style={HEAD}>
-            <th className={thLeft}>Role</th>
-            {months.map((m) => <th key={m} className={thCls}>{formatMonth(m)}</th>)}
+            <th className={thLeft} style={thStyle}>Role</th>
+            {months.map((m) => <th key={m} className={thCls} style={thStyle}>{formatMonth(m)}</th>)}
           </tr>
         </thead>
         <tbody>
@@ -145,7 +146,10 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
             if (!roleAllocs.length && !roleResources.length) return null
             return (
               <tr key={role} style={ROW} className="group">
-                <td className={`py-2.5 font-medium ${role === 'quality' ? 'text-violet-400' : 'text-slate-400'}`}>
+                <td
+                  className={`py-2.5 font-medium${role === 'quality' ? ' text-violet-400' : ''}`}
+                  style={role === 'quality' ? undefined : { color: 'var(--text-muted)' }}
+                >
                   {ROLE_LABELS[role]}
                 </td>
                 {months.map((m) => {
@@ -161,7 +165,7 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
                         >
                           {Math.round(totalAlloc)}h
                         </span>
-                      ) : <span className="text-slate-800">—</span>}
+                      ) : <span style={{ color: 'var(--text-faint)' }}>—</span>}
                     </td>
                   )
                 })}

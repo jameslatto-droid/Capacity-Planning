@@ -50,9 +50,9 @@ export function ResourcesPage() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
             className="w-full max-w-lg rounded-2xl p-6"
-            style={{ background: '#0e0e1a', border: '1px solid rgba(255,255,255,0.08)' }}
+            style={{ background: 'var(--surface)', border: '1px solid var(--border-s)' }}
           >
-            <h2 className="text-base font-semibold text-slate-200 mb-5">
+            <h2 className="text-base font-semibold mb-5" style={{ color: 'var(--text)' }}>
               {editingResource ? 'Edit Resource' : 'Add Resource'}
             </h2>
             <ResourceForm
@@ -66,11 +66,12 @@ export function ResourcesPage() {
 
       <table className="w-full text-sm">
         <thead>
-          <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          <tr style={{ borderBottom: '1px solid var(--border)' }}>
             {['Name', 'Role', 'Type', 'h/wk', 'Days', 'Monthly cap.', 'Active', ''].map((h, i) => (
               <th
                 key={h + i}
-                className={`pb-3 text-[10px] uppercase tracking-widest font-semibold text-slate-600 ${i === 0 ? 'text-left' : i < 7 ? 'text-right' : ''}`}
+                className={`pb-3 text-[10px] uppercase tracking-widest font-semibold ${i === 0 ? 'text-left' : i < 7 ? 'text-right' : ''}`}
+                style={{ color: 'var(--text-faint)' }}
               >
                 {h}
               </th>
@@ -86,25 +87,25 @@ export function ResourcesPage() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03, duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}
+                style={{ borderBottom: '1px solid var(--row-divider)' }}
                 className="group"
               >
-                <td className="py-3 text-slate-300 font-medium">
+                <td className="py-3 font-medium" style={{ color: 'var(--text)' }}>
                   {r.displayName}
-                  {r.notes && <span className="ml-2 text-[11px] text-slate-700">{r.notes}</span>}
+                  {r.notes && <span className="ml-2 text-[11px]" style={{ color: 'var(--text-faint)' }}>{r.notes}</span>}
                   {r.secondaryRoles && r.secondaryRoles.length > 0 && (
-                    <div className="text-[11px] text-slate-700 mt-0.5">
+                    <div className="text-[11px] mt-0.5" style={{ color: 'var(--text-faint)' }}>
                       +{r.secondaryRoles.map((sr) => ROLE_LABELS[sr]).join(', ')}
                     </div>
                   )}
                 </td>
-                <td className="py-3 text-right text-slate-500">{ROLE_LABELS[r.role]}</td>
+                <td className="py-3 text-right" style={{ color: 'var(--text-muted)' }}>{ROLE_LABELS[r.role]}</td>
                 <td className="py-3 text-right">
                   <Badge variant={employmentBadge[r.employmentType] ?? 'default'}>{r.employmentType}</Badge>
                 </td>
-                <td className="py-3 text-right text-slate-500 tabular">{r.contractHoursPerWeek}</td>
-                <td className="py-3 text-right text-slate-500 tabular">{r.workingDaysPerWeek}</td>
-                <td className="py-3 text-right font-semibold text-slate-300 tabular">
+                <td className="py-3 text-right tabular" style={{ color: 'var(--text-muted)' }}>{r.contractHoursPerWeek}</td>
+                <td className="py-3 text-right tabular" style={{ color: 'var(--text-muted)' }}>{r.workingDaysPerWeek}</td>
+                <td className="py-3 text-right font-semibold tabular" style={{ color: 'var(--text)' }}>
                   {capacity !== null ? formatHours(capacity) : '—'}
                 </td>
                 <td className="py-3 text-right">

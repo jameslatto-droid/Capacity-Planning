@@ -4,46 +4,40 @@ interface StatProps {
   label: string
   value: string
   sub?: string
-  accent?: 'default' | 'violet' | 'emerald' | 'amber' | 'red' | 'blue'
-  animateNumber?: boolean
+  accent?: 'default' | 'violet' | 'emerald' | 'amber' | 'red'
 }
 
-const accentLine: Record<string, string> = {
-  default: 'bg-slate-700',
-  violet: 'bg-violet-500',
-  emerald: 'bg-emerald-500',
-  amber: 'bg-amber-500',
-  red: 'bg-red-500',
-  blue: 'bg-blue-500',
+const accentBar: Record<string, string> = {
+  default: 'var(--border-s)',
+  violet: '#7c3aed',
+  emerald: '#059669',
+  amber: '#d97706',
+  red: '#dc2626',
 }
-
-const accentText: Record<string, string> = {
-  default: 'text-slate-300',
-  violet: 'text-violet-300',
-  emerald: 'text-emerald-300',
-  amber: 'text-amber-300',
-  red: 'text-red-300',
-  blue: 'text-blue-300',
+const accentVal: Record<string, string> = {
+  default: 'var(--text)',
+  violet: 'var(--accent-text)',
+  emerald: '#059669',
+  amber: '#d97706',
+  red: '#dc2626',
 }
 
 export function StatCard({ label, value, sub, accent = 'default' }: StatProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       className="flex flex-col gap-1.5"
     >
-      <div className={`w-6 h-px ${accentLine[accent]}`} />
-      <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-600">
+      <div className="w-5 h-0.5 rounded-full" style={{ background: accentBar[accent] }} />
+      <div className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-faint)' }}>
         {label}
       </div>
-      <div className={`text-3xl font-bold tracking-tight tabular ${accentText[accent]}`}>
+      <div className="text-3xl font-bold tracking-tight tabular" style={{ color: accentVal[accent] }}>
         {value}
       </div>
-      {sub && (
-        <div className="text-xs text-slate-600">{sub}</div>
-      )}
+      {sub && <div className="text-xs" style={{ color: 'var(--text-muted)' }}>{sub}</div>}
     </motion.div>
   )
 }

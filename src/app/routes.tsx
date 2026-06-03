@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import { DashboardPage } from '../features/dashboard/DashboardPage'
 import { ResourcesPage } from '../features/resources/ResourcesPage'
 import { ProjectsPage } from '../features/projects/ProjectsPage'
+import { ProjectAllocationEditor } from '../features/projects/ProjectAllocationEditor'
 import { AllocationsPage } from '../features/allocations/AllocationsPage'
 import { ScenariosPage } from '../features/scenarios/ScenariosPage'
 import { OptimisationPage } from '../features/optimisation/OptimisationPage'
@@ -13,6 +14,7 @@ export function AppRoutes() {
       <Route path="/" element={<DashboardPage />} />
       <Route path="/resources" element={<ResourcesPage />} />
       <Route path="/projects" element={<ProjectsPage />} />
+      <Route path="/projects/:projectId/allocations" element={<ProjectAllocationEditor />} />
       <Route path="/allocations" element={<AllocationsPage />} />
       <Route path="/scenarios" element={<ScenariosPage />} />
       <Route path="/optimisation" element={<OptimisationPage />} />

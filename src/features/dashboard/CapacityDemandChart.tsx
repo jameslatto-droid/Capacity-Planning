@@ -25,17 +25,17 @@ function CustomTooltip({ active, payload, label }: {
     <div
       className="rounded-xl px-4 py-3 text-sm"
       style={{
-        background: '#14141f',
+        background: 'var(--surface-2)',
         border: '1px solid rgba(255,255,255,0.1)',
         boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
       }}
     >
-      <div className="text-slate-500 text-xs mb-2">{label}</div>
+      <div className="text-xs mb-2" style={{ color: 'var(--text-muted)' }}>{label}</div>
       {payload.map((p) => (
         <div key={p.name} className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full" style={{ background: p.color }} />
-          <span className="text-slate-400 text-xs">{p.name}</span>
-          <span className="text-slate-200 font-semibold tabular ml-auto pl-4">{p.value}h</span>
+          <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{p.name}</span>
+          <span className="font-semibold tabular ml-auto pl-4" style={{ color: 'var(--text)' }}>{p.value}h</span>
         </div>
       ))}
     </div>

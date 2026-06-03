@@ -23,13 +23,13 @@ type Tab = 'person' | 'role' | 'brand' | 'project' | 'overload'
 function DarkTooltip({ active, payload, label }: { active?: boolean; payload?: { name: string; value: number; color: string }[]; label?: string }) {
   if (!active || !payload?.length) return null
   return (
-    <div className="rounded-xl px-4 py-3 text-xs" style={{ background: '#14141f', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 8px 32px rgba(0,0,0,0.6)' }}>
-      <div className="text-slate-500 mb-2">{label}</div>
+    <div className="rounded-xl px-4 py-3 text-xs" style={{ background: 'var(--surface-2)', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 8px 32px rgba(0,0,0,0.6)' }}>
+      <div className="mb-2" style={{ color: 'var(--text-muted)' }}>{label}</div>
       {payload.map((p) => (
         <div key={p.name} className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full shrink-0" style={{ background: p.color }} />
-          <span className="text-slate-400">{p.name}</span>
-          <span className="text-slate-200 font-semibold tabular ml-auto pl-4">{p.value}h</span>
+          <span style={{ color: 'var(--text-muted)' }}>{p.name}</span>
+          <span className="font-semibold tabular ml-auto pl-4" style={{ color: 'var(--text)' }}>{p.value}h</span>
         </div>
       ))}
     </div>
@@ -168,7 +168,7 @@ export function ReportsPage() {
     { key: 'overload', label: 'Overloads' },
   ]
 
-  if (!assumptions) return <PageLayout title="Reports"><p className="text-slate-600">No scenario.</p></PageLayout>
+  if (!assumptions) return <PageLayout title="Reports"><p style={{ color: 'var(--text-faint)' }}>No scenario.</p></PageLayout>
 
   const chartWrapper = (children: React.ReactNode, title: string) => (
     <motion.div
@@ -176,9 +176,9 @@ export function ReportsPage() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className="rounded-2xl p-6"
-      style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}
+      style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
     >
-      <div className="text-[10px] uppercase tracking-widest text-slate-600 mb-5">{title}</div>
+      <div className="text-[10px] uppercase tracking-widest mb-5" style={{ color: 'var(--text-faint)' }}>{title}</div>
       {children}
     </motion.div>
   )
@@ -213,9 +213,9 @@ export function ReportsPage() {
             onClick={() => setActiveTab(t.key)}
             className="px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-150"
             style={{
-              background: activeTab === t.key ? 'rgba(124,58,237,0.2)' : 'rgba(255,255,255,0.03)',
-              border: activeTab === t.key ? '1px solid rgba(139,92,246,0.4)' : '1px solid rgba(255,255,255,0.06)',
-              color: activeTab === t.key ? '#c4b5fd' : '#475569',
+              background: activeTab === t.key ? 'var(--accent-light)' : 'var(--surface-2)',
+              border: activeTab === t.key ? '1px solid rgba(139,92,246,0.4)' : '1px solid rgba(139,92,246,0.15)',
+              color: activeTab === t.key ? 'var(--accent-text)' : 'var(--text-muted)',
               boxShadow: activeTab === t.key ? '0 0 16px rgba(139,92,246,0.2)' : 'none',
             }}
           >
@@ -277,7 +277,7 @@ export function ReportsPage() {
                     <Cell fill="#7c3aed" style={{ filter: 'drop-shadow(0 0 10px rgba(124,58,237,0.5))' }} />
                     <Cell fill="#2563eb" style={{ filter: 'drop-shadow(0 0 10px rgba(37,99,235,0.4))' }} />
                   </Pie>
-                  <Tooltip formatter={(v: number) => `${v}h`} contentStyle={{ background: '#14141f', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 12 }} labelStyle={{ color: '#94a3b8' }} itemStyle={{ color: '#e2e8f0' }} />
+                  <Tooltip formatter={(v: number) => `${v}h`} contentStyle={{ background: 'var(--surface-2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 12 }} labelStyle={{ color: 'var(--text-muted)' }} itemStyle={{ color: 'var(--text)' }} />
                   <Legend wrapperStyle={{ fontSize: 12, color: '#64748b' }} />
                 </PieChart>
               </ResponsiveContainer>
@@ -339,15 +339,15 @@ export function ReportsPage() {
             'Overloaded People — Heatmap'
           )}
           <div>
-            <div className="text-[10px] uppercase tracking-widest text-slate-600 mb-4">All Overloads</div>
+            <div className="text-[10px] uppercase tracking-widest mb-4" style={{ color: 'var(--text-faint)' }}>All Overloads</div>
             {personResults.filter(({ result }) => result.overloadHours > 0).length === 0 ? (
               <p className="text-sm text-emerald-500/60">No overloads in selected period.</p>
             ) : (
               <table className="w-full text-xs">
                 <thead>
-                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
                     {['Person', 'Month', 'Capacity', 'Allocated', 'Overload', 'Util'].map((h, i) => (
-                      <th key={h} className={`pb-3 text-[10px] uppercase tracking-widest font-semibold text-slate-600 ${i === 0 ? 'text-left' : 'text-right'}`}>{h}</th>
+                      <th key={h} className={`pb-3 text-[10px] uppercase tracking-widest font-semibold ${i === 0 ? 'text-left' : 'text-right'}`} style={{ color: 'var(--text-faint)' }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -356,11 +356,11 @@ export function ReportsPage() {
                     .filter(({ result }) => result.overloadHours > 0)
                     .sort((a, b) => b.result.overloadHours - a.result.overloadHours)
                     .map(({ resource, result }) => (
-                      <tr key={`${resource.id}-${result.month}`} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                        <td className="py-2.5 text-slate-300 font-medium">{resource.displayName}</td>
-                        <td className="py-2.5 text-right text-slate-500">{formatMonth(result.month)}</td>
-                        <td className="py-2.5 text-right tabular text-slate-600">{formatHours(result.capacityHours)}</td>
-                        <td className="py-2.5 text-right tabular text-slate-400">{formatHours(result.allocatedHours)}</td>
+                      <tr key={`${resource.id}-${result.month}`} style={{ borderBottom: '1px solid var(--row-divider)' }}>
+                        <td className="py-2.5 font-medium" style={{ color: 'var(--text)' }}>{resource.displayName}</td>
+                        <td className="py-2.5 text-right" style={{ color: 'var(--text-muted)' }}>{formatMonth(result.month)}</td>
+                        <td className="py-2.5 text-right tabular" style={{ color: 'var(--text-faint)' }}>{formatHours(result.capacityHours)}</td>
+                        <td className="py-2.5 text-right tabular" style={{ color: 'var(--text-muted)' }}>{formatHours(result.allocatedHours)}</td>
                         <td className="py-2.5 text-right tabular font-bold text-red-400" style={{ textShadow: '0 0 10px rgba(239,68,68,0.5)' }}>+{formatHours(result.overloadHours)}</td>
                         <td className="py-2.5 text-right tabular font-semibold text-orange-400">{formatPercent(result.utilisation)}</td>
                       </tr>

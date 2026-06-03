@@ -5,23 +5,25 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string
 }
 
-export function Input({ label, error, className = '', ...props }: InputProps) {
+export function Input({ label, error, className = '', style: extStyle, ...props }: InputProps) {
   return (
     <label className="flex flex-col gap-1.5">
       {label && (
-        <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-600">
+        <span className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-faint)' }}>
           {label}
         </span>
       )}
       <input
         {...props}
-        className={`rounded-lg px-3 py-2 text-sm text-slate-200 transition-all duration-150 ${className}`}
+        className={`rounded-lg px-3 py-2 text-sm transition-all ${className}`}
         style={{
-          background: 'rgba(255,255,255,0.04)',
-          border: `1px solid ${error ? 'rgba(239,68,68,0.5)' : 'rgba(255,255,255,0.08)'}`,
+          background: 'var(--input-bg)',
+          border: `1px solid ${error ? 'rgba(220,38,38,0.5)' : 'var(--border)'}`,
+          color: 'var(--text)',
+          ...extStyle,
         }}
       />
-      {error && <span className="text-xs text-red-400">{error}</span>}
+      {error && <span className="text-xs text-red-500">{error}</span>}
     </label>
   )
 }

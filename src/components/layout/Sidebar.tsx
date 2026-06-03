@@ -1,33 +1,36 @@
 import { NavLink } from 'react-router-dom'
 import { motion } from 'motion/react'
+import { useTheme } from '../../utils/ThemeContext'
 
 const navItems = [
   { to: '/', label: 'Dashboard', icon: '▦' },
-  { to: '/resources', label: 'Resources', icon: '◎' },
+  { to: '/resources', label: 'Team', icon: '◎' },
   { to: '/projects', label: 'Projects', icon: '◈' },
-  { to: '/allocations', label: 'Allocations', icon: '▤' },
+  { to: '/allocations', label: 'Planning', icon: '▤' },
   { to: '/scenarios', label: 'Scenarios', icon: '⊕' },
   { to: '/optimisation', label: 'Optimisation', icon: '◬' },
   { to: '/reports', label: 'Reports', icon: '◻' },
 ]
 
 export function Sidebar() {
+  const { toggle, isDark } = useTheme()
   const appName = import.meta.env['VITE_APP_NAME'] ?? 'Resource Planner'
 
   return (
     <aside
-      className="w-52 min-h-screen flex flex-col"
-      style={{ background: '#06060c', borderRight: '1px solid rgba(255,255,255,0.04)' }}
+      className="w-52 min-h-screen flex flex-col shrink-0"
+      style={{
+        background: 'var(--sidebar-bg)',
+        borderRight: '1px solid var(--sidebar-bdr)',
+      }}
     >
       {/* Logo */}
       <div className="px-5 pt-7 pb-6">
-        <div className="gradient-text text-sm font-semibold tracking-tight leading-snug">
-          {appName}
-        </div>
+        <div className="gradient-text text-sm font-semibold tracking-tight">{appName}</div>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 space-y-0.5">
+      <nav className="flex-1 px-2 space-y-0.5">
         {navItems.map((item, i) => (
           <motion.div
             key={item.to}
@@ -38,25 +41,25 @@ export function Sidebar() {
             <NavLink
               to={item.to}
               end={item.to === '/'}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-150 ${
-                  isActive
-                    ? 'text-violet-300 bg-violet-500/10'
-                    : 'text-slate-500 hover:text-slate-300 hover:bg-white/[0.03]'
-                }`
-              }
-              style={({ isActive }) =>
-                isActive
-                  ? { boxShadow: 'inset 0 0 0 1px rgba(139,92,246,0.2)' }
-                  : {}
-              }
+              style={({ isActive }) => ({
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+                padding: '7px 10px',
+                borderRadius: 8,
+                fontSize: 13,
+                fontWeight: 500,
+                textDecoration: 'none',
+                transition: 'all 0.12s ease',
+                background: isActive ? 'var(--accent-light)' : 'transparent',
+                color: isActive ? 'var(--accent-text)' : 'var(--text-muted)',
+                boxShadow: isActive ? 'inset 0 0 0 1px rgba(124,58,237,0.2)' : 'none',
+              })}
             >
               {({ isActive }) => (
                 <>
-                  <span className={`text-xs ${isActive ? 'text-violet-400' : 'text-slate-600'}`}>
-                    {item.icon}
-                  </span>
-                  <span className="font-medium">{item.label}</span>
+                  <span style={{ fontSize: 11, opacity: isActive ? 1 : 0.5 }}>{item.icon}</span>
+                  {item.label}
                 </>
               )}
             </NavLink>
@@ -64,9 +67,21 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* Footer */}
-      <div className="px-5 py-5">
-        <div className="text-[10px] text-slate-700 font-mono tracking-widest uppercase">v0.1.0</div>
+      {/* Theme toggle + version */}
+      <div className="px-4 py-5 flex items-center justify-between">
+        <span className="text-[10px] font-mono tracking-widest uppercase" style={{ color: 'var(--text-faint)' }}>
+          v0.1
+        </span>
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={toggle}
+          className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+          style={{ background: 'var(--surface-2)', color: 'var(--text-muted)', border: '1px solid var(--border)' }}
+          title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+          <span style={{ fontSize: 13 }}>{isDark ? '☀' : '◑'}</span>
+        </motion.button>
       </div>
     </aside>
   )

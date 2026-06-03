@@ -28,9 +28,9 @@ export function ScenariosPage() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
             className="w-full max-w-lg rounded-2xl p-6"
-            style={{ background: '#0e0e1a', border: '1px solid rgba(255,255,255,0.08)' }}
+            style={{ background: 'var(--surface)', border: '1px solid var(--border-s)' }}
           >
-            <h2 className="text-base font-semibold text-slate-200 mb-5">{editing ? 'Edit Scenario' : 'New Scenario'}</h2>
+            <h2 className="text-base font-semibold mb-5" style={{ color: 'var(--text)' }}>{editing ? 'Edit Scenario' : 'New Scenario'}</h2>
             <ScenarioForm
               initial={editing ?? undefined}
               onSave={(data) => {
@@ -57,8 +57,8 @@ export function ScenariosPage() {
               transition={{ delay: i * 0.05, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="group"
               style={{
-                background: isActive ? 'rgba(139,92,246,0.06)' : 'transparent',
-                border: isActive ? '1px solid rgba(139,92,246,0.2)' : '1px solid rgba(255,255,255,0.04)',
+                background: isActive ? 'rgba(139,92,246,0.06)' : 'var(--surface)',
+                border: isActive ? '1px solid rgba(139,92,246,0.2)' : '1px solid var(--border)',
                 borderRadius: 12,
                 padding: '20px 24px',
                 marginBottom: 8,
@@ -67,13 +67,13 @@ export function ScenariosPage() {
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className={`text-sm font-semibold ${isActive ? 'text-violet-300' : 'text-slate-300'}`}>{s.name}</span>
+                    <span className={`text-sm font-semibold${isActive ? ' text-violet-300' : ''}`} style={isActive ? undefined : { color: 'var(--text)' }}>{s.name}</span>
                     {isActive && (
                       <span className="text-[10px] uppercase tracking-widest font-bold text-violet-400 border border-violet-500/40 px-1.5 py-0.5 rounded"
                         style={{ background: 'rgba(139,92,246,0.15)' }}>Active</span>
                     )}
                   </div>
-                  {s.description && <p className="text-xs text-slate-600 mb-3">{s.description}</p>}
+                  {s.description && <p className="text-xs mb-3" style={{ color: 'var(--text-faint)' }}>{s.description}</p>}
                   <div className="flex flex-wrap gap-3 mt-3">
                     {[
                       ['FT h/wk', `${a.fullTimeHoursPerWeek}h`],
@@ -84,8 +84,8 @@ export function ScenariosPage() {
                       ['Max util', `${a.defaultMaxUtilisationPercent}%`],
                     ].map(([label, val]) => (
                       <div key={label}>
-                        <div className="text-[10px] uppercase tracking-widest text-slate-700">{label}</div>
-                        <div className="text-xs font-semibold tabular text-slate-400 mt-0.5">{val}</div>
+                        <div className="text-[10px] uppercase tracking-widest" style={{ color: 'var(--text-faint)' }}>{label}</div>
+                        <div className="text-xs font-semibold tabular mt-0.5" style={{ color: 'var(--text-muted)' }}>{val}</div>
                       </div>
                     ))}
                   </div>
@@ -133,12 +133,12 @@ function ScenarioForm({ initial, onSave, onCancel }: { initial?: Scenario; onSav
         <Input label="FT hours/week" type="number" value={ftHours} onChange={(e) => setFtHours(e.target.value)} />
         <Input label="Leave days/year" type="number" value={leaveDays} onChange={(e) => setLeaveDays(e.target.value)} />
         <div className="flex flex-col gap-1.5">
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-600">Leave model</span>
+          <span className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-faint)' }}>Leave model</span>
           <select value={leaveModel} onChange={(e) => setLeaveModel(e.target.value as 'fixed-days' | 'pro-rated')}
-            className="rounded-lg px-3 py-2 text-sm text-slate-300"
-            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <option value="fixed-days" style={{ background: '#0e0e1a' }}>Fixed days</option>
-            <option value="pro-rated" style={{ background: '#0e0e1a' }}>Pro-rated</option>
+            className="rounded-lg px-3 py-2 text-sm"
+            style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', color: 'var(--text)' }}>
+            <option value="fixed-days" style={{ background: 'var(--surface)' }}>Fixed days</option>
+            <option value="pro-rated" style={{ background: 'var(--surface)' }}>Pro-rated</option>
           </select>
         </div>
         <Input label="Public holidays/year" type="number" value={pubHols} onChange={(e) => setPubHols(e.target.value)} />
@@ -146,7 +146,7 @@ function ScenarioForm({ initial, onSave, onCancel }: { initial?: Scenario; onSav
         <Input label="Max utilisation %" type="number" value={maxUtil} onChange={(e) => setMaxUtil(e.target.value)} />
       </div>
       {error && <p className="text-xs text-red-400">{error}</p>}
-      <div className="flex justify-end gap-2 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+      <div className="flex justify-end gap-2 pt-3" style={{ borderTop: '1px solid var(--border)' }}>
         <Button variant="ghost" onClick={onCancel}>Cancel</Button>
         <Button variant="primary" onClick={handleSubmit}>Save</Button>
       </div>

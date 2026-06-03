@@ -17,7 +17,7 @@ import {
 import { ROLE_LABELS } from '../../types'
 
 const MONTHS = generateMonthRange('2026-01', '2026-12')
-const ROW = { borderBottom: '1px solid rgba(255,255,255,0.03)' }
+const ROW = { borderBottom: '1px solid var(--row-divider)' }
 
 export function OptimisationPage() {
   const { resources, allocations, scenarios, activeScenarioId } = usePlannerStore()
@@ -58,7 +58,7 @@ export function OptimisationPage() {
     [residualOverload, monthlyFteCapacity]
   )
 
-  if (!assumptions) return <PageLayout title="Optimisation"><p className="text-slate-600">No scenario.</p></PageLayout>
+  if (!assumptions) return <PageLayout title="Optimisation"><p style={{ color: 'var(--text-faint)' }}>No scenario.</p></PageLayout>
 
   return (
     <PageLayout title="Optimisation" subtitle="Recommendations only — no changes are made automatically">
@@ -78,15 +78,15 @@ export function OptimisationPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Overloads */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }}>
-          <div className="text-[10px] uppercase tracking-widest text-slate-600 mb-4">Person-Month Overloads</div>
+          <div className="text-[10px] uppercase tracking-widest mb-4" style={{ color: 'var(--text-faint)' }}>Person-Month Overloads</div>
           {overloads.length === 0 ? (
             <p className="text-sm text-emerald-500/60">No overloads detected.</p>
           ) : (
             <table className="w-full text-xs">
               <thead>
-                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                <tr style={{ borderBottom: '1px solid var(--border)' }}>
                   {['Person', 'Month', 'Overload', 'Util'].map((h, i) => (
-                    <th key={h} className={`pb-3 text-[10px] uppercase tracking-widest font-semibold text-slate-600 ${i === 0 ? 'text-left' : 'text-right'}`}>{h}</th>
+                    <th key={h} className={`pb-3 text-[10px] uppercase tracking-widest font-semibold ${i === 0 ? 'text-left' : 'text-right'}`} style={{ color: 'var(--text-faint)' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -95,8 +95,8 @@ export function OptimisationPage() {
                   const name = resources.find((r) => r.id === o.resourceId)?.displayName ?? o.resourceId
                   return (
                     <tr key={`${o.resourceId}-${o.month}`} style={ROW}>
-                      <td className="py-2.5 text-slate-300 font-medium">{name}</td>
-                      <td className="py-2.5 text-right text-slate-500">{formatMonth(o.month)}</td>
+                      <td className="py-2.5 font-medium" style={{ color: 'var(--text)' }}>{name}</td>
+                      <td className="py-2.5 text-right" style={{ color: 'var(--text-muted)' }}>{formatMonth(o.month)}</td>
                       <td className="py-2.5 text-right font-bold tabular text-red-400" style={{ textShadow: utilisationGlow(o.utilisation) }}>+{formatHours(o.overloadHours)}</td>
                       <td className={`py-2.5 text-right font-semibold tabular ${utilisationTextColor(o.utilisation)}`}>{formatPercent(o.utilisation)}</td>
                     </tr>
@@ -109,16 +109,16 @@ export function OptimisationPage() {
 
         {/* Recommendations */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
-          <div className="text-[10px] uppercase tracking-widest text-slate-600 mb-4">Reallocation Recommendations</div>
+          <div className="text-[10px] uppercase tracking-widest mb-4" style={{ color: 'var(--text-faint)' }}>Reallocation Recommendations</div>
           {recommendations.length === 0 ? (
-            <p className="text-sm text-slate-600">{overloads.length === 0 ? 'No overloads to resolve.' : 'No compatible spare capacity found.'}</p>
+            <p className="text-sm" style={{ color: 'var(--text-faint)' }}>{overloads.length === 0 ? 'No overloads to resolve.' : 'No compatible spare capacity found.'}</p>
           ) : (
             <div className="space-y-2">
               {recommendations.map((r, i) => (
                 <div key={i} className="rounded-xl px-4 py-3 text-xs"
-                  style={{ background: 'rgba(139,92,246,0.07)', border: '1px solid rgba(139,92,246,0.15)' }}>
+                  style={{ background: 'var(--accent-light)', border: '1px solid rgba(124,58,237,0.2)' }}>
                   <div className="font-semibold text-violet-300 mb-0.5 capitalize">{r.type.replace(/-/g, ' ')}</div>
-                  <div className="text-slate-500">{r.description}</div>
+                  <div style={{ color: 'var(--text-muted)' }}>{r.description}</div>
                 </div>
               ))}
             </div>
@@ -127,14 +127,14 @@ export function OptimisationPage() {
 
         {/* Available capacity */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }}>
-          <div className="text-[10px] uppercase tracking-widest text-slate-600 mb-4">Available Capacity</div>
+          <div className="text-[10px] uppercase tracking-widest mb-4" style={{ color: 'var(--text-faint)' }}>Available Capacity</div>
           <table className="w-full text-xs">
             <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                <th className="text-left pb-3 text-[10px] uppercase tracking-widest font-semibold text-slate-600">Person</th>
-                <th className="text-left pb-3 text-[10px] uppercase tracking-widest font-semibold text-slate-600">Role</th>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <th className="text-left pb-3 text-[10px] uppercase tracking-widest font-semibold" style={{ color: 'var(--text-faint)' }}>Person</th>
+                <th className="text-left pb-3 text-[10px] uppercase tracking-widest font-semibold" style={{ color: 'var(--text-faint)' }}>Role</th>
                 {filteredMonths.slice(0, 4).map((m) => (
-                  <th key={m} className="text-right pb-3 text-[10px] uppercase tracking-widest font-semibold text-slate-600">{formatMonth(m)}</th>
+                  <th key={m} className="text-right pb-3 text-[10px] uppercase tracking-widest font-semibold" style={{ color: 'var(--text-faint)' }}>{formatMonth(m)}</th>
                 ))}
               </tr>
             </thead>
@@ -147,11 +147,11 @@ export function OptimisationPage() {
                 if (!monthData.some((d) => d.available > 0)) return null
                 return (
                   <tr key={r.id} style={ROW}>
-                    <td className="py-2.5 text-slate-400 font-medium">{r.displayName}</td>
-                    <td className="py-2.5 text-slate-600">{ROLE_LABELS[r.role]}</td>
+                    <td className="py-2.5 font-medium" style={{ color: 'var(--text-muted)' }}>{r.displayName}</td>
+                    <td className="py-2.5" style={{ color: 'var(--text-faint)' }}>{ROLE_LABELS[r.role]}</td>
                     {monthData.map((d) => (
                       <td key={d.month} className="py-2.5 text-right tabular text-emerald-400/70 font-medium">
-                        {d.available > 0 ? formatHours(d.available) : <span className="text-slate-800">—</span>}
+                        {d.available > 0 ? formatHours(d.available) : <span style={{ color: 'var(--text-faint)' }}>—</span>}
                       </td>
                     ))}
                   </tr>
@@ -163,16 +163,16 @@ export function OptimisationPage() {
 
         {/* Contractor */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-          <div className="text-[10px] uppercase tracking-widest text-slate-600 mb-4">Contractor Requirement</div>
+          <div className="text-[10px] uppercase tracking-widest mb-4" style={{ color: 'var(--text-faint)' }}>Contractor Requirement</div>
           {contractorReqs.length === 0 ? (
             <p className="text-sm text-emerald-500/60">No contractor capacity required.</p>
           ) : (
             contractorReqs.map((req) => (
               <div key={req.month} className="rounded-xl px-4 py-4 text-sm"
-                style={{ background: 'rgba(234,88,12,0.07)', border: '1px solid rgba(234,88,12,0.2)' }}>
-                <div className="text-xs text-slate-500 mb-1">Residual after recommendations</div>
+                style={{ background: 'rgba(217,119,6,0.08)', border: '1px solid rgba(217,119,6,0.2)' }}>
+                <div className="text-xs mb-1" style={{ color: 'var(--text-muted)' }}>Residual after recommendations</div>
                 <div className="text-2xl font-bold tabular text-amber-400">{formatFte(req.contractorFte)} FTE</div>
-                <div className="text-xs text-slate-600 mt-1">{formatHours(req.residualOverloadHours)} / month</div>
+                <div className="text-xs mt-1" style={{ color: 'var(--text-faint)' }}>{formatHours(req.residualOverloadHours)} / month</div>
               </div>
             ))
           )}

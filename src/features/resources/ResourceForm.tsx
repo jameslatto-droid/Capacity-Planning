@@ -59,10 +59,10 @@ export function ResourceForm({ initial, onSave, onCancel }: Props) {
       <Input label="Name" value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
       <Select label="Role" value={role} onChange={(e) => setRole(e.target.value as ResourceRole)} options={roleOptions} />
       <div>
-        <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-600 mb-2">Secondary Roles</div>
+        <div className="text-[10px] font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-faint)' }}>Secondary Roles</div>
         <div className="flex flex-wrap gap-3">
           {ALL_ROLES.filter((r) => r !== role).map((r) => (
-            <label key={r} className="flex items-center gap-1.5 text-xs text-slate-500 cursor-pointer hover:text-slate-300 transition-colors">
+            <label key={r} className="flex items-center gap-1.5 text-xs cursor-pointer transition-colors" style={{ color: 'var(--text-muted)' }}>
               <input type="checkbox" checked={secondaryRoles.includes(r)} onChange={() => toggleSecondaryRole(r)} className="accent-violet-500" />
               {ROLE_LABELS[r]}
             </label>
@@ -74,13 +74,13 @@ export function ResourceForm({ initial, onSave, onCancel }: Props) {
         <Input label="Contract h/week" type="number" value={contractHours} onChange={(e) => setContractHours(e.target.value)} />
         <Input label="Working days/week" type="number" value={workingDays} onChange={(e) => setWorkingDays(e.target.value)} />
       </div>
-      <label className="flex items-center gap-2 text-sm text-slate-500 cursor-pointer">
+      <label className="flex items-center gap-2 text-sm cursor-pointer" style={{ color: 'var(--text-muted)' }}>
         <input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} className="accent-violet-500" />
         Active
       </label>
       <Input label="Notes (optional)" value={notes} onChange={(e) => setNotes(e.target.value)} />
       {error && <p className="text-xs text-red-400">{error}</p>}
-      <div className="flex justify-end gap-2 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+      <div className="flex justify-end gap-2 pt-3" style={{ borderTop: '1px solid var(--border)' }}>
         <Button variant="ghost" onClick={onCancel}>Cancel</Button>
         <Button variant="primary" onClick={handleSubmit}>Save</Button>
       </div>

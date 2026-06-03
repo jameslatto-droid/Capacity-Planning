@@ -34,9 +34,9 @@ export function AllocationsPage() {
               onClick={() => setViewMode(m)}
               className="px-3 py-2 rounded-lg text-xs font-medium capitalize transition-all duration-150"
               style={{
-                background: viewMode === m ? 'rgba(124,58,237,0.2)' : 'rgba(255,255,255,0.04)',
-                border: viewMode === m ? '1px solid rgba(139,92,246,0.4)' : '1px solid rgba(255,255,255,0.08)',
-                color: viewMode === m ? '#c4b5fd' : '#64748b',
+                background: viewMode === m ? 'var(--accent-light)' : 'var(--surface-2)',
+                border: viewMode === m ? '1px solid rgba(139,92,246,0.4)' : '1px solid rgba(139,92,246,0.15)',
+                color: viewMode === m ? 'var(--accent-text)' : 'var(--text-muted)',
                 boxShadow: viewMode === m ? '0 0 12px rgba(139,92,246,0.2)' : 'none',
               }}
             >

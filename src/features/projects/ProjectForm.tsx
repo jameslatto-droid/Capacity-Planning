@@ -57,7 +57,7 @@ export function ProjectForm({ initial, resources, onSave, onCancel }: Props) {
       </div>
       <Input label="Notes (optional)" value={notes} onChange={(e) => setNotes(e.target.value)} />
       {error && <p className="text-xs text-red-400">{error}</p>}
-      <div className="flex justify-end gap-2 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+      <div className="flex justify-end gap-2 pt-3" style={{ borderTop: '1px solid var(--border)' }}>
         <Button variant="ghost" onClick={onCancel}>Cancel</Button>
         <Button variant="primary" onClick={handleSubmit}>Save</Button>
       </div>

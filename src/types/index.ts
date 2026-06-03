@@ -61,6 +61,7 @@ export interface Allocation {
   hours: number
   locked: boolean
   notes?: string
+  lastModifiedAt?: string
 }
 
 export interface CapacityAssumptions {
