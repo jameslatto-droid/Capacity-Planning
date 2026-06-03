@@ -1,6 +1,5 @@
 import { NavLink } from 'react-router-dom'
 import { motion } from 'motion/react'
-import { useTheme } from '../../utils/ThemeContext'
 
 const navItems = [
   { to: '/', label: 'Dashboard', icon: '▦' },
@@ -13,7 +12,6 @@ const navItems = [
 ]
 
 export function Sidebar() {
-  const { toggle, isDark } = useTheme()
   const appName = import.meta.env['VITE_APP_NAME'] ?? 'Resource Planner'
 
   return (
@@ -67,21 +65,11 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* Theme toggle + version */}
-      <div className="px-4 py-5 flex items-center justify-between">
+      {/* Version */}
+      <div className="px-5 py-4">
         <span className="text-[10px] font-mono tracking-widest uppercase" style={{ color: 'var(--text-faint)' }}>
           v0.1
         </span>
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={toggle}
-          className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
-          style={{ background: 'var(--surface-2)', color: 'var(--text-muted)', border: '1px solid var(--border)' }}
-          title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-        >
-          <span style={{ fontSize: 13 }}>{isDark ? '☀' : '◑'}</span>
-        </motion.button>
       </div>
     </aside>
   )
