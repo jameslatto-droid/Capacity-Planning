@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion } from 'motion/react'
 import { usePlannerStore } from '../../store/plannerStore'
 import { PageLayout } from '../../components/layout/PageLayout'
 import { Select } from '../../components/ui/Select'
@@ -6,7 +7,6 @@ import { formatMonth, generateMonthRange } from '../../utils/months'
 import { AllocationMatrixByPerson } from './AllocationMatrixByPerson'
 
 type ViewMode = 'person' | 'project' | 'role'
-
 const MONTHS = generateMonthRange('2026-01', '2026-12')
 
 export function AllocationsPage() {
@@ -21,31 +21,31 @@ export function AllocationsPage() {
 
   return (
     <PageLayout title="Allocations">
-      <div className="flex flex-wrap items-end gap-3 mb-6">
+      <div className="flex flex-wrap items-end gap-4 mb-8">
         <Select label="Scenario" value={scenarioId} onChange={(e) => setScenarioId(e.target.value)} options={scenarioOptions} />
         <Select label="From" value={startMonth} onChange={(e) => setStartMonth(e.target.value)} options={monthOptions} />
         <Select label="To" value={endMonth} onChange={(e) => setEndMonth(e.target.value)} options={monthOptions} />
         <div className="flex gap-1 self-end">
           {(['person', 'project', 'role'] as ViewMode[]).map((m) => (
-            <button
+            <motion.button
               key={m}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
               onClick={() => setViewMode(m)}
-              className={`px-3 py-1.5 rounded text-sm font-medium capitalize transition-colors ${
-                viewMode === m ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-              }`}
+              className="px-3 py-2 rounded-lg text-xs font-medium capitalize transition-all duration-150"
+              style={{
+                background: viewMode === m ? 'rgba(124,58,237,0.2)' : 'rgba(255,255,255,0.04)',
+                border: viewMode === m ? '1px solid rgba(139,92,246,0.4)' : '1px solid rgba(255,255,255,0.08)',
+                color: viewMode === m ? '#c4b5fd' : '#64748b',
+                boxShadow: viewMode === m ? '0 0 12px rgba(139,92,246,0.2)' : 'none',
+              }}
             >
               By {m}
-            </button>
+            </motion.button>
           ))}
         </div>
       </div>
-
-      <AllocationMatrixByPerson
-        scenarioId={scenarioId}
-        startMonth={startMonth}
-        endMonth={endMonth}
-        viewMode={viewMode}
-      />
+      <AllocationMatrixByPerson scenarioId={scenarioId} startMonth={startMonth} endMonth={endMonth} viewMode={viewMode} />
     </PageLayout>
   )
 }

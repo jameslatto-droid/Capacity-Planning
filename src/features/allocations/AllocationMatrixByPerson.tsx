@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { usePlannerStore } from '../../store/plannerStore'
 import { generateMonthRange, formatMonth } from '../../utils/months'
 import { calculateMonthlyProductiveCapacity } from '../../domain/capacity/capacityCalculations'
-import { utilisationBgColor } from '../../utils/format'
+import { utilisationColor, utilisationTextColor } from '../../utils/format'
 import { ROLE_LABELS } from '../../types'
 
 interface Props {
@@ -11,6 +11,9 @@ interface Props {
   endMonth: string
   viewMode: 'person' | 'project' | 'role'
 }
+
+const ROW = { borderBottom: '1px solid rgba(255,255,255,0.03)' }
+const HEAD = { borderBottom: '1px solid rgba(255,255,255,0.06)' }
 
 export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, viewMode }: Props) {
   const { resources, projects, allocations, scenarios } = usePlannerStore()
@@ -23,18 +26,19 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
     [allocations, scenarioId, months]
   )
 
-  if (!assumptions) return <div className="text-gray-500">No scenario found.</div>
+  if (!assumptions) return <div className="text-slate-600">No scenario found.</div>
+
+  const thCls = 'text-right pb-3 text-[10px] uppercase tracking-widest font-semibold text-slate-600 whitespace-nowrap px-2'
+  const thLeft = 'text-left pb-3 text-[10px] uppercase tracking-widest font-semibold text-slate-600'
 
   if (viewMode === 'person') {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
-        <table className="text-sm">
-          <thead className="bg-gray-50 border-b border-gray-200">
-            <tr>
-              <th className="text-left px-4 py-3 font-medium text-gray-600 whitespace-nowrap">Person / Project</th>
-              {months.map((m) => (
-                <th key={m} className="text-right px-3 py-3 font-medium text-gray-600 whitespace-nowrap">{formatMonth(m)}</th>
-              ))}
+      <div className="overflow-x-auto">
+        <table className="text-xs w-full">
+          <thead>
+            <tr style={HEAD}>
+              <th className={thLeft}>Person / Project</th>
+              {months.map((m) => <th key={m} className={thCls}>{formatMonth(m)}</th>)}
             </tr>
           </thead>
           <tbody>
@@ -42,42 +46,32 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
               const capacity = calculateMonthlyProductiveCapacity(r, assumptions)
               const personAllocs = filteredAllocations.filter((a) => a.resourceId === r.id)
               const projectIds = [...new Set(personAllocs.map((a) => a.projectId))]
-
               return [
-                // Capacity row
-                <tr key={`${r.id}-cap`} className="bg-blue-50">
-                  <td className="px-4 py-1.5 font-semibold text-blue-800 whitespace-nowrap">{r.displayName} <span className="font-normal text-blue-500 text-xs">(cap)</span></td>
+                <tr key={`${r.id}-cap`} style={{ ...ROW, background: 'rgba(139,92,246,0.04)' }}>
+                  <td className="py-2.5 font-semibold text-violet-300">{r.displayName}</td>
                   {months.map((m) => {
-                    const allocated = personAllocs
-                      .filter((a) => a.month === m)
-                      .reduce((s, a) => s + a.hours, 0)
+                    const allocated = personAllocs.filter((a) => a.month === m).reduce((s, a) => s + a.hours, 0)
                     const util = allocated / capacity
                     return (
-                      <td key={m} className="px-3 py-1.5 text-right">
-                        <span className={`inline-block px-1.5 py-0.5 rounded text-xs font-medium ${allocated > 0 ? utilisationBgColor(util) : 'text-gray-400'}`}>
+                      <td key={m} className="px-2 py-2.5 text-right">
+                        <span
+                          className={`tabular font-semibold text-xs px-1.5 py-0.5 rounded ${utilisationTextColor(util)}`}
+                          style={{ background: allocated > 0 ? utilisationColor(util) : 'transparent' }}
+                        >
                           {allocated > 0 ? `${Math.round(allocated)}/${Math.round(capacity)}h` : `—/${Math.round(capacity)}h`}
                         </span>
                       </td>
                     )
                   })}
                 </tr>,
-                // Per-project rows
                 ...projectIds.map((pid) => {
                   const proj = projects.find((p) => p.id === pid)
                   return (
-                    <tr key={`${r.id}-${pid}`} className="border-b border-gray-100 hover:bg-gray-50">
-                      <td className="px-4 py-1 pl-8 text-gray-600 whitespace-nowrap text-xs">
-                        {proj?.code ?? pid} — {proj?.name ?? ''}
-                      </td>
+                    <tr key={`${r.id}-${pid}`} style={ROW}>
+                      <td className="py-1.5 pl-6 text-slate-600">{proj?.code} — {proj?.name}</td>
                       {months.map((m) => {
-                        const hrs = personAllocs
-                          .filter((a) => a.projectId === pid && a.month === m)
-                          .reduce((s, a) => s + a.hours, 0)
-                        return (
-                          <td key={m} className="px-3 py-1 text-right text-xs text-gray-700">
-                            {hrs > 0 ? `${hrs}h` : '—'}
-                          </td>
-                        )
+                        const hrs = personAllocs.filter((a) => a.projectId === pid && a.month === m).reduce((s, a) => s + a.hours, 0)
+                        return <td key={m} className="px-2 py-1.5 text-right tabular text-slate-500">{hrs > 0 ? `${hrs}h` : <span className="text-slate-800">—</span>}</td>
                       })}
                     </tr>
                   )
@@ -92,37 +86,35 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
 
   if (viewMode === 'project') {
     return (
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
-        <table className="text-sm">
-          <thead className="bg-gray-50 border-b border-gray-200">
-            <tr>
-              <th className="text-left px-4 py-3 font-medium text-gray-600 whitespace-nowrap">Project / Person</th>
-              {months.map((m) => (
-                <th key={m} className="text-right px-3 py-3 font-medium text-gray-600 whitespace-nowrap">{formatMonth(m)}</th>
-              ))}
+      <div className="overflow-x-auto">
+        <table className="text-xs w-full">
+          <thead>
+            <tr style={HEAD}>
+              <th className={thLeft}>Project / Person</th>
+              {months.map((m) => <th key={m} className={thCls}>{formatMonth(m)}</th>)}
             </tr>
           </thead>
           <tbody>
             {projects.map((proj) => {
               const projAllocs = filteredAllocations.filter((a) => a.projectId === proj.id)
-              if (projAllocs.length === 0) return null
+              if (!projAllocs.length) return null
               const resourceIds = [...new Set(projAllocs.map((a) => a.resourceId).filter(Boolean))] as string[]
               return [
-                <tr key={`${proj.id}-total`} className="bg-green-50">
-                  <td className="px-4 py-1.5 font-semibold text-green-800 whitespace-nowrap">{proj.code} — {proj.name}</td>
+                <tr key={`${proj.id}-total`} style={{ ...ROW, background: 'rgba(16,185,129,0.04)' }}>
+                  <td className="py-2.5 font-semibold text-emerald-400">{proj.code} — {proj.name}</td>
                   {months.map((m) => {
                     const hrs = projAllocs.filter((a) => a.month === m).reduce((s, a) => s + a.hours, 0)
-                    return <td key={m} className="px-3 py-1.5 text-right font-medium text-green-700 text-xs">{hrs > 0 ? `${hrs}h` : '—'}</td>
+                    return <td key={m} className="px-2 py-2.5 text-right tabular font-semibold text-emerald-400/70">{hrs > 0 ? `${hrs}h` : <span className="text-slate-800">—</span>}</td>
                   })}
                 </tr>,
                 ...resourceIds.map((rid) => {
                   const res = resources.find((r) => r.id === rid)
                   return (
-                    <tr key={`${proj.id}-${rid}`} className="border-b border-gray-100 hover:bg-gray-50">
-                      <td className="px-4 py-1 pl-8 text-gray-600 whitespace-nowrap text-xs">{res?.displayName ?? rid}</td>
+                    <tr key={`${proj.id}-${rid}`} style={ROW}>
+                      <td className="py-1.5 pl-6 text-slate-600">{res?.displayName ?? rid}</td>
                       {months.map((m) => {
                         const hrs = projAllocs.filter((a) => a.resourceId === rid && a.month === m).reduce((s, a) => s + a.hours, 0)
-                        return <td key={m} className="px-3 py-1 text-right text-xs text-gray-700">{hrs > 0 ? `${hrs}h` : '—'}</td>
+                        return <td key={m} className="px-2 py-1.5 text-right tabular text-slate-500">{hrs > 0 ? `${hrs}h` : <span className="text-slate-800">—</span>}</td>
                       })}
                     </tr>
                   )
@@ -135,39 +127,41 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
     )
   }
 
-  // Role view
   const activeResources = resources.filter((r) => r.active)
+  const roles = ['project-management','process-engineering','mechanical-engineering','drafting','procurement','quality','technical-review','management','other'] as const
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
-      <table className="text-sm">
-        <thead className="bg-gray-50 border-b border-gray-200">
-          <tr>
-            <th className="text-left px-4 py-3 font-medium text-gray-600 whitespace-nowrap">Role</th>
-            {months.map((m) => (
-              <th key={m} className="text-right px-3 py-3 font-medium text-gray-600 whitespace-nowrap">{formatMonth(m)}</th>
-            ))}
+    <div className="overflow-x-auto">
+      <table className="text-xs w-full">
+        <thead>
+          <tr style={HEAD}>
+            <th className={thLeft}>Role</th>
+            {months.map((m) => <th key={m} className={thCls}>{formatMonth(m)}</th>)}
           </tr>
         </thead>
         <tbody>
-          {['project-management','process-engineering','mechanical-engineering','drafting','procurement','quality','technical-review','management','other'].map((role) => {
+          {roles.map((role) => {
             const roleAllocs = filteredAllocations.filter((a) => a.role === role)
-            const roleResources = activeResources.filter((r) => r.role === role || r.secondaryRoles?.includes(role as never))
-            const hasData = roleAllocs.length > 0 || roleResources.length > 0
-            if (!hasData) return null
+            const roleResources = activeResources.filter((r) => r.role === role || r.secondaryRoles?.includes(role))
+            if (!roleAllocs.length && !roleResources.length) return null
             return (
-              <tr key={role} className="border-b border-gray-100 hover:bg-gray-50">
-                <td className="px-4 py-2 font-medium text-gray-900">{ROLE_LABELS[role as keyof typeof ROLE_LABELS]}</td>
+              <tr key={role} style={ROW} className="group">
+                <td className={`py-2.5 font-medium ${role === 'quality' ? 'text-violet-400' : 'text-slate-400'}`}>
+                  {ROLE_LABELS[role]}
+                </td>
                 {months.map((m) => {
                   const totalCap = roleResources.reduce((s, r) => s + calculateMonthlyProductiveCapacity(r, assumptions), 0)
                   const totalAlloc = roleAllocs.filter((a) => a.month === m).reduce((s, a) => s + a.hours, 0)
                   const util = totalCap > 0 ? totalAlloc / totalCap : 0
                   return (
-                    <td key={m} className="px-3 py-2 text-right">
+                    <td key={m} className="px-2 py-2.5 text-right">
                       {totalAlloc > 0 ? (
-                        <span className={`inline-block px-1.5 py-0.5 rounded text-xs font-medium ${utilisationBgColor(util)}`}>
+                        <span
+                          className={`tabular text-xs font-semibold px-1.5 py-0.5 rounded ${utilisationTextColor(util)}`}
+                          style={{ background: utilisationColor(util) }}
+                        >
                           {Math.round(totalAlloc)}h
                         </span>
-                      ) : <span className="text-xs text-gray-400">—</span>}
+                      ) : <span className="text-slate-800">—</span>}
                     </td>
                   )
                 })}

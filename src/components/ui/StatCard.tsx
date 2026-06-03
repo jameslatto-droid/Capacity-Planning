@@ -1,34 +1,49 @@
-interface StatCardProps {
+import { motion } from 'motion/react'
+
+interface StatProps {
   label: string
   value: string
   sub?: string
-  accent?: 'default' | 'green' | 'yellow' | 'orange' | 'red' | 'blue'
+  accent?: 'default' | 'violet' | 'emerald' | 'amber' | 'red' | 'blue'
+  animateNumber?: boolean
 }
 
-const accentClasses = {
-  default: 'border-gray-200',
-  green: 'border-green-400',
-  yellow: 'border-yellow-400',
-  orange: 'border-orange-400',
-  red: 'border-red-400',
-  blue: 'border-blue-400',
+const accentLine: Record<string, string> = {
+  default: 'bg-slate-700',
+  violet: 'bg-violet-500',
+  emerald: 'bg-emerald-500',
+  amber: 'bg-amber-500',
+  red: 'bg-red-500',
+  blue: 'bg-blue-500',
 }
 
-const valueCls = {
-  default: 'text-gray-900',
-  green: 'text-green-700',
-  yellow: 'text-yellow-700',
-  orange: 'text-orange-700',
-  red: 'text-red-700',
-  blue: 'text-blue-700',
+const accentText: Record<string, string> = {
+  default: 'text-slate-300',
+  violet: 'text-violet-300',
+  emerald: 'text-emerald-300',
+  amber: 'text-amber-300',
+  red: 'text-red-300',
+  blue: 'text-blue-300',
 }
 
-export function StatCard({ label, value, sub, accent = 'default' }: StatCardProps) {
+export function StatCard({ label, value, sub, accent = 'default' }: StatProps) {
   return (
-    <div className={`bg-white rounded-lg border-l-4 ${accentClasses[accent]} shadow-sm p-4`}>
-      <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">{label}</div>
-      <div className={`text-2xl font-bold mt-1 ${valueCls[accent]}`}>{value}</div>
-      {sub && <div className="text-xs text-gray-400 mt-0.5">{sub}</div>}
-    </div>
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      className="flex flex-col gap-1.5"
+    >
+      <div className={`w-6 h-px ${accentLine[accent]}`} />
+      <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-600">
+        {label}
+      </div>
+      <div className={`text-3xl font-bold tracking-tight tabular ${accentText[accent]}`}>
+        {value}
+      </div>
+      {sub && (
+        <div className="text-xs text-slate-600">{sub}</div>
+      )}
+    </motion.div>
   )
 }

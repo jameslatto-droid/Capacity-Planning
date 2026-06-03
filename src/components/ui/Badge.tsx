@@ -1,21 +1,23 @@
 interface BadgeProps {
   children: string
-  variant?: 'gray' | 'green' | 'yellow' | 'orange' | 'red' | 'blue' | 'purple'
+  variant?: 'default' | 'violet' | 'emerald' | 'amber' | 'red' | 'blue'
 }
 
-const variants = {
-  gray: 'bg-gray-100 text-gray-700',
-  green: 'bg-green-100 text-green-800',
-  yellow: 'bg-yellow-100 text-yellow-800',
-  orange: 'bg-orange-100 text-orange-800',
-  red: 'bg-red-100 text-red-800',
-  blue: 'bg-blue-100 text-blue-800',
-  purple: 'bg-purple-100 text-purple-800',
+const variants: Record<string, string> = {
+  default: 'text-slate-400 border-slate-700',
+  violet: 'text-violet-300 border-violet-500/40',
+  emerald: 'text-emerald-300 border-emerald-500/40',
+  amber: 'text-amber-300 border-amber-500/40',
+  red: 'text-red-300 border-red-500/40',
+  blue: 'text-blue-300 border-blue-500/40',
 }
 
-export function Badge({ children, variant = 'gray' }: BadgeProps) {
+export function Badge({ children, variant = 'default' }: BadgeProps) {
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${variants[variant]}`}>
+    <span
+      className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium border ${variants[variant]}`}
+      style={{ background: 'rgba(255,255,255,0.03)' }}
+    >
       {children}
     </span>
   )

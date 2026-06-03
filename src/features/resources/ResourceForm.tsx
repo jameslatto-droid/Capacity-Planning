@@ -11,14 +11,13 @@ interface Props {
   onCancel: () => void
 }
 
+const roleOptions = ALL_ROLES.map((r) => ({ value: r, label: ROLE_LABELS[r] }))
 const employmentOptions = [
   { value: 'employee', label: 'Employee' },
   { value: 'contractor', label: 'Contractor' },
   { value: 'freelancer', label: 'Freelancer' },
   { value: 'placeholder', label: 'Placeholder' },
 ]
-
-const roleOptions = ALL_ROLES.map((r) => ({ value: r, label: ROLE_LABELS[r] }))
 
 export function ResourceForm({ initial, onSave, onCancel }: Props) {
   const [displayName, setDisplayName] = useState(initial?.displayName ?? '')
@@ -32,22 +31,20 @@ export function ResourceForm({ initial, onSave, onCancel }: Props) {
   const [error, setError] = useState('')
 
   function toggleSecondaryRole(r: ResourceRole) {
-    setSecondaryRoles((prev) =>
-      prev.includes(r) ? prev.filter((x) => x !== r) : [...prev, r]
-    )
+    setSecondaryRoles((prev) => prev.includes(r) ? prev.filter((x) => x !== r) : [...prev, r])
   }
 
   function handleSubmit() {
     const hours = Number(contractHours)
     const days = Number(workingDays)
-    if (!displayName.trim()) { setError('Name is required'); return }
+    if (!displayName.trim()) { setError('Name required'); return }
     if (hours <= 0) { setError('Contract hours must be > 0'); return }
     if (days < 1 || days > 7) { setError('Working days must be 1–7'); return }
     setError('')
     onSave({
       displayName: displayName.trim(),
       role,
-      secondaryRoles: secondaryRoles.length > 0 ? secondaryRoles : undefined,
+      secondaryRoles: secondaryRoles.length ? secondaryRoles : undefined,
       employmentType,
       contractHoursPerWeek: hours,
       workingDaysPerWeek: days,
@@ -62,16 +59,11 @@ export function ResourceForm({ initial, onSave, onCancel }: Props) {
       <Input label="Name" value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
       <Select label="Role" value={role} onChange={(e) => setRole(e.target.value as ResourceRole)} options={roleOptions} />
       <div>
-        <div className="text-xs font-medium text-gray-600 mb-1">Secondary Roles</div>
-        <div className="flex flex-wrap gap-2">
+        <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-600 mb-2">Secondary Roles</div>
+        <div className="flex flex-wrap gap-3">
           {ALL_ROLES.filter((r) => r !== role).map((r) => (
-            <label key={r} className="flex items-center gap-1 text-xs text-gray-700 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={secondaryRoles.includes(r)}
-                onChange={() => toggleSecondaryRole(r)}
-                className="rounded"
-              />
+            <label key={r} className="flex items-center gap-1.5 text-xs text-slate-500 cursor-pointer hover:text-slate-300 transition-colors">
+              <input type="checkbox" checked={secondaryRoles.includes(r)} onChange={() => toggleSecondaryRole(r)} className="accent-violet-500" />
               {ROLE_LABELS[r]}
             </label>
           ))}
@@ -79,17 +71,17 @@ export function ResourceForm({ initial, onSave, onCancel }: Props) {
       </div>
       <Select label="Employment Type" value={employmentType} onChange={(e) => setEmploymentType(e.target.value as EmploymentType)} options={employmentOptions} />
       <div className="flex gap-3">
-        <Input label="Contract Hours/Week" type="number" value={contractHours} onChange={(e) => setContractHours(e.target.value)} />
-        <Input label="Working Days/Week" type="number" value={workingDays} onChange={(e) => setWorkingDays(e.target.value)} />
+        <Input label="Contract h/week" type="number" value={contractHours} onChange={(e) => setContractHours(e.target.value)} />
+        <Input label="Working days/week" type="number" value={workingDays} onChange={(e) => setWorkingDays(e.target.value)} />
       </div>
-      <label className="flex items-center gap-2 text-sm text-gray-700">
-        <input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} className="rounded" />
+      <label className="flex items-center gap-2 text-sm text-slate-500 cursor-pointer">
+        <input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} className="accent-violet-500" />
         Active
       </label>
       <Input label="Notes (optional)" value={notes} onChange={(e) => setNotes(e.target.value)} />
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      <div className="flex justify-end gap-2 pt-2 border-t border-gray-100">
-        <Button onClick={onCancel}>Cancel</Button>
+      {error && <p className="text-xs text-red-400">{error}</p>}
+      <div className="flex justify-end gap-2 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+        <Button variant="ghost" onClick={onCancel}>Cancel</Button>
         <Button variant="primary" onClick={handleSubmit}>Save</Button>
       </div>
     </div>

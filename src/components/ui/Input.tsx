@@ -1,4 +1,4 @@
-import type { InputHTMLAttributes } from 'react'
+import { type InputHTMLAttributes } from 'react'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string
@@ -7,15 +7,21 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export function Input({ label, error, className = '', ...props }: InputProps) {
   return (
-    <label className="flex flex-col gap-1">
-      {label && <span className="text-xs font-medium text-gray-600">{label}</span>}
+    <label className="flex flex-col gap-1.5">
+      {label && (
+        <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-600">
+          {label}
+        </span>
+      )}
       <input
         {...props}
-        className={`rounded border px-2 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-          error ? 'border-red-400' : 'border-gray-300'
-        } ${className}`}
+        className={`rounded-lg px-3 py-2 text-sm text-slate-200 transition-all duration-150 ${className}`}
+        style={{
+          background: 'rgba(255,255,255,0.04)',
+          border: `1px solid ${error ? 'rgba(239,68,68,0.5)' : 'rgba(255,255,255,0.08)'}`,
+        }}
       />
-      {error && <span className="text-xs text-red-600">{error}</span>}
+      {error && <span className="text-xs text-red-400">{error}</span>}
     </label>
   )
 }

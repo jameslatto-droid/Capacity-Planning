@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react'
+import { motion } from 'motion/react'
 import { usePlannerStore } from '../../store/plannerStore'
 import { PageLayout } from '../../components/layout/PageLayout'
 import { Select } from '../../components/ui/Select'
 import { StatCard } from '../../components/ui/StatCard'
-import { formatHours, formatPercent, formatFte, utilisationBgColor } from '../../utils/format'
+import { formatHours, formatPercent, formatFte, utilisationTextColor, utilisationGlow } from '../../utils/format'
 import { formatMonth, generateMonthRange } from '../../utils/months'
 import { calculatePersonUtilisation } from '../../domain/utilisation/utilisationCalculations'
 import { calculateMonthlyProductiveCapacity } from '../../domain/capacity/capacityCalculations'
@@ -16,6 +17,7 @@ import {
 import { ROLE_LABELS } from '../../types'
 
 const MONTHS = generateMonthRange('2026-01', '2026-12')
+const ROW = { borderBottom: '1px solid rgba(255,255,255,0.03)' }
 
 export function OptimisationPage() {
   const { resources, allocations, scenarios, activeScenarioId } = usePlannerStore()
@@ -25,8 +27,8 @@ export function OptimisationPage() {
 
   const scenario = scenarios.find((s) => s.id === scenarioId)
   const assumptions = scenario?.assumptions
-
   const filteredMonths = useMemo(() => generateMonthRange(startMonth, endMonth), [startMonth, endMonth])
+
   const scenarioAllocations = useMemo(
     () => allocations.filter((a) => a.scenarioId === scenarioId && filteredMonths.includes(a.month)),
     [allocations, scenarioId, filteredMonths]
@@ -41,113 +43,98 @@ export function OptimisationPage() {
   }, [activeResources, scenarioAllocations, assumptions, filteredMonths])
 
   const overloads = useMemo(() => findOverloadedPersonMonths(allPersonResults), [allPersonResults])
-
   const recommendations = useMemo(
     () => suggestSameRoleReallocations(overloads, activeResources, allPersonResults, scenarioAllocations),
     [overloads, activeResources, allPersonResults, scenarioAllocations]
   )
-
-  const residualOverload = useMemo(
-    () => calculateResidualOverload(overloads, recommendations),
-    [overloads, recommendations]
-  )
+  const residualOverload = useMemo(() => calculateResidualOverload(overloads, recommendations), [overloads, recommendations])
 
   const monthlyFteCapacity = assumptions
-    ? calculateMonthlyProductiveCapacity(
-        { id: '', displayName: '', role: 'other', employmentType: 'employee', contractHoursPerWeek: 40, workingDaysPerWeek: 5, fullTimeHoursPerWeek: 40, active: true },
-        assumptions
-      )
-    : 129
+    ? calculateMonthlyProductiveCapacity({ id: '', displayName: '', role: 'other', employmentType: 'employee', contractHoursPerWeek: 40, workingDaysPerWeek: 5, fullTimeHoursPerWeek: 40, active: true }, assumptions)
+    : 133
 
   const contractorReqs = useMemo(
     () => calculateContractorFteRequirement(residualOverload, monthlyFteCapacity),
     [residualOverload, monthlyFteCapacity]
   )
 
-  const scenarioOptions = scenarios.map((s) => ({ value: s.id, label: s.name }))
-  const monthOptions = MONTHS.map((m) => ({ value: m, label: formatMonth(m) }))
-
-  if (!assumptions) return <PageLayout title="Optimisation"><p className="text-gray-500">No scenario found.</p></PageLayout>
+  if (!assumptions) return <PageLayout title="Optimisation"><p className="text-slate-600">No scenario.</p></PageLayout>
 
   return (
-    <PageLayout title="Optimisation">
-      <div className="flex flex-wrap gap-3 mb-6">
-        <Select label="Scenario" value={scenarioId} onChange={(e) => setScenarioId(e.target.value)} options={scenarioOptions} />
-        <Select label="From" value={startMonth} onChange={(e) => setStartMonth(e.target.value)} options={monthOptions} />
-        <Select label="To" value={endMonth} onChange={(e) => setEndMonth(e.target.value)} options={monthOptions} />
+    <PageLayout title="Optimisation" subtitle="Recommendations only — no changes are made automatically">
+      <div className="flex flex-wrap gap-4 mb-10">
+        <Select label="Scenario" value={scenarioId} onChange={(e) => setScenarioId(e.target.value)} options={scenarios.map((s) => ({ value: s.id, label: s.name }))} />
+        <Select label="From" value={startMonth} onChange={(e) => setStartMonth(e.target.value)} options={MONTHS.map((m) => ({ value: m, label: formatMonth(m) }))} />
+        <Select label="To" value={endMonth} onChange={(e) => setEndMonth(e.target.value)} options={MONTHS.map((m) => ({ value: m, label: formatMonth(m) }))} />
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <StatCard label="Person Overloads" value={String(overloads.length)} accent={overloads.length > 0 ? 'red' : 'green'} />
-        <StatCard label="Total Overload" value={formatHours(overloads.reduce((s, o) => s + o.overloadHours, 0))} accent={overloads.length > 0 ? 'red' : 'green'} />
-        <StatCard label="Residual After Recs" value={formatHours(residualOverload)} accent={residualOverload > 0 ? 'orange' : 'green'} />
-        <StatCard label="Contractor FTE" value={contractorReqs[0] ? formatFte(contractorReqs[0].contractorFte) : '0.00'} accent={residualOverload > 0 ? 'orange' : 'green'} />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-8 mb-12">
+        <StatCard label="Person overloads" value={String(overloads.length)} accent={overloads.length > 0 ? 'red' : 'emerald'} />
+        <StatCard label="Total overload" value={formatHours(overloads.reduce((s, o) => s + o.overloadHours, 0))} accent={overloads.length > 0 ? 'red' : 'emerald'} />
+        <StatCard label="Residual after recs" value={formatHours(residualOverload)} accent={residualOverload > 0 ? 'amber' : 'emerald'} />
+        <StatCard label="Contractor FTE" value={contractorReqs[0] ? formatFte(contractorReqs[0].contractorFte) : '0.00'} accent={residualOverload > 0 ? 'amber' : 'default'} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Overloads */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <h2 className="font-semibold text-gray-800 mb-3">Person-Month Overloads</h2>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }}>
+          <div className="text-[10px] uppercase tracking-widest text-slate-600 mb-4">Person-Month Overloads</div>
           {overloads.length === 0 ? (
-            <p className="text-sm text-green-600">No overloads detected.</p>
+            <p className="text-sm text-emerald-500/60">No overloads detected.</p>
           ) : (
-            <table className="w-full text-sm">
+            <table className="w-full text-xs">
               <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="text-left py-2 font-medium text-gray-600">Person</th>
-                  <th className="text-left py-2 font-medium text-gray-600">Month</th>
-                  <th className="text-right py-2 font-medium text-gray-600">Overload</th>
-                  <th className="text-right py-2 font-medium text-gray-600">Util</th>
+                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                  {['Person', 'Month', 'Overload', 'Util'].map((h, i) => (
+                    <th key={h} className={`pb-3 text-[10px] uppercase tracking-widest font-semibold text-slate-600 ${i === 0 ? 'text-left' : 'text-right'}`}>{h}</th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
                 {overloads.map((o) => {
                   const name = resources.find((r) => r.id === o.resourceId)?.displayName ?? o.resourceId
                   return (
-                    <tr key={`${o.resourceId}-${o.month}`} className="border-b border-gray-100">
-                      <td className="py-2 text-gray-900">{name}</td>
-                      <td className="py-2 text-gray-600">{formatMonth(o.month)}</td>
-                      <td className="py-2 text-right font-medium text-red-600">{formatHours(o.overloadHours)}</td>
-                      <td className="py-2 text-right">
-                        <span className={`inline-block px-1.5 py-0.5 rounded text-xs font-medium ${utilisationBgColor(o.utilisation)}`}>
-                          {formatPercent(o.utilisation)}
-                        </span>
-                      </td>
+                    <tr key={`${o.resourceId}-${o.month}`} style={ROW}>
+                      <td className="py-2.5 text-slate-300 font-medium">{name}</td>
+                      <td className="py-2.5 text-right text-slate-500">{formatMonth(o.month)}</td>
+                      <td className="py-2.5 text-right font-bold tabular text-red-400" style={{ textShadow: utilisationGlow(o.utilisation) }}>+{formatHours(o.overloadHours)}</td>
+                      <td className={`py-2.5 text-right font-semibold tabular ${utilisationTextColor(o.utilisation)}`}>{formatPercent(o.utilisation)}</td>
                     </tr>
                   )
                 })}
               </tbody>
             </table>
           )}
-        </div>
+        </motion.div>
 
         {/* Recommendations */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <h2 className="font-semibold text-gray-800 mb-3">Reallocation Recommendations</h2>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+          <div className="text-[10px] uppercase tracking-widest text-slate-600 mb-4">Reallocation Recommendations</div>
           {recommendations.length === 0 ? (
-            <p className="text-sm text-gray-500">{overloads.length === 0 ? 'No overloads to resolve.' : 'No same-role capacity available to reallocate.'}</p>
+            <p className="text-sm text-slate-600">{overloads.length === 0 ? 'No overloads to resolve.' : 'No compatible spare capacity found.'}</p>
           ) : (
-            <ul className="space-y-2">
+            <div className="space-y-2">
               {recommendations.map((r, i) => (
-                <li key={i} className="text-sm bg-blue-50 text-blue-800 rounded p-2.5">
-                  <div className="font-medium capitalize">{r.type.replace(/-/g, ' ')}</div>
-                  <div className="text-xs mt-0.5">{r.description}</div>
-                </li>
+                <div key={i} className="rounded-xl px-4 py-3 text-xs"
+                  style={{ background: 'rgba(139,92,246,0.07)', border: '1px solid rgba(139,92,246,0.15)' }}>
+                  <div className="font-semibold text-violet-300 mb-0.5 capitalize">{r.type.replace(/-/g, ' ')}</div>
+                  <div className="text-slate-500">{r.description}</div>
+                </div>
               ))}
-            </ul>
+            </div>
           )}
-        </div>
+        </motion.div>
 
         {/* Available capacity */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <h2 className="font-semibold text-gray-800 mb-3">Available Capacity</h2>
-          <table className="w-full text-sm">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }}>
+          <div className="text-[10px] uppercase tracking-widest text-slate-600 mb-4">Available Capacity</div>
+          <table className="w-full text-xs">
             <thead>
-              <tr className="border-b border-gray-200">
-                <th className="text-left py-2 font-medium text-gray-600">Person</th>
-                <th className="text-left py-2 font-medium text-gray-600">Role</th>
+              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                <th className="text-left pb-3 text-[10px] uppercase tracking-widest font-semibold text-slate-600">Person</th>
+                <th className="text-left pb-3 text-[10px] uppercase tracking-widest font-semibold text-slate-600">Role</th>
                 {filteredMonths.slice(0, 4).map((m) => (
-                  <th key={m} className="text-right py-2 font-medium text-gray-600">{formatMonth(m)}</th>
+                  <th key={m} className="text-right pb-3 text-[10px] uppercase tracking-widest font-semibold text-slate-600">{formatMonth(m)}</th>
                 ))}
               </tr>
             </thead>
@@ -155,20 +142,16 @@ export function OptimisationPage() {
               {activeResources.map((r) => {
                 const monthData = filteredMonths.slice(0, 4).map((m) => {
                   const result = allPersonResults.find((pr) => pr.resourceId === r.id && pr.month === m)
-                  return {
-                    month: m,
-                    available: Math.max(0, (result?.capacityHours ?? 0) - (result?.allocatedHours ?? 0)),
-                  }
+                  return { month: m, available: Math.max(0, (result?.capacityHours ?? 0) - (result?.allocatedHours ?? 0)) }
                 })
-                const totalAvailable = monthData.reduce((s, d) => s + d.available, 0)
-                if (totalAvailable === 0) return null
+                if (!monthData.some((d) => d.available > 0)) return null
                 return (
-                  <tr key={r.id} className="border-b border-gray-100 hover:bg-gray-50">
-                    <td className="py-2 text-gray-900">{r.displayName}</td>
-                    <td className="py-2 text-gray-500 text-xs">{ROLE_LABELS[r.role]}</td>
+                  <tr key={r.id} style={ROW}>
+                    <td className="py-2.5 text-slate-400 font-medium">{r.displayName}</td>
+                    <td className="py-2.5 text-slate-600">{ROLE_LABELS[r.role]}</td>
                     {monthData.map((d) => (
-                      <td key={d.month} className="py-2 text-right text-green-700 text-xs font-medium">
-                        {d.available > 0 ? formatHours(d.available) : '—'}
+                      <td key={d.month} className="py-2.5 text-right tabular text-emerald-400/70 font-medium">
+                        {d.available > 0 ? formatHours(d.available) : <span className="text-slate-800">—</span>}
                       </td>
                     ))}
                   </tr>
@@ -176,24 +159,24 @@ export function OptimisationPage() {
               })}
             </tbody>
           </table>
-        </div>
+        </motion.div>
 
-        {/* Contractor requirement */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <h2 className="font-semibold text-gray-800 mb-3">Contractor Requirement</h2>
+        {/* Contractor */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
+          <div className="text-[10px] uppercase tracking-widest text-slate-600 mb-4">Contractor Requirement</div>
           {contractorReqs.length === 0 ? (
-            <p className="text-sm text-green-600">No contractor capacity required.</p>
+            <p className="text-sm text-emerald-500/60">No contractor capacity required.</p>
           ) : (
-            <div className="space-y-2">
-              {contractorReqs.map((req) => (
-                <div key={req.month} className="bg-orange-50 rounded p-3 text-sm">
-                  <div className="font-medium text-orange-800">Residual overload after recommendations</div>
-                  <div className="text-orange-700 mt-1">{formatHours(req.residualOverloadHours)} = {formatFte(req.contractorFte)} FTE/month</div>
-                </div>
-              ))}
-            </div>
+            contractorReqs.map((req) => (
+              <div key={req.month} className="rounded-xl px-4 py-4 text-sm"
+                style={{ background: 'rgba(234,88,12,0.07)', border: '1px solid rgba(234,88,12,0.2)' }}>
+                <div className="text-xs text-slate-500 mb-1">Residual after recommendations</div>
+                <div className="text-2xl font-bold tabular text-amber-400">{formatFte(req.contractorFte)} FTE</div>
+                <div className="text-xs text-slate-600 mt-1">{formatHours(req.residualOverloadHours)} / month</div>
+              </div>
+            ))
           )}
-        </div>
+        </motion.div>
       </div>
     </PageLayout>
   )
