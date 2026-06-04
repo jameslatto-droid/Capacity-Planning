@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
 import { usePlannerStore } from '../../store/plannerStore'
 import { generateMonthRange, formatMonth } from '../../utils/months'
-import { calculateMonthlyCapacityWithLeave } from '../../domain/capacity/leaveCalculations'
+import { calculateMonthlyCapacityWithLeave, getLeaveDaysInMonth } from '../../domain/capacity/leaveCalculations'
+import type { LeaveType } from '../../types'
 import { utilisationColor, utilisationTextColor } from '../../utils/format'
 import { ROLE_LABELS } from '../../types'
 
@@ -46,9 +47,13 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
             {resources.filter((r) => r.active).map((r) => {
               const personAllocs = filteredAllocations.filter((a) => a.resourceId === r.id)
               const projectIds = [...new Set(personAllocs.map((a) => a.projectId))]
+              const personLeave = leaveEntries.filter((e) => e.resourceId === r.id)
+              const hasLeaveInView = months.some((m) => getLeaveDaysInMonth(r, m, personLeave) > 0)
+
               return [
+                // ── Capacity header row ──────────────────────────────────
                 <tr key={`${r.id}-cap`} style={{ ...ROW, background: 'rgba(124,58,237,0.06)' }}>
-                  <td className="py-2.5 font-semibold text-violet-300" style={{ color: 'var(--text)' }}>{r.displayName}</td>
+                  <td className="py-2.5 font-semibold" style={{ color: 'var(--text)' }}>{r.displayName}</td>
                   {months.map((m) => {
                     const capacity = calculateMonthlyCapacityWithLeave(r, m, leaveEntries, assumptions)
                     const allocated = personAllocs.filter((a) => a.month === m).reduce((s, a) => s + a.hours, 0)
@@ -65,6 +70,60 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
                     )
                   })}
                 </tr>,
+
+                // ── Leave row (only shown when leave exists in view) ──────
+                ...(hasLeaveInView ? [
+                  <tr key={`${r.id}-leave`} style={ROW}>
+                    <td className="py-1.5 pl-6 font-medium flex items-center gap-1.5"
+                      style={{ color: '#d97706' }}>
+                      <span style={{ fontSize: 10 }}>◷</span> Leave
+                    </td>
+                    {months.map((m) => {
+                      const days = getLeaveDaysInMonth(r, m, personLeave)
+                      // Pick dominant leave type for colour
+                      const [y, mo] = m.split('-').map(Number)
+                      const ms2 = new Date(y!, mo! - 1, 1)
+                      const me2 = new Date(y!, mo!, 0)
+                      const monthEntries = personLeave.filter((e) => {
+                        const s = new Date(e.startDate + 'T00:00:00')
+                        const end2 = new Date(e.endDate + 'T00:00:00')
+                        return s <= me2 && end2 >= ms2
+                      })
+                      const type: LeaveType = monthEntries[0]?.type ?? 'annual'
+                      const typeColor: Record<LeaveType, string> = {
+                        'annual': 'rgba(37,99,235,0.55)',
+                        'sick': 'rgba(217,119,6,0.6)',
+                        'public-holiday': 'rgba(124,58,237,0.55)',
+                        'unpaid': 'rgba(107,114,128,0.5)',
+                        'other': 'rgba(75,85,99,0.45)',
+                      }
+                      const typeText: Record<LeaveType, string> = {
+                        'annual': '#93c5fd',
+                        'sick': '#fde68a',
+                        'public-holiday': '#c4b5fd',
+                        'unpaid': '#d1d5db',
+                        'other': '#9ca3af',
+                      }
+                      return (
+                        <td key={m} className="px-2 py-1.5 text-right">
+                          {days > 0 ? (
+                            <span
+                              className="tabular font-semibold text-[11px] px-1.5 py-0.5 rounded"
+                              style={{ background: typeColor[type], color: typeText[type] }}
+                              title={monthEntries.map((e) => `${e.type}: ${e.startDate} – ${e.endDate}`).join('\n')}
+                            >
+                              {days}d
+                            </span>
+                          ) : (
+                            <span style={{ color: 'var(--text-faint)' }}>—</span>
+                          )}
+                        </td>
+                      )
+                    })}
+                  </tr>
+                ] : []),
+
+                // ── Project sub-rows ─────────────────────────────────────
                 ...projectIds.map((pid) => {
                   const proj = projects.find((p) => p.id === pid)
                   return (
