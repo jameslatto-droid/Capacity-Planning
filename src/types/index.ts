@@ -34,6 +34,8 @@ export interface Resource {
   fullTimeHoursPerWeek: number
   active: boolean
   notes?: string
+  contractStart?: string  // YYYY-MM-DD, contractor/freelancer only
+  contractEnd?: string    // YYYY-MM-DD, contractor/freelancer only
 }
 
 export interface Project {

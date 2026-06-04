@@ -6,6 +6,7 @@ import { Button } from '../../components/ui/Button'
 import { Badge } from '../../components/ui/Badge'
 import { calculateMonthlyProductiveCapacity } from '../../domain/capacity/capacityCalculations'
 import { formatHours } from '../../utils/format'
+import { fmtContractDate } from '../../utils/contractDates'
 import { ROLE_LABELS } from '../../types'
 import type { Resource } from '../../types'
 import { ResourceForm } from './ResourceForm'
@@ -103,6 +104,11 @@ export function ResourcesPage() {
                   {r.secondaryRoles && r.secondaryRoles.length > 0 && (
                     <div className="text-[11px] mt-0.5" style={{ color: 'var(--text-faint)' }}>
                       +{r.secondaryRoles.map((sr) => ROLE_LABELS[sr]).join(', ')}
+                    </div>
+                  )}
+                  {(r.contractStart || r.contractEnd) && (
+                    <div className="text-[11px] mt-0.5 font-mono" style={{ color: 'var(--text-faint)' }}>
+                      ◷ {r.contractStart ? fmtContractDate(r.contractStart) : '…'} → {r.contractEnd ? fmtContractDate(r.contractEnd) : '…'}
                     </div>
                   )}
                 </td>

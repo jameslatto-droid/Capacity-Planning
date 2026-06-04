@@ -4,6 +4,7 @@ import { generateMonthRange, formatMonth } from '../../utils/months'
 import { calculateMonthlyCapacityWithLeave, getLeaveDaysInMonth } from '../../domain/capacity/leaveCalculations'
 import type { LeaveType } from '../../types'
 import { utilisationColor, utilisationTextColor } from '../../utils/format'
+import { isOutsideContract } from '../../utils/contractDates'
 import { ROLE_LABELS } from '../../types'
 
 interface Props {
@@ -11,12 +12,14 @@ interface Props {
   startMonth: string
   endMonth: string
   viewMode: 'person' | 'project' | 'role'
+  valueMode?: 'hours' | 'percent'
 }
 
 const ROW = { borderBottom: '1px solid var(--row-divider)' }
 const HEAD = { borderBottom: '1px solid var(--border)' }
 
-export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, viewMode }: Props) {
+export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, viewMode, valueMode = 'hours' }: Props) {
+  const isPct = valueMode === 'percent'
   const { resources, projects, allocations, scenarios, leaveEntries } = usePlannerStore()
   const months = generateMonthRange(startMonth, endMonth)
   const scenario = scenarios.find((s) => s.id === scenarioId)
@@ -49,22 +52,36 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
               const projectIds = [...new Set(personAllocs.map((a) => a.projectId))]
               const personLeave = leaveEntries.filter((e) => e.resourceId === r.id)
               const hasLeaveInView = months.some((m) => getLeaveDaysInMonth(r, m, personLeave) > 0)
+              // Pre-compute capacity per month so project sub-rows can use it for % mode
+              const capByMonth = Object.fromEntries(
+                months.map(m => [m, calculateMonthlyCapacityWithLeave(r, m, leaveEntries, assumptions)])
+              )
 
               return [
                 // ── Capacity header row ──────────────────────────────────
                 <tr key={`${r.id}-cap`} style={{ ...ROW, background: 'rgba(124,58,237,0.06)' }}>
                   <td className="py-2.5 font-semibold" style={{ color: 'var(--text)' }}>{r.displayName}</td>
                   {months.map((m) => {
-                    const capacity = calculateMonthlyCapacityWithLeave(r, m, leaveEntries, assumptions)
+                    const capacity = capByMonth[m] ?? 0
                     const allocated = personAllocs.filter((a) => a.month === m).reduce((s, a) => s + a.hours, 0)
-                    const util = allocated / capacity
+                    const util = capacity > 0 ? allocated / capacity : 0
+                    const outsideContract = allocated > 0 && isOutsideContract(r, m)
+                    const label = isPct
+                      ? (allocated > 0 ? `${Math.round(util * 100)}%` : '—')
+                      : (allocated > 0 ? `${Math.round(allocated)}/${Math.round(capacity)}h` : `—/${Math.round(capacity)}h`)
                     return (
                       <td key={m} className="px-2 py-2.5 text-right">
                         <span
                           className={`tabular font-semibold text-xs px-1.5 py-0.5 rounded ${utilisationTextColor(util)}`}
-                          style={{ background: allocated > 0 ? utilisationColor(util) : 'transparent' }}
+                          style={{
+                            background: allocated > 0 ? utilisationColor(util) : 'transparent',
+                            outline: outsideContract ? '1.5px solid rgba(245,158,11,0.8)' : 'none',
+                            outlineOffset: 1,
+                          }}
+                          title={outsideContract ? 'Allocated outside contract period' : undefined}
                         >
-                          {allocated > 0 ? `${Math.round(allocated)}/${Math.round(capacity)}h` : `—/${Math.round(capacity)}h`}
+                          {outsideContract && <span style={{ marginRight: 3, fontSize: 9 }}>⚠</span>}
+                          {label}
                         </span>
                       </td>
                     )
@@ -131,7 +148,15 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
                       <td className="py-1.5 pl-6" style={{ color: 'var(--text-faint)' }}>{proj?.code} — {proj?.name}</td>
                       {months.map((m) => {
                         const hrs = personAllocs.filter((a) => a.projectId === pid && a.month === m).reduce((s, a) => s + a.hours, 0)
-                        return <td key={m} className="px-2 py-1.5 text-right tabular" style={{ color: 'var(--text-muted)' }}>{hrs > 0 ? `${hrs}h` : <span style={{ color: 'var(--text-faint)' }}>—</span>}</td>
+                        const cap = capByMonth[m] ?? 1
+                        const display = hrs > 0
+                          ? (isPct ? `${Math.round(hrs / cap * 100)}%` : `${hrs}h`)
+                          : null
+                        return (
+                          <td key={m} className="px-2 py-1.5 text-right tabular" style={{ color: 'var(--text-muted)' }}>
+                            {display ?? <span style={{ color: 'var(--text-faint)' }}>—</span>}
+                          </td>
+                        )
                       })}
                     </tr>
                   )
@@ -215,14 +240,17 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
                   const totalCap = roleResources.reduce((s, r) => s + calculateMonthlyCapacityWithLeave(r, m, leaveEntries, assumptions), 0)
                   const totalAlloc = roleAllocs.filter((a) => a.month === m).reduce((s, a) => s + a.hours, 0)
                   const util = totalCap > 0 ? totalAlloc / totalCap : 0
+                  const roleLabel = totalAlloc > 0
+                    ? (isPct ? `${Math.round(util * 100)}%` : `${Math.round(totalAlloc)}h`)
+                    : null
                   return (
                     <td key={m} className="px-2 py-2.5 text-right">
-                      {totalAlloc > 0 ? (
+                      {roleLabel ? (
                         <span
                           className={`tabular text-xs font-semibold px-1.5 py-0.5 rounded ${utilisationTextColor(util)}`}
                           style={{ background: utilisationColor(util) }}
                         >
-                          {Math.round(totalAlloc)}h
+                          {roleLabel}
                         </span>
                       ) : <span style={{ color: 'var(--text-faint)' }}>—</span>}
                     </td>

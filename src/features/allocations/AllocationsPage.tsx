@@ -7,12 +7,14 @@ import { formatMonth, generateMonthRange } from '../../utils/months'
 import { AllocationMatrixByPerson } from './AllocationMatrixByPerson'
 
 type ViewMode = 'person' | 'project' | 'role'
+type ValueMode = 'hours' | 'percent'
 const MONTHS = generateMonthRange('2026-01', '2026-12')
 
 export function AllocationsPage() {
   const { scenarios, activeScenarioId } = usePlannerStore()
   const [scenarioId, setScenarioId] = useState(activeScenarioId)
   const [viewMode, setViewMode] = useState<ViewMode>('person')
+  const [valueMode, setValueMode] = useState<ValueMode>('hours')
   const [startMonth, setStartMonth] = useState('2026-06')
   const [endMonth, setEndMonth] = useState('2026-12')
 
@@ -44,8 +46,29 @@ export function AllocationsPage() {
             </motion.button>
           ))}
         </div>
+
+        {/* h / % toggle */}
+        <div className="flex gap-0.5 self-end" style={{ marginLeft: 4 }}>
+          {(['hours', 'percent'] as ValueMode[]).map((v) => (
+            <motion.button
+              key={v}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => setValueMode(v)}
+              className="px-2.5 py-2 rounded-lg text-xs font-semibold transition-all duration-150"
+              style={{
+                background: valueMode === v ? 'var(--accent-light)' : 'var(--surface-2)',
+                border: valueMode === v ? '1px solid rgba(139,92,246,0.4)' : '1px solid rgba(139,92,246,0.15)',
+                color: valueMode === v ? 'var(--accent-text)' : 'var(--text-muted)',
+                boxShadow: valueMode === v ? '0 0 12px rgba(139,92,246,0.2)' : 'none',
+              }}
+            >
+              {v === 'hours' ? 'h' : '%'}
+            </motion.button>
+          ))}
+        </div>
       </div>
-      <AllocationMatrixByPerson scenarioId={scenarioId} startMonth={startMonth} endMonth={endMonth} viewMode={viewMode} />
+      <AllocationMatrixByPerson scenarioId={scenarioId} startMonth={startMonth} endMonth={endMonth} viewMode={viewMode} valueMode={valueMode} />
     </PageLayout>
   )
 }

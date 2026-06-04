@@ -19,6 +19,8 @@ const employmentOptions = [
   { value: 'placeholder', label: 'Placeholder' },
 ]
 
+const CONTRACT_TYPES = new Set<EmploymentType>(['contractor', 'freelancer'])
+
 export function ResourceForm({ initial, onSave, onCancel }: Props) {
   const [displayName, setDisplayName] = useState(initial?.displayName ?? '')
   const [role, setRole] = useState<ResourceRole>(initial?.role ?? 'other')
@@ -26,6 +28,8 @@ export function ResourceForm({ initial, onSave, onCancel }: Props) {
   const [employmentType, setEmploymentType] = useState<EmploymentType>(initial?.employmentType ?? 'employee')
   const [contractHours, setContractHours] = useState(String(initial?.contractHoursPerWeek ?? 40))
   const [workingDays, setWorkingDays] = useState(String(initial?.workingDaysPerWeek ?? 5))
+  const [contractStart, setContractStart] = useState(initial?.contractStart ?? '')
+  const [contractEnd, setContractEnd] = useState(initial?.contractEnd ?? '')
   const [active, setActive] = useState(initial?.active ?? true)
   const [notes, setNotes] = useState(initial?.notes ?? '')
   const [error, setError] = useState('')
@@ -40,6 +44,9 @@ export function ResourceForm({ initial, onSave, onCancel }: Props) {
     if (!displayName.trim()) { setError('Name required'); return }
     if (hours <= 0) { setError('Contract hours must be > 0'); return }
     if (days < 1 || days > 7) { setError('Working days must be 1–7'); return }
+    if (contractStart && contractEnd && contractStart > contractEnd) {
+      setError('Contract start must be before end date'); return
+    }
     setError('')
     onSave({
       displayName: displayName.trim(),
@@ -51,8 +58,12 @@ export function ResourceForm({ initial, onSave, onCancel }: Props) {
       fullTimeHoursPerWeek: 40,
       active,
       notes: notes.trim() || undefined,
+      contractStart: CONTRACT_TYPES.has(employmentType) && contractStart ? contractStart : undefined,
+      contractEnd: CONTRACT_TYPES.has(employmentType) && contractEnd ? contractEnd : undefined,
     })
   }
+
+  const showContractDates = CONTRACT_TYPES.has(employmentType)
 
   return (
     <div className="flex flex-col gap-4">
@@ -74,6 +85,19 @@ export function ResourceForm({ initial, onSave, onCancel }: Props) {
         <Input label="Contract h/week" type="number" value={contractHours} onChange={(e) => setContractHours(e.target.value)} />
         <Input label="Working days/week" type="number" value={workingDays} onChange={(e) => setWorkingDays(e.target.value)} />
       </div>
+
+      {showContractDates && (
+        <div>
+          <div className="text-[10px] font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-faint)' }}>
+            Contract period <span style={{ color: 'var(--text-faint)', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(optional — allocations outside this window will show a warning)</span>
+          </div>
+          <div className="flex gap-3">
+            <Input label="Start date" type="date" value={contractStart} onChange={(e) => setContractStart(e.target.value)} />
+            <Input label="End date" type="date" value={contractEnd} onChange={(e) => setContractEnd(e.target.value)} />
+          </div>
+        </div>
+      )}
+
       <label className="flex items-center gap-2 text-sm cursor-pointer" style={{ color: 'var(--text-muted)' }}>
         <input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} className="accent-violet-500" />
         Active
