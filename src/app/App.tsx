@@ -27,7 +27,7 @@ function Inner() {
     <BrowserRouter>
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <TopBar />
-        <div style={{ flex: 1, overflow: 'auto' }}>
+        <div style={{ flex: 1, overflow: 'auto', background: 'var(--bg)', minHeight: 0 }}>
           <AppRoutes />
         </div>
       </div>

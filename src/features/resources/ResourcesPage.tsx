@@ -68,7 +68,7 @@ export function ResourcesPage() {
 
       <table className="w-full text-sm">
         <thead>
-          <tr style={{ borderBottom: '1px solid var(--border)' }}>
+          <tr style={{ borderBottom: '1px solid var(--border-s)' }}>
             {['Name', 'Role', 'Type', 'h/wk', 'Days', 'Monthly cap.', 'Active', ''].map((h, i) => (
               <th
                 key={h + i}

@@ -11,7 +11,7 @@ interface PageLayoutProps {
 export function PageLayout({ title, subtitle, actions, children }: PageLayoutProps) {
   return (
     <motion.div
-      className="flex-1 flex flex-col"
+      className="flex-1 flex flex-col min-h-full"
       style={{ background: 'var(--bg)' }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}

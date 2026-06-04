@@ -47,9 +47,11 @@ function RolePanel({ role, data, avgUtil }: { role: ResourceRole; data: RoleData
         background: 'var(--surface)',
         border: '1px solid var(--border)',
         borderRadius: 10,
-        padding: '12px 14px 6px',
+        overflow: 'hidden',
       }}
     >
+      {/* Accent top bar — instant health signal */}
+      <div style={{ height: 3, background: color }} />
       <div
         style={{
           fontSize: 11,
@@ -58,12 +60,13 @@ function RolePanel({ role, data, avgUtil }: { role: ResourceRole; data: RoleData
           letterSpacing: '0.05em',
           color: 'var(--text-muted)',
           marginBottom: 6,
+          padding: '10px 14px 0',
         }}
       >
         {ROLE_LABELS[role]}
       </div>
 
-      <div style={{ height: 100 }}>
+      <div style={{ height: 100, padding: '0 14px 8px' }}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
             <defs>

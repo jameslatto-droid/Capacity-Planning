@@ -16,7 +16,7 @@ interface Props {
 }
 
 const ROW = { borderBottom: '1px solid var(--row-divider)' }
-const HEAD = { borderBottom: '1px solid var(--border)' }
+const HEAD = { borderBottom: '1px solid var(--border-s)' }
 
 export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, viewMode, valueMode = 'hours' }: Props) {
   const isPct = valueMode === 'percent'

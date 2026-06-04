@@ -19,7 +19,7 @@ export function TopBar() {
   return (
     <header
       style={{
-        height: 48,
+        height: 52,
         flexShrink: 0,
         position: 'sticky',
         top: 0,
@@ -56,7 +56,7 @@ export function TopBar() {
               textDecoration: 'none',
               whiteSpace: 'nowrap',
               color: isActive ? 'var(--accent-text)' : 'var(--text-muted)',
-              borderBottom: isActive ? '2px solid var(--accent)' : '2px solid transparent',
+              borderBottom: isActive ? '3px solid var(--accent)' : '3px solid transparent',
               transition: 'color 0.12s, border-color 0.12s',
             })}
           >

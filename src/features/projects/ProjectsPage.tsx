@@ -63,7 +63,7 @@ export function ProjectsPage() {
 
       <table className="w-full text-sm">
         <thead>
-          <tr style={{ borderBottom: '1px solid var(--border)' }}>
+          <tr style={{ borderBottom: '1px solid var(--border-s)' }}>
             {['Code', 'Project', 'Brand', 'Status', 'Period', 'Hours', ''].map((h, i) => (
               <th
                 key={h + i}
