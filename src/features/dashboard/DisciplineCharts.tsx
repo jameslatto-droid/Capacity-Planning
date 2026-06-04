@@ -2,10 +2,10 @@ import { useMemo } from 'react'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import type { Resource, Allocation, CapacityAssumptions, LeaveEntry, ResourceRole } from '../../types'
 import { ROLE_LABELS } from '../../types'
-import { calculateRoleUtilisation } from '../../domain/utilisation/utilisationCalculations'
+import { calculateMonthlyCapacityWithLeave } from '../../domain/capacity/leaveCalculations'
 import { formatHours } from '../../utils/format'
 
-// Primary disciplines only — secondary/overhead roles excluded
+// Primary disciplines only — secondary/overhead roles excluded from display
 const PRIMARY_ROLES: ResourceRole[] = [
   'project-management',
   'process-engineering',
@@ -100,7 +100,7 @@ function RolePanel({ role, data, avgUtil }: { role: ResourceRole; data: RoleData
                 name === 'capacity' ? 'Capacity' : 'Allocated',
               ]}
             />
-            {/* Capacity — subtle dashed ceiling */}
+            {/* Capacity ceiling — primary-role headcount only */}
             <Area
               type="monotone"
               dataKey="capacity"
@@ -111,7 +111,7 @@ function RolePanel({ role, data, avgUtil }: { role: ResourceRole; data: RoleData
               dot={false}
               isAnimationActive={false}
             />
-            {/* Allocated — filled area */}
+            {/* Allocated hours for this discipline */}
             <Area
               type="monotone"
               dataKey="allocated"
@@ -133,14 +133,24 @@ export function DisciplineCharts({ resources, allocations, leaveEntries, assumpt
 
   const roleData = useMemo(() => {
     return PRIMARY_ROLES.map((role) => {
+      // Capacity: only people whose PRIMARY role is this discipline
+      const primaryResources = activeResources.filter((r) => r.role === role)
+
       const data: RoleData[] = months.map((m) => {
-        const result = calculateRoleUtilisation(role, activeResources, allocations, assumptions, m, leaveEntries)
+        const capacity = primaryResources.reduce(
+          (s, r) => s + calculateMonthlyCapacityWithLeave(r, m, leaveEntries, assumptions),
+          0,
+        )
+        const allocated = allocations
+          .filter((a) => a.role === role && a.month === m)
+          .reduce((s, a) => s + a.hours, 0)
         return {
           month: new Date(m + '-01').toLocaleDateString('en-GB', { month: 'short' }),
-          capacity: Math.round(result.capacityHours),
-          allocated: Math.round(result.allocatedHours),
+          capacity: Math.round(capacity),
+          allocated: Math.round(allocated),
         }
       })
+
       const totalCap = data.reduce((s, d) => s + d.capacity, 0)
       const totalAlloc = data.reduce((s, d) => s + d.allocated, 0)
       const avgUtil = totalCap > 0 ? totalAlloc / totalCap : 0

@@ -87,7 +87,7 @@ export function PlanGantt({ projects, allocations, brandFilter, startMonth, endM
   return (
     <div className="overflow-x-auto select-none">
       {/* Header — month labels */}
-      <div className="relative" style={{ marginLeft: 130 }}>
+      <div className="relative" style={{ marginLeft: 0 }}>
         {/* Year markers */}
         {yearBoundaries.map(({ label, pct }) => (
           <div
@@ -113,7 +113,7 @@ export function PlanGantt({ projects, allocations, brandFilter, startMonth, endM
       </div>
 
       {/* Gantt body */}
-      <div className="relative" style={{ marginLeft: 130 }}>
+      <div className="relative" style={{ marginLeft: 0 }}>
         {/* Month grid lines */}
         <div className="absolute inset-0 flex pointer-events-none" style={{ zIndex: 0 }}>
           {months.map((m, i) => (
@@ -188,33 +188,6 @@ export function PlanGantt({ projects, allocations, brandFilter, startMonth, endM
         })}
       </div>
 
-      {/* Project labels (left column) */}
-      <div
-        className="absolute top-0"
-        style={{ width: 130, pointerEvents: 'none' }}
-      />
-
-      {/* Re-render with label column overlay */}
-      <div style={{ marginTop: -((ROW_H + 3) * visibleProjects.length) }}>
-        {visibleProjects.map((p) => {
-          const col = brandColor[p.frontendBrand] ?? brandColor['DCT']!
-          return (
-            <div
-              key={`label-${p.id}`}
-              className="flex items-center"
-              style={{ height: ROW_H + 3 }}
-            >
-              <div
-                className="text-right text-[11px] font-medium truncate pr-3"
-                style={{ width: 128, color: col.border, flexShrink: 0 }}
-                title={`${p.code} ${p.name}`}
-              >
-                {p.code}
-              </div>
-            </div>
-          )
-        })}
-      </div>
 
       {/* Legend */}
       <div className="flex items-center gap-5 mt-4 pl-0 flex-wrap">
