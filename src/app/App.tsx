@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { BrowserRouter } from 'react-router-dom'
-import { Sidebar } from '../components/layout/Sidebar'
+import { TopBar } from '../components/layout/TopBar'
 import { AppRoutes } from './routes'
 import { usePlannerStore } from '../store/plannerStore'
 import { ThemeProvider } from '../utils/ThemeContext'
@@ -25,9 +25,9 @@ function Inner() {
   }
   return (
     <BrowserRouter>
-      <div className="flex min-h-screen">
-        <Sidebar />
-        <div className="flex-1 flex flex-col overflow-hidden">
+      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        <TopBar />
+        <div style={{ flex: 1, overflow: 'auto' }}>
           <AppRoutes />
         </div>
       </div>

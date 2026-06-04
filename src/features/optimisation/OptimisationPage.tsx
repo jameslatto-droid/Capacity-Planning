@@ -21,17 +21,15 @@ const ROW = { borderBottom: '1px solid var(--row-divider)' }
 
 export function OptimisationPage() {
   const { resources, allocations, scenarios, activeScenarioId, leaveEntries } = usePlannerStore()
-  const [scenarioId, setScenarioId] = useState(activeScenarioId)
   const [startMonth, setStartMonth] = useState('2026-06')
   const [endMonth, setEndMonth] = useState('2026-12')
 
-  const scenario = scenarios.find((s) => s.id === scenarioId)
-  const assumptions = scenario?.assumptions
+  const assumptions = scenarios.find((s) => s.id === activeScenarioId)?.assumptions
   const filteredMonths = useMemo(() => generateMonthRange(startMonth, endMonth), [startMonth, endMonth])
 
   const scenarioAllocations = useMemo(
-    () => allocations.filter((a) => a.scenarioId === scenarioId && filteredMonths.includes(a.month)),
-    [allocations, scenarioId, filteredMonths]
+    () => allocations.filter((a) => a.scenarioId === activeScenarioId && filteredMonths.includes(a.month)),
+    [allocations, activeScenarioId, filteredMonths]
   )
   const activeResources = resources.filter((r) => r.active)
 
@@ -58,12 +56,11 @@ export function OptimisationPage() {
     [residualOverload, monthlyFteCapacity]
   )
 
-  if (!assumptions) return <PageLayout title="Optimisation"><p style={{ color: 'var(--text-faint)' }}>No scenario.</p></PageLayout>
+  if (!assumptions) return <PageLayout title="Optimisation"><p style={{ color: 'var(--text-faint)' }}>No data.</p></PageLayout>
 
   return (
     <PageLayout title="Optimisation" subtitle="Recommendations only — no changes are made automatically">
       <div className="flex flex-wrap gap-4 mb-10">
-        <Select label="Scenario" value={scenarioId} onChange={(e) => setScenarioId(e.target.value)} options={scenarios.map((s) => ({ value: s.id, label: s.name }))} />
         <Select label="From" value={startMonth} onChange={(e) => setStartMonth(e.target.value)} options={MONTHS.map((m) => ({ value: m, label: formatMonth(m) }))} />
         <Select label="To" value={endMonth} onChange={(e) => setEndMonth(e.target.value)} options={MONTHS.map((m) => ({ value: m, label: formatMonth(m) }))} />
       </div>

@@ -1,11 +1,13 @@
 import { useMemo, useState } from 'react'
+import { motion } from 'motion/react'
 import { usePlannerStore } from '../../store/plannerStore'
 import { PageLayout } from '../../components/layout/PageLayout'
 import { Select } from '../../components/ui/Select'
 import { formatHours, formatPercent } from '../../utils/format'
 import { formatMonth, generateMonthRange } from '../../utils/months'
 import { calculatePersonUtilisation, calculateTeamUtilisation } from '../../domain/utilisation/utilisationCalculations'
-import { UnifiedTimeline } from './UnifiedTimeline'
+import { DisciplineCharts } from './DisciplineCharts'
+import { PlanGantt } from './PlanGantt'
 import type { FrontendBrand } from '../../types'
 
 const MONTHS = generateMonthRange('2026-01', '2026-12')
@@ -13,13 +15,11 @@ const MONTHS = generateMonthRange('2026-01', '2026-12')
 export function DashboardPage() {
   const { resources, projects, allocations, scenarios, leaveEntries, activeScenarioId } = usePlannerStore()
 
-  const [scenarioId, setScenarioId] = useState(activeScenarioId)
   const [startMonth, setStartMonth] = useState('2026-06')
   const [endMonth, setEndMonth] = useState('2026-12')
   const [brandFilter, setBrandFilter] = useState<'DCT' | 'PLK' | 'both'>('both')
 
-  const scenario = scenarios.find((s) => s.id === scenarioId)
-  const assumptions = scenario?.assumptions
+  const assumptions = scenarios.find((s) => s.id === activeScenarioId)?.assumptions
   const filteredMonths = useMemo(() => generateMonthRange(startMonth, endMonth), [startMonth, endMonth])
 
   const filteredProjects = useMemo(
@@ -30,14 +30,14 @@ export function DashboardPage() {
 
   const filteredAllocations = useMemo(
     () => allocations.filter(
-      (a) => a.scenarioId === scenarioId && filteredProjectIds.has(a.projectId) && filteredMonths.includes(a.month),
+      (a) => a.scenarioId === activeScenarioId && filteredProjectIds.has(a.projectId) && filteredMonths.includes(a.month),
     ),
-    [allocations, scenarioId, filteredProjectIds, filteredMonths],
+    [allocations, activeScenarioId, filteredProjectIds, filteredMonths],
   )
 
   const activeResources = resources.filter((r) => r.active)
 
-  if (!assumptions) return <PageLayout title="Dashboard"><div style={{ color: 'var(--text-muted)' }}>No scenario.</div></PageLayout>
+  if (!assumptions) return <PageLayout title="Dashboard"><div style={{ color: 'var(--text-muted)' }}>No data.</div></PageLayout>
 
   const teamByMonth = filteredMonths.map((m) =>
     calculateTeamUtilisation(activeResources, filteredAllocations, assumptions, m, leaveEntries),
@@ -76,11 +76,9 @@ export function DashboardPage() {
   ]
 
   return (
-    <PageLayout title="Dashboard" subtitle={scenario?.name}>
+    <PageLayout title="Dashboard">
       {/* Filters */}
       <div className="flex flex-wrap gap-3 mb-5">
-        <Select label="Scenario" value={scenarioId} onChange={(e) => setScenarioId(e.target.value)}
-          options={scenarios.map((s) => ({ value: s.id, label: s.name }))} />
         <Select label="From" value={startMonth} onChange={(e) => setStartMonth(e.target.value)}
           options={MONTHS.map((m) => ({ value: m, label: formatMonth(m) }))} />
         <Select label="To" value={endMonth} onChange={(e) => setEndMonth(e.target.value)}
@@ -96,35 +94,54 @@ export function DashboardPage() {
       >
         {kpis.map(({ value, label, color }) => (
           <div key={label} className="flex items-baseline gap-1.5">
-            <span
-              className="font-bold tabular-nums"
-              style={{ fontSize: 20, lineHeight: 1, color }}
-            >
+            <span className="font-bold tabular-nums" style={{ fontSize: 20, lineHeight: 1, color }}>
               {value}
             </span>
-            <span
-              style={{
-                fontSize: 10, color: 'var(--text-muted)',
-                textTransform: 'uppercase', letterSpacing: '0.07em',
-              }}
-            >
+            <span style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               {label}
             </span>
           </div>
         ))}
       </div>
 
-      {/* Unified timeline */}
-      <UnifiedTimeline
-        resources={activeResources}
-        projects={filteredProjects}
-        allocations={filteredAllocations}
-        assumptions={assumptions}
-        months={filteredMonths}
-        leaveEntries={leaveEntries}
-        startMonth={startMonth}
-        endMonth={endMonth}
-      />
+      {/* Discipline charts */}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        className="mb-8"
+      >
+        <DisciplineCharts
+          resources={activeResources}
+          allocations={filteredAllocations}
+          leaveEntries={leaveEntries}
+          assumptions={assumptions}
+          months={filteredMonths}
+        />
+      </motion.div>
+
+      {/* Portfolio */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.1, duration: 0.3 }}
+      >
+        <div
+          style={{
+            fontSize: 10, fontWeight: 700, letterSpacing: '0.08em',
+            textTransform: 'uppercase', color: 'var(--text-faint)', marginBottom: 10,
+          }}
+        >
+          Portfolio
+        </div>
+        <PlanGantt
+          projects={projects}
+          allocations={filteredAllocations}
+          brandFilter={brandFilter}
+          startMonth={startMonth}
+          endMonth={endMonth}
+        />
+      </motion.div>
     </PageLayout>
   )
 }

@@ -52,27 +52,25 @@ const ROLE_COLORS: Record<string, string> = {
 
 export function ReportsPage() {
   const { resources, projects, allocations, scenarios, activeScenarioId, leaveEntries } = usePlannerStore()
-  const [scenarioId, setScenarioId] = useState(activeScenarioId)
   const [startMonth, setStartMonth] = useState('2026-06')
   const [endMonth, setEndMonth] = useState('2026-12')
   const [brandFilter, setBrandFilter] = useState<'DCT' | 'PLK' | 'both'>('both')
   const [activeTab, setActiveTab] = useState<Tab>('person')
   const [displayMode, setDisplayMode] = useState<'percent' | 'hours'>('percent')
 
-  const scenario = scenarios.find((s) => s.id === scenarioId)
-  const assumptions = scenario?.assumptions
+  const assumptions = scenarios.find((s) => s.id === activeScenarioId)?.assumptions
   const filteredMonths = useMemo(() => generateMonthRange(startMonth, endMonth), [startMonth, endMonth])
 
   const filteredAllocations = useMemo(() =>
     allocations.filter((a) => {
-      if (a.scenarioId !== scenarioId) return false
+      if (a.scenarioId !== activeScenarioId) return false
       if (!filteredMonths.includes(a.month)) return false
       if (brandFilter !== 'both') {
         const proj = projects.find((p) => p.id === a.projectId)
         if (proj?.frontendBrand !== brandFilter) return false
       }
       return true
-    }), [allocations, scenarioId, filteredMonths, brandFilter, projects])
+    }), [allocations, activeScenarioId, filteredMonths, brandFilter, projects])
 
   const activeResources = resources.filter((r) => r.active)
 
@@ -198,7 +196,6 @@ export function ReportsPage() {
     >
       {/* Filters */}
       <div className="flex flex-wrap gap-4 mb-8">
-        <Select label="Scenario" value={scenarioId} onChange={(e) => setScenarioId(e.target.value)} options={scenarios.map((s) => ({ value: s.id, label: s.name }))} />
         <Select label="From" value={startMonth} onChange={(e) => setStartMonth(e.target.value)} options={MONTHS.map((m) => ({ value: m, label: formatMonth(m) }))} />
         <Select label="To" value={endMonth} onChange={(e) => setEndMonth(e.target.value)} options={MONTHS.map((m) => ({ value: m, label: formatMonth(m) }))} />
         <Select label="Brand" value={brandFilter} onChange={(e) => setBrandFilter(e.target.value as typeof brandFilter)} options={[{ value: 'both', label: 'Both' }, { value: 'DCT', label: 'DCT' }, { value: 'PLK', label: 'PLK' }]} />

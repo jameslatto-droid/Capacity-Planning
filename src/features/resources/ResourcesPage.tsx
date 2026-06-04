@@ -72,7 +72,7 @@ export function ResourcesPage() {
             {['Name', 'Role', 'Type', 'h/wk', 'Days', 'Monthly cap.', 'Active', ''].map((h, i) => (
               <th
                 key={h + i}
-                className={`pb-3 text-[10px] uppercase tracking-widest font-semibold ${i === 0 ? 'text-left' : i < 7 ? 'text-right' : ''}`}
+                className={`pb-2.5 text-[11px] uppercase tracking-wider font-semibold ${i === 0 ? 'text-left' : i < 7 ? 'text-right' : ''}`}
                 style={{ color: 'var(--text-faint)' }}
               >
                 {h}
@@ -98,7 +98,7 @@ export function ResourcesPage() {
                 onMouseEnter={() => setHoveredId(r.id)}
                 onMouseLeave={() => setHoveredId(null)}
               >
-                <td className="py-3 font-medium" style={{ color: 'var(--text)' }}>
+                <td className="py-2.5 font-medium" style={{ color: 'var(--text)' }}>
                   {r.displayName}
                   {r.notes && <span className="ml-2 text-[11px]" style={{ color: 'var(--text-faint)' }}>{r.notes}</span>}
                   {r.secondaryRoles && r.secondaryRoles.length > 0 && (
@@ -112,8 +112,8 @@ export function ResourcesPage() {
                     </div>
                   )}
                 </td>
-                <td className="py-3 text-right" style={{ color: 'var(--text-muted)' }}>{ROLE_LABELS[r.role]}</td>
-                <td className="py-3 text-right">
+                <td className="py-2.5 text-right" style={{ color: 'var(--text-muted)' }}>{ROLE_LABELS[r.role]}</td>
+                <td className="py-2.5 text-right">
                   <Badge variant={employmentBadge[r.employmentType] ?? 'default'}>{r.employmentType}</Badge>
                 </td>
                 <td className="py-3 text-right tabular" style={{ color: 'var(--text-muted)' }}>{r.contractHoursPerWeek}</td>
@@ -121,11 +121,11 @@ export function ResourcesPage() {
                 <td className="py-3 text-right font-semibold tabular" style={{ color: 'var(--text)' }}>
                   {capacity !== null ? formatHours(capacity) : '—'}
                 </td>
-                <td className="py-3 text-right">
+                <td className="py-2.5 text-right">
                   <span className={`inline-block w-2 h-2 rounded-full ${r.active ? 'bg-emerald-500' : 'bg-slate-700'}`}
                     style={r.active ? { boxShadow: '0 0 6px rgba(16,185,129,0.6)' } : {}} />
                 </td>
-                <td className="py-3 text-right">
+                <td className="py-2.5 text-right">
                   <div className="flex gap-1 justify-end transition-opacity duration-150" style={{ opacity: isHovered ? 1 : 0 }}>
                     <Button size="sm" variant="ghost" onClick={() => { setEditingResource(r); setShowForm(true) }}>Edit</Button>
                     <Button size="sm" variant="danger" onClick={() => { if (confirm('Delete?')) deleteResource(r.id) }}>Del</Button>

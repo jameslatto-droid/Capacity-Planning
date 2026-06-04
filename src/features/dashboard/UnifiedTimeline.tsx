@@ -156,8 +156,8 @@ export function UnifiedTimeline({
           <div
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
-              paddingRight: 10, fontSize: 9, fontWeight: 700,
-              letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-faint)',
+              paddingRight: 10, fontSize: 10, fontWeight: 700,
+              letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-faint)',
             }}
           >
             Team
@@ -202,7 +202,7 @@ export function UnifiedTimeline({
             <div style={{ height: 1, background: 'var(--border)', margin: '12px 0 8px' }} />
             <div
               style={{
-                fontSize: 9, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase',
+                fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
                 color: 'var(--text-faint)', marginBottom: 6,
               }}
             >

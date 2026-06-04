@@ -11,20 +11,17 @@ type ValueMode = 'hours' | 'percent'
 const MONTHS = generateMonthRange('2026-01', '2026-12')
 
 export function AllocationsPage() {
-  const { scenarios, activeScenarioId } = usePlannerStore()
-  const [scenarioId, setScenarioId] = useState(activeScenarioId)
+  const { activeScenarioId } = usePlannerStore()
   const [viewMode, setViewMode] = useState<ViewMode>('person')
   const [valueMode, setValueMode] = useState<ValueMode>('hours')
   const [startMonth, setStartMonth] = useState('2026-06')
   const [endMonth, setEndMonth] = useState('2026-12')
 
-  const scenarioOptions = scenarios.map((s) => ({ value: s.id, label: s.name }))
   const monthOptions = MONTHS.map((m) => ({ value: m, label: formatMonth(m) }))
 
   return (
     <PageLayout title="Allocations">
       <div className="flex flex-wrap items-end gap-4 mb-8">
-        <Select label="Scenario" value={scenarioId} onChange={(e) => setScenarioId(e.target.value)} options={scenarioOptions} />
         <Select label="From" value={startMonth} onChange={(e) => setStartMonth(e.target.value)} options={monthOptions} />
         <Select label="To" value={endMonth} onChange={(e) => setEndMonth(e.target.value)} options={monthOptions} />
         <div className="flex gap-1 self-end">
@@ -68,7 +65,7 @@ export function AllocationsPage() {
           ))}
         </div>
       </div>
-      <AllocationMatrixByPerson scenarioId={scenarioId} startMonth={startMonth} endMonth={endMonth} viewMode={viewMode} valueMode={valueMode} />
+      <AllocationMatrixByPerson scenarioId={activeScenarioId} startMonth={startMonth} endMonth={endMonth} viewMode={viewMode} valueMode={valueMode} />
     </PageLayout>
   )
 }

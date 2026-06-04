@@ -67,7 +67,7 @@ export function ProjectsPage() {
             {['Code', 'Project', 'Brand', 'Status', 'Period', 'Hours', ''].map((h, i) => (
               <th
                 key={h + i}
-                className={`pb-3 text-[10px] uppercase tracking-widest font-semibold ${i <= 1 ? 'text-left' : i < 6 ? 'text-right' : ''}`}
+                className={`pb-2.5 text-[11px] uppercase tracking-wider font-semibold ${i <= 1 ? 'text-left' : i < 6 ? 'text-right' : ''}`}
                 style={{ color: 'var(--text-faint)' }}
               >
                 {h}
@@ -98,8 +98,8 @@ export function ProjectsPage() {
                 onMouseEnter={() => setHoveredId(p.id)}
                 onMouseLeave={() => setHoveredId(null)}
               >
-                <td className="py-3 font-mono text-xs" style={{ color: 'var(--text-muted)' }}>{p.code}</td>
-                <td className="py-3 font-medium" style={{ color: 'var(--text)' }}>
+                <td className="py-2.5font-mono text-xs" style={{ color: 'var(--text-muted)' }}>{p.code}</td>
+                <td className="py-2.5font-medium" style={{ color: 'var(--text)' }}>
                   {p.name}
                   {(p.client || pm) && (
                     <div className="text-[11px] mt-0.5" style={{ color: 'var(--text-muted)' }}>
@@ -107,24 +107,24 @@ export function ProjectsPage() {
                     </div>
                   )}
                   {lastSaved && (
-                    <div className="text-[10px] mt-0.5" style={{ color: 'var(--text-faint)' }}>
+                    <div className="text-[11px] mt-0.5" style={{ color: 'var(--text-faint)' }}>
                       Saved {new Date(lastSaved).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                     </div>
                   )}
                 </td>
-                <td className="py-3 text-right">
+                <td className="py-2.5text-right">
                   <Badge variant={p.frontendBrand === 'DCT' ? 'violet' : 'blue'}>{p.frontendBrand}</Badge>
                 </td>
-                <td className="py-3 text-right">
+                <td className="py-2.5text-right">
                   <Badge variant={statusVariant[p.status] ?? 'default'}>{p.status}</Badge>
                 </td>
-                <td className="py-3 text-right text-xs whitespace-nowrap tabular" style={{ color: 'var(--text-muted)' }}>
+                <td className="py-2.5text-right text-xs whitespace-nowrap tabular" style={{ color: 'var(--text-muted)' }}>
                   {formatMonth(p.startMonth)} – {formatMonth(p.endMonth)}
                 </td>
-                <td className="py-3 text-right font-semibold tabular" style={{ color: 'var(--text)' }}>
+                <td className="py-2.5text-right font-semibold tabular" style={{ color: 'var(--text)' }}>
                   {totalHours > 0 ? formatHours(totalHours) : <span style={{ color: 'var(--text-faint)' }}>—</span>}
                 </td>
-                <td className="py-3 text-right" style={{ minWidth: 160 }}>
+                <td className="py-2.5text-right" style={{ minWidth: 160 }}>
                   <div
                     className="flex gap-1.5 justify-end transition-opacity duration-150"
                     style={{ opacity: isHovered ? 1 : 0 }}

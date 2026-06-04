@@ -32,8 +32,8 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
 
   if (!assumptions) return <div style={{ color: 'var(--text-faint)' }}>No scenario found.</div>
 
-  const thCls = 'text-right pb-3 text-[10px] uppercase tracking-widest font-semibold whitespace-nowrap px-2'
-  const thLeft = 'text-left pb-3 text-[10px] uppercase tracking-widest font-semibold'
+  const thCls = 'text-right pb-2.5text-[11px] uppercase tracking-wider font-semibold whitespace-nowrap px-2'
+  const thLeft = 'text-left pb-2.5text-[11px] uppercase tracking-wider font-semibold'
   const thStyle = { color: 'var(--text-faint)' }
 
   if (viewMode === 'person') {

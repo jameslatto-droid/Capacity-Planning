@@ -9,7 +9,7 @@ export function Select({ label, options, className = '', style: extStyle, ...pro
   return (
     <label className="flex flex-col gap-1.5">
       {label && (
-        <span className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-faint)' }}>
+        <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: 'var(--text-faint)' }}>
           {label}
         </span>
       )}
