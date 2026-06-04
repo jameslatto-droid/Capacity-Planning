@@ -204,7 +204,7 @@ export function LeavePage() {
       {/* Who's out this month */}
       {outThisMonth.length > 0 && (
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-          <div className="text-[10px] uppercase tracking-widest font-semibold mb-3" style={{ color: 'var(--text-faint)' }}>
+          <div className="text-[10px] uppercase tracking-wider font-semibold mb-3" style={{ color: 'var(--text-faint)' }}>
             Out this month — {formatMonth(now)}
           </div>
           <div className="flex flex-wrap gap-2">
@@ -240,9 +240,9 @@ export function LeavePage() {
           <table className="text-xs w-full">
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                <th className="text-left pb-3 pr-4 font-semibold text-[10px] uppercase tracking-widest" style={{ color: 'var(--text-faint)', minWidth: 150 }}>Person</th>
+                <th className="text-left pb-3 pr-4 font-semibold text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-faint)', minWidth: 150 }}>Person</th>
                 {viewMonths.map((m) => (
-                  <th key={m} className="text-center pb-3 px-2 font-semibold text-[10px] uppercase tracking-widest whitespace-nowrap" style={{ color: 'var(--text-faint)', minWidth: 56 }}>
+                  <th key={m} className="text-center pb-3 px-2 font-semibold text-[10px] uppercase tracking-wider whitespace-nowrap" style={{ color: 'var(--text-faint)', minWidth: 56 }}>
                     {new Date(m + '-01').toLocaleDateString('en-GB', { month: 'short' })}
                   </th>
                 ))}
@@ -255,7 +255,7 @@ export function LeavePage() {
                   const hasAny = viewMonths.some((m) => getLeaveDaysInMonth(r, m, leaveEntries) > 0)
                   return (
                     <tr key={r.id} style={ROW}>
-                      <td className="py-2.5 pr-4 font-medium" style={{ color: hasAny ? 'var(--text)' : 'var(--text-muted)' }}>
+                      <td className="py-1.5 pr-4 font-medium" style={{ color: hasAny ? 'var(--text)' : 'var(--text-muted)' }}>
                         {r.displayName}
                       </td>
                       {viewMonths.map((m) => {
@@ -269,7 +269,7 @@ export function LeavePage() {
                         })
                         const mainType = monthEntries[0]?.type
                         return (
-                          <td key={m} className="px-2 py-2 text-center">
+                          <td key={m} className="px-2 py-1 text-center">
                             {days > 0 ? (
                               <button
                                 onClick={() => monthEntries[0] && openEdit(monthEntries[0])}
@@ -305,17 +305,22 @@ export function LeavePage() {
 
       {/* Leave entry list */}
       <div>
-        <div className="text-[10px] uppercase tracking-widest font-semibold mb-4" style={{ color: 'var(--text-faint)' }}>
+        <div className="text-[10px] uppercase tracking-wider font-semibold mb-4" style={{ color: 'var(--text-faint)' }}>
           All Leave Entries {filteredEntries.length > 0 && `· ${filteredEntries.length}`}
         </div>
         {filteredEntries.length === 0 ? (
-          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>No leave entries recorded yet.</p>
+          <div className="flex flex-col items-center justify-center py-12 gap-3">
+            <div style={{ fontSize: 32, opacity: 0.2 }}>◷</div>
+            <div style={{ fontSize: 13, color: 'var(--text-faint)' }}>
+              {filterResource === 'all' ? 'No leave entries yet — add the first one above' : 'No leave entries for this person'}
+            </div>
+          </div>
         ) : (
           <table className="w-full text-sm">
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
                 {['Person', 'Type', 'From', 'To', 'Days', 'Notes', ''].map((h, i) => (
-                  <th key={h + i} className={`pb-3 text-[10px] uppercase tracking-widest font-semibold ${i === 0 || i === 5 ? 'text-left' : 'text-center'} ${i >= 6 ? '' : 'pr-3'}`}
+                  <th key={h + i} className={`pb-3 text-[10px] uppercase tracking-wider font-semibold ${i === 0 || i === 5 ? 'text-left' : 'text-center'} ${i >= 6 ? '' : 'pr-3'}`}
                     style={{ color: 'var(--text-faint)' }}>
                     {h}
                   </th>

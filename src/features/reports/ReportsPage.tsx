@@ -177,7 +177,7 @@ export function ReportsPage() {
       className="rounded-2xl p-6"
       style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
     >
-      <div className="text-[10px] uppercase tracking-widest mb-5" style={{ color: 'var(--text-faint)' }}>{title}</div>
+      <div className="text-[10px] uppercase tracking-wider mb-5" style={{ color: 'var(--text-faint)' }}>{title}</div>
       {children}
     </motion.div>
   )
@@ -359,7 +359,7 @@ export function ReportsPage() {
             'Overloaded People'
           )}
           <div>
-            <div className="text-[10px] uppercase tracking-widest mb-4" style={{ color: 'var(--text-faint)' }}>All Overloads</div>
+            <div className="text-[10px] uppercase tracking-wider mb-4" style={{ color: 'var(--text-faint)' }}>All Overloads</div>
             {personResults.filter(({ result }) => result.overloadHours > 0).length === 0 ? (
               <p className="text-sm text-emerald-500/60">No overloads in selected period.</p>
             ) : (
@@ -367,7 +367,7 @@ export function ReportsPage() {
                 <thead>
                   <tr style={{ borderBottom: '1px solid var(--border)' }}>
                     {['Person', 'Month', 'Capacity', 'Allocated', 'Overload', 'Util'].map((h, i) => (
-                      <th key={h} className={`pb-3 text-[10px] uppercase tracking-widest font-semibold ${i === 0 ? 'text-left' : 'text-right'}`} style={{ color: 'var(--text-faint)' }}>{h}</th>
+                      <th key={h} className={`pb-3 text-[10px] uppercase tracking-wider font-semibold ${i === 0 ? 'text-left' : 'text-right'}`} style={{ color: 'var(--text-faint)' }}>{h}</th>
                     ))}
                   </tr>
                 </thead>

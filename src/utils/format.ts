@@ -23,12 +23,8 @@ export function utilisationColor(ratio: number): string {
 
 /** Returns a text colour class for a utilisation ratio */
 export function utilisationTextColor(ratio: number): string {
-  if (ratio <= 0) return 'text-slate-700'
-  if (ratio < 0.6) return 'text-blue-300'
-  if (ratio < 0.85) return 'text-emerald-300'
-  if (ratio < 1.0) return 'text-amber-300'
-  if (ratio <= 1.15) return 'text-orange-300'
-  return 'text-red-300'
+  if (ratio <= 0) return 'text-slate-500'
+  return 'text-white'
 }
 
 /** Glow shadow for overloaded states */

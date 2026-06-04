@@ -31,7 +31,7 @@ export function StatCard({ label, value, sub, accent = 'default' }: StatProps) {
       className="flex flex-col gap-1.5"
     >
       <div className="w-5 h-0.5 rounded-full" style={{ background: accentBar[accent] }} />
-      <div className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-faint)' }}>
+      <div className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--text-faint)' }}>
         {label}
       </div>
       <div className="text-3xl font-bold tracking-tight tabular" style={{ color: accentVal[accent] }}>

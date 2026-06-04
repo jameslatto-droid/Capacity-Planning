@@ -61,7 +61,13 @@ export function ProjectsPage() {
         </div>
       )}
 
-      <table className="w-full text-sm">
+      {projects.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-20 gap-3">
+          <div style={{ fontSize: 36, opacity: 0.2 }}>◈</div>
+          <div style={{ fontSize: 13, color: 'var(--text-faint)' }}>No projects yet — add your first project above</div>
+        </div>
+      )}
+      {projects.length > 0 && <table className="w-full text-sm">
         <thead>
           <tr style={{ borderBottom: '1px solid var(--border-s)' }}>
             {['Code', 'Project', 'Brand', 'Status', 'Period', 'Hours', ''].map((h, i) => (
@@ -148,7 +154,7 @@ export function ProjectsPage() {
             )
           })}
         </tbody>
-      </table>
+      </table>}
     </PageLayout>
   )
 }

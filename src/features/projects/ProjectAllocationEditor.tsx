@@ -201,7 +201,7 @@ export function ProjectAllocationEditor() {
             ← Projects
           </button>
           <div>
-            <span className="text-[10px] uppercase tracking-widest font-semibold mr-2" style={{ color: 'var(--text-faint)' }}>
+            <span className="text-[10px] uppercase tracking-wider font-semibold mr-2" style={{ color: 'var(--text-faint)' }}>
               {project.code} · {project.frontendBrand}
             </span>
             <span className="text-base font-bold tracking-tight" style={{ color: 'var(--text)' }}>
@@ -236,12 +236,12 @@ export function ProjectAllocationEditor() {
         <table className="text-xs w-full" style={{ borderCollapse: 'separate', borderSpacing: 0 }}>
           <thead>
             <tr>
-              <th className="text-left pb-2 pr-4 font-semibold text-[10px] uppercase tracking-widest sticky left-0 z-10 whitespace-nowrap"
+              <th className="text-left pb-2 pr-4 font-semibold text-[10px] uppercase tracking-wider sticky left-0 z-10 whitespace-nowrap"
                 style={{ color: 'var(--text-faint)', background: 'var(--bg)', borderBottom: '1px solid var(--border)', minWidth: 150 }}>
                 Team Member
               </th>
               {months.map((m) => (
-                <th key={m} className="text-center pb-2 px-0.5 font-semibold text-[10px] uppercase tracking-widest whitespace-nowrap"
+                <th key={m} className="text-center pb-2 px-0.5 font-semibold text-[10px] uppercase tracking-wider whitespace-nowrap"
                   style={{ color: 'var(--text-faint)', borderBottom: '1px solid var(--border)', minWidth: 56 }}>
                   {new Date(m + '-01').toLocaleDateString('en-GB', { month: 'short', year: '2-digit' })}
                 </th>
@@ -326,7 +326,7 @@ export function ProjectAllocationEditor() {
           {assignedResources.length > 0 && (
             <tfoot>
               <tr>
-                <td className="pt-3 pb-1 pr-4 text-[10px] uppercase tracking-widest font-semibold sticky left-0"
+                <td className="pt-3 pb-1 pr-4 text-[10px] uppercase tracking-wider font-semibold sticky left-0"
                   style={{ color: 'var(--text-faint)', background: 'var(--bg)' }}>
                   Total
                 </td>

@@ -52,26 +52,43 @@ export function DashboardPage() {
     filteredMonths.map((m) => calculatePersonUtilisation(r, filteredAllocations, assumptions, m, leaveEntries)),
   ).filter((result) => result.overloadHours > 0).length
 
+  // Trend: first half vs second half of selected period
+  const trendArrow = (() => {
+    if (teamByMonth.length < 2) return null
+    const mid = Math.floor(teamByMonth.length / 2)
+    const a = teamByMonth.slice(0, mid).reduce((s, m) => s + m.utilisation, 0) / mid
+    const b = teamByMonth.slice(mid).reduce((s, m) => s + m.utilisation, 0) / (teamByMonth.length - mid)
+    const delta = b - a
+    if (Math.abs(delta) < 0.03) return null
+    return delta > 0
+      ? { symbol: '↑', color: '#f59e0b', title: 'Utilisation rising across period' }
+      : { symbol: '↓', color: '#10b981', title: 'Utilisation easing across period' }
+  })()
+
   const kpis = [
     {
       value: formatPercent(overallUtil),
       label: 'utilised',
       color: overallUtil > 1 ? '#ef4444' : overallUtil > 0.85 ? '#f59e0b' : '#10b981',
+      trend: trendArrow,
     },
     {
       value: formatHours(Math.abs(netHours)),
       label: netHours >= 0 ? 'headroom' : 'overrun',
       color: netHours >= 0 ? '#10b981' : '#ef4444',
+      trend: null,
     },
     {
       value: String(overloadCount),
       label: `overload${overloadCount !== 1 ? 's' : ''}`,
       color: overloadCount > 0 ? '#ef4444' : '#10b981',
+      trend: null,
     },
     {
       value: String(filteredProjects.length),
       label: 'projects',
       color: 'var(--text)',
+      trend: null,
     },
   ]
 
@@ -92,11 +109,16 @@ export function DashboardPage() {
         className="flex flex-wrap items-center gap-x-8 gap-y-2 mb-6 pb-5"
         style={{ borderBottom: '1px solid var(--border)' }}
       >
-        {kpis.map(({ value, label, color }) => (
-          <div key={label} className="flex items-baseline gap-1.5">
+        {kpis.map(({ value, label, color, trend }) => (
+          <div key={label} className="flex items-center gap-1.5">
             <span className="font-bold tabular-nums" style={{ fontSize: 20, lineHeight: 1, color }}>
               {value}
             </span>
+            {trend && (
+              <span title={trend.title} style={{ fontSize: 13, color: trend.color, lineHeight: 1, fontWeight: 600 }}>
+                {trend.symbol}
+              </span>
+            )}
             <span style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               {label}
             </span>

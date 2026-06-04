@@ -92,7 +92,7 @@ export function PlanGantt({ projects, allocations, brandFilter, startMonth, endM
         {yearBoundaries.map(({ label, pct }) => (
           <div
             key={label}
-            className="absolute top-0 text-[10px] font-bold uppercase tracking-widest"
+            className="absolute top-0 text-[10px] font-bold uppercase tracking-wider"
             style={{ left: `${pct}%`, color: 'var(--text-faint)', transform: 'translateX(-2px)' }}
           >
             {label}

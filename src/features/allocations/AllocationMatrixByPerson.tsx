@@ -60,7 +60,7 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
               return [
                 // ── Capacity header row ──────────────────────────────────
                 <tr key={`${r.id}-cap`} style={{ ...ROW, background: 'rgba(124,58,237,0.06)' }}>
-                  <td className="py-2.5 font-semibold" style={{ color: 'var(--text)' }}>{r.displayName}</td>
+                  <td className="py-2 font-semibold" style={{ color: 'var(--text)' }}>{r.displayName}</td>
                   {months.map((m) => {
                     const capacity = capByMonth[m] ?? 0
                     const allocated = personAllocs.filter((a) => a.month === m).reduce((s, a) => s + a.hours, 0)
@@ -145,7 +145,7 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
                   const proj = projects.find((p) => p.id === pid)
                   return (
                     <tr key={`${r.id}-${pid}`} style={ROW}>
-                      <td className="py-1.5 pl-6" style={{ color: 'var(--text-faint)' }}>{proj?.code} — {proj?.name}</td>
+                      <td className="py-1 pl-6" style={{ color: 'var(--text-faint)' }}>{proj?.code} — {proj?.name}</td>
                       {months.map((m) => {
                         const hrs = personAllocs.filter((a) => a.projectId === pid && a.month === m).reduce((s, a) => s + a.hours, 0)
                         const cap = capByMonth[m] ?? 1
@@ -153,7 +153,7 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
                           ? (isPct ? `${Math.round(hrs / cap * 100)}%` : `${hrs}h`)
                           : null
                         return (
-                          <td key={m} className="px-2 py-1.5 text-right tabular" style={{ color: 'var(--text-muted)' }}>
+                          <td key={m} className="px-2 py-1 text-right tabular" style={{ color: 'var(--text-muted)' }}>
                             {display ?? <span style={{ color: 'var(--text-faint)' }}>—</span>}
                           </td>
                         )
@@ -196,10 +196,10 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
                   const res = resources.find((r) => r.id === rid)
                   return (
                     <tr key={`${proj.id}-${rid}`} style={ROW}>
-                      <td className="py-1.5 pl-6" style={{ color: 'var(--text-faint)' }}>{res?.displayName ?? rid}</td>
+                      <td className="py-1 pl-6" style={{ color: 'var(--text-faint)' }}>{res?.displayName ?? rid}</td>
                       {months.map((m) => {
                         const hrs = projAllocs.filter((a) => a.resourceId === rid && a.month === m).reduce((s, a) => s + a.hours, 0)
-                        return <td key={m} className="px-2 py-1.5 text-right tabular" style={{ color: 'var(--text-muted)' }}>{hrs > 0 ? `${hrs}h` : <span style={{ color: 'var(--text-faint)' }}>—</span>}</td>
+                        return <td key={m} className="px-2 py-1 text-right tabular" style={{ color: 'var(--text-muted)' }}>{hrs > 0 ? `${hrs}h` : <span style={{ color: 'var(--text-faint)' }}>—</span>}</td>
                       })}
                     </tr>
                   )

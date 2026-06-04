@@ -66,7 +66,13 @@ export function ResourcesPage() {
         </div>
       )}
 
-      <table className="w-full text-sm">
+      {resources.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-20 gap-3">
+          <div style={{ fontSize: 36, opacity: 0.2 }}>◎</div>
+          <div style={{ fontSize: 13, color: 'var(--text-faint)' }}>No team members yet — add your first resource above</div>
+        </div>
+      )}
+      {resources.length > 0 && <table className="w-full text-sm">
         <thead>
           <tr style={{ borderBottom: '1px solid var(--border-s)' }}>
             {['Name', 'Role', 'Type', 'h/wk', 'Days', 'Monthly cap.', 'Active', ''].map((h, i) => (
@@ -135,7 +141,7 @@ export function ResourcesPage() {
             )
           })}
         </tbody>
-      </table>
+      </table>}
     </PageLayout>
   )
 }

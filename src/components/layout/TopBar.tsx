@@ -29,7 +29,8 @@ export function TopBar() {
         paddingLeft: 20,
         paddingRight: 16,
         background: 'var(--sidebar-bg)',
-        borderBottom: '1px solid var(--sidebar-bdr)',
+        borderBottom: '1px solid var(--border-s)',
+        boxShadow: '0 1px 0 var(--border), 0 2px 6px rgba(0,0,0,0.06)',
       }}
     >
       {/* App name */}

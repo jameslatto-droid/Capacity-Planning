@@ -82,8 +82,18 @@ html, body, #root {
 .heatmap-cell { transition: filter 0.12s ease; }
 .heatmap-cell:hover { filter: brightness(1.15); }
 
-/* Focus ring */
-input:focus, select:focus, textarea:focus {
+/* Focus ring — keyboard only, skip mouse clicks */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(124,58,237,0.35);
+  box-shadow: 0 0 0 2px rgba(124,58,237,0.4);
+  border-color: var(--accent) !important;
 }
+
+/* Smooth row hover on all data tables */
+tr { transition: background 0.1s ease; }
+
+/* Smooth interactive elements */
+button, a { transition: color 0.12s ease, opacity 0.12s ease; }
+select, input { transition: box-shadow 0.15s ease, border-color 0.15s ease; }

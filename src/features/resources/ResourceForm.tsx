@@ -70,7 +70,7 @@ export function ResourceForm({ initial, onSave, onCancel }: Props) {
       <Input label="Name" value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
       <Select label="Role" value={role} onChange={(e) => setRole(e.target.value as ResourceRole)} options={roleOptions} />
       <div>
-        <div className="text-[10px] font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-faint)' }}>Secondary Roles</div>
+        <div className="text-[10px] font-semibold uppercase tracking-wider mb-2" style={{ color: 'var(--text-faint)' }}>Secondary Roles</div>
         <div className="flex flex-wrap gap-3">
           {ALL_ROLES.filter((r) => r !== role).map((r) => (
             <label key={r} className="flex items-center gap-1.5 text-xs cursor-pointer transition-colors" style={{ color: 'var(--text-muted)' }}>
@@ -88,7 +88,7 @@ export function ResourceForm({ initial, onSave, onCancel }: Props) {
 
       {showContractDates && (
         <div>
-          <div className="text-[10px] font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--text-faint)' }}>
+          <div className="text-[10px] font-semibold uppercase tracking-wider mb-2" style={{ color: 'var(--text-faint)' }}>
             Contract period <span style={{ color: 'var(--text-faint)', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(optional — allocations outside this window will show a warning)</span>
           </div>
           <div className="flex gap-3">

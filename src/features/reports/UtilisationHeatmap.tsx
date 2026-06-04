@@ -36,7 +36,7 @@ export function UtilisationHeatmap({ rows, months, displayMode = 'percent' }: Pr
         {months.map((m) => (
           <div
             key={m}
-            className="flex-1 text-center text-[10px] uppercase tracking-widest px-1"
+            className="flex-1 text-center text-[10px] uppercase tracking-wider px-1"
             style={{ color: 'var(--text-muted)' }}
           >
             {formatMonth(m)}

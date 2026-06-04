@@ -75,7 +75,7 @@ export function OptimisationPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Overloads */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }}>
-          <div className="text-[10px] uppercase tracking-widest mb-4" style={{ color: 'var(--text-faint)' }}>Person-Month Overloads</div>
+          <div className="text-[10px] uppercase tracking-wider mb-4" style={{ color: 'var(--text-faint)' }}>Person-Month Overloads</div>
           {overloads.length === 0 ? (
             <p className="text-sm text-emerald-500/60">No overloads detected.</p>
           ) : (
@@ -83,7 +83,7 @@ export function OptimisationPage() {
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border)' }}>
                   {['Person', 'Month', 'Overload', 'Util'].map((h, i) => (
-                    <th key={h} className={`pb-3 text-[10px] uppercase tracking-widest font-semibold ${i === 0 ? 'text-left' : 'text-right'}`} style={{ color: 'var(--text-faint)' }}>{h}</th>
+                    <th key={h} className={`pb-3 text-[10px] uppercase tracking-wider font-semibold ${i === 0 ? 'text-left' : 'text-right'}`} style={{ color: 'var(--text-faint)' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -106,7 +106,7 @@ export function OptimisationPage() {
 
         {/* Recommendations */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
-          <div className="text-[10px] uppercase tracking-widest mb-4" style={{ color: 'var(--text-faint)' }}>Reallocation Recommendations</div>
+          <div className="text-[10px] uppercase tracking-wider mb-4" style={{ color: 'var(--text-faint)' }}>Reallocation Recommendations</div>
           {recommendations.length === 0 ? (
             <p className="text-sm" style={{ color: 'var(--text-faint)' }}>{overloads.length === 0 ? 'No overloads to resolve.' : 'No compatible spare capacity found.'}</p>
           ) : (
@@ -124,14 +124,14 @@ export function OptimisationPage() {
 
         {/* Available capacity */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }}>
-          <div className="text-[10px] uppercase tracking-widest mb-4" style={{ color: 'var(--text-faint)' }}>Available Capacity</div>
+          <div className="text-[10px] uppercase tracking-wider mb-4" style={{ color: 'var(--text-faint)' }}>Available Capacity</div>
           <table className="w-full text-xs">
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                <th className="text-left pb-3 text-[10px] uppercase tracking-widest font-semibold" style={{ color: 'var(--text-faint)' }}>Person</th>
-                <th className="text-left pb-3 text-[10px] uppercase tracking-widest font-semibold" style={{ color: 'var(--text-faint)' }}>Role</th>
+                <th className="text-left pb-3 text-[10px] uppercase tracking-wider font-semibold" style={{ color: 'var(--text-faint)' }}>Person</th>
+                <th className="text-left pb-3 text-[10px] uppercase tracking-wider font-semibold" style={{ color: 'var(--text-faint)' }}>Role</th>
                 {filteredMonths.slice(0, 4).map((m) => (
-                  <th key={m} className="text-right pb-3 text-[10px] uppercase tracking-widest font-semibold" style={{ color: 'var(--text-faint)' }}>{formatMonth(m)}</th>
+                  <th key={m} className="text-right pb-3 text-[10px] uppercase tracking-wider font-semibold" style={{ color: 'var(--text-faint)' }}>{formatMonth(m)}</th>
                 ))}
               </tr>
             </thead>
@@ -160,7 +160,7 @@ export function OptimisationPage() {
 
         {/* Contractor */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-          <div className="text-[10px] uppercase tracking-widest mb-4" style={{ color: 'var(--text-faint)' }}>Contractor Requirement</div>
+          <div className="text-[10px] uppercase tracking-wider mb-4" style={{ color: 'var(--text-faint)' }}>Contractor Requirement</div>
           {contractorReqs.length === 0 ? (
             <p className="text-sm text-emerald-500/60">No contractor capacity required.</p>
           ) : (
