@@ -3,7 +3,7 @@ import { motion } from 'motion/react'
 import { usePlannerStore } from '../../store/plannerStore'
 import { PageLayout } from '../../components/layout/PageLayout'
 import { Input } from '../../components/ui/Input'
-import { defaultForecastRange } from '../../utils/months'
+import { useDateRange } from '../../utils/useDateRange'
 import { AllocationMatrixByPerson } from './AllocationMatrixByPerson'
 
 type ViewMode = 'person' | 'project' | 'role'
@@ -11,17 +11,15 @@ type ValueMode = 'hours' | 'percent'
 
 export function AllocationsPage() {
   const { activeScenarioId } = usePlannerStore()
-  const defaultRange = defaultForecastRange()
+  const { startMonth, endMonth, setStartMonth, setEndMonth, minMonth, maxMonth } = useDateRange()
   const [viewMode, setViewMode] = useState<ViewMode>('person')
   const [valueMode, setValueMode] = useState<ValueMode>('hours')
-  const [startMonth, setStartMonth] = useState(defaultRange.startMonth)
-  const [endMonth, setEndMonth] = useState(defaultRange.endMonth)
 
   return (
     <PageLayout title="Allocations">
       <div className="flex flex-wrap items-end gap-4 mb-8">
-        <Input label="From" type="month" value={startMonth} onChange={(e) => setStartMonth(e.target.value)} className="w-36" />
-        <Input label="To" type="month" value={endMonth} onChange={(e) => setEndMonth(e.target.value)} className="w-36" />
+        <Input label="From" type="month" value={startMonth} min={minMonth} max={maxMonth} onChange={(e) => setStartMonth(e.target.value)} className="w-36" />
+        <Input label="To" type="month" value={endMonth} min={minMonth} max={maxMonth} onChange={(e) => setEndMonth(e.target.value)} className="w-36" />
         <div className="flex gap-1 self-end">
           {(['person', 'project', 'role'] as ViewMode[]).map((m) => (
             <motion.button

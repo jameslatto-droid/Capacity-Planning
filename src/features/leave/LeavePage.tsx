@@ -11,7 +11,8 @@ import {
   getEntryWorkingDays,
   countWorkingDays,
 } from '../../domain/capacity/leaveCalculations'
-import { defaultForecastRange, generateMonthRange, formatMonth, currentMonth } from '../../utils/months'
+import { generateMonthRange, formatMonth, currentMonth } from '../../utils/months'
+import { useDateRange } from '../../utils/useDateRange'
 import type { LeaveEntry, LeaveType } from '../../types'
 import { LEAVE_TYPE_LABELS } from '../../types'
 
@@ -48,10 +49,7 @@ function emptyForm(defaultResourceId = ''): LeaveFormState {
 
 export function LeavePage() {
   const { resources, leaveEntries, addLeaveEntry, updateLeaveEntry, deleteLeaveEntry } = usePlannerStore()
-  const defaultRange = defaultForecastRange()
-
-  const [viewStart, setViewStart] = useState(defaultRange.startMonth)
-  const [viewEnd,   setViewEnd]   = useState(defaultRange.endMonth)
+  const { startMonth: viewStart, endMonth: viewEnd, setStartMonth: setViewStart, setEndMonth: setViewEnd, minMonth, maxMonth } = useDateRange()
   const [showForm,  setShowForm]  = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [form,      setForm]      = useState<LeaveFormState>(emptyForm)
@@ -230,8 +228,8 @@ export function LeavePage() {
       {/* Month-by-month grid */}
       <div className="mb-10">
         <div className="flex flex-wrap items-end gap-3 mb-4">
-          <Input label="From" type="month" value={viewStart} onChange={(e) => setViewStart(e.target.value)} className="w-36" />
-          <Input label="To" type="month" value={viewEnd} onChange={(e) => setViewEnd(e.target.value)} className="w-36" />
+          <Input label="From" type="month" value={viewStart} min={minMonth} max={maxMonth} onChange={(e) => setViewStart(e.target.value)} className="w-36" />
+          <Input label="To" type="month" value={viewEnd} min={minMonth} max={maxMonth} onChange={(e) => setViewEnd(e.target.value)} className="w-36" />
           <Select label="Person" value={filterResource} onChange={(e) => setFilterResource(e.target.value)} options={resourceOptions} />
         </div>
 

@@ -6,7 +6,8 @@ import { Select } from '../../components/ui/Select'
 import { Input } from '../../components/ui/Input'
 import { StatCard } from '../../components/ui/StatCard'
 import { formatHours, formatPercent, formatFte, utilisationGlow } from '../../utils/format'
-import { defaultForecastRange, formatMonth, generateMonthRange } from '../../utils/months'
+import { formatMonth, generateMonthRange } from '../../utils/months'
+import { useDateRange } from '../../utils/useDateRange'
 import { calculatePersonUtilisation } from '../../domain/utilisation/utilisationCalculations'
 import { calculateMonthlyProductiveCapacity } from '../../domain/capacity/capacityCalculations'
 import {
@@ -28,9 +29,7 @@ function plainUtilisationColor(utilisation: number): string {
 
 export function OptimisationPage() {
   const { resources, projects, allocations, scenarios, activeScenarioId, leaveEntries } = usePlannerStore()
-  const defaultRange = defaultForecastRange()
-  const [startMonth, setStartMonth] = useState(defaultRange.startMonth)
-  const [endMonth, setEndMonth] = useState(defaultRange.endMonth)
+  const { startMonth, endMonth, setStartMonth, setEndMonth, minMonth, maxMonth } = useDateRange()
   const [capacityLookAhead, setCapacityLookAhead] = useState<'4' | '6' | '12' | 'all'>('6')
 
   const assumptions = scenarios.find((s) => s.id === activeScenarioId)?.assumptions
@@ -78,8 +77,8 @@ export function OptimisationPage() {
   return (
     <PageLayout title="Optimisation" subtitle="Recommendations only — no changes are made automatically">
       <div className="flex flex-wrap gap-4 mb-10">
-        <Input label="From" type="month" value={startMonth} onChange={(e) => setStartMonth(e.target.value)} className="w-36" />
-        <Input label="To" type="month" value={endMonth} onChange={(e) => setEndMonth(e.target.value)} className="w-36" />
+        <Input label="From" type="month" value={startMonth} min={minMonth} max={maxMonth} onChange={(e) => setStartMonth(e.target.value)} className="w-36" />
+        <Input label="To" type="month" value={endMonth} min={minMonth} max={maxMonth} onChange={(e) => setEndMonth(e.target.value)} className="w-36" />
         <Select
           label="Capacity look-ahead"
           value={capacityLookAhead}

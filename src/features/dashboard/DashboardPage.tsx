@@ -4,7 +4,8 @@ import { usePlannerStore } from '../../store/plannerStore'
 import { PageLayout } from '../../components/layout/PageLayout'
 import { Select } from '../../components/ui/Select'
 import { Input } from '../../components/ui/Input'
-import { addMonths, currentMonth, defaultForecastRange, generateMonthRange } from '../../utils/months'
+import { addMonths, currentMonth, generateMonthRange } from '../../utils/months'
+import { useDateRange } from '../../utils/useDateRange'
 import { calculateTeamUtilisation } from '../../domain/utilisation/utilisationCalculations'
 import { CapacityDemandChart } from './CapacityDemandChart'
 import { DisciplineCharts } from './DisciplineCharts'
@@ -14,10 +15,7 @@ import type { FrontendBrand } from '../../types'
 
 export function DashboardPage() {
   const { resources, projects, allocations, scenarios, leaveEntries, activeScenarioId } = usePlannerStore()
-  const defaultRange = defaultForecastRange()
-
-  const [startMonth, setStartMonth] = useState(defaultRange.startMonth)
-  const [endMonth, setEndMonth] = useState(defaultRange.endMonth)
+  const { startMonth, endMonth, setStartMonth, setEndMonth, minMonth, maxMonth } = useDateRange()
   const [brandFilter, setBrandFilter] = useState<'DCT' | 'PLK' | 'both'>('both')
 
   const assumptions = scenarios.find((s) => s.id === activeScenarioId)?.assumptions
@@ -98,8 +96,8 @@ export function DashboardPage() {
     <PageLayout title="Dashboard">
       {/* Filters */}
       <div className="flex flex-wrap gap-3 mb-5">
-        <Input label="From" type="month" value={startMonth} onChange={(e) => setStartMonth(e.target.value)} className="w-36" />
-        <Input label="To" type="month" value={endMonth} onChange={(e) => setEndMonth(e.target.value)} className="w-36" />
+        <Input label="From" type="month" value={startMonth} min={minMonth} max={maxMonth} onChange={(e) => setStartMonth(e.target.value)} className="w-36" />
+        <Input label="To" type="month" value={endMonth} min={minMonth} max={maxMonth} onChange={(e) => setEndMonth(e.target.value)} className="w-36" />
         <Select label="Brand" value={brandFilter} onChange={(e) => setBrandFilter(e.target.value as FrontendBrand | 'both')}
           options={[{ value: 'both', label: 'Both brands' }, { value: 'DCT', label: 'DCT' }, { value: 'PLK', label: 'PLK' }]} />
       </div>

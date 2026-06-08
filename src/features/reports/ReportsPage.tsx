@@ -10,7 +10,8 @@ import { Select } from '../../components/ui/Select'
 import { Input } from '../../components/ui/Input'
 import { Button } from '../../components/ui/Button'
 import { formatHours, formatPercent } from '../../utils/format'
-import { defaultForecastRange, formatMonth, generateMonthRange } from '../../utils/months'
+import { formatMonth, generateMonthRange } from '../../utils/months'
+import { useDateRange } from '../../utils/useDateRange'
 import { calculatePersonUtilisation, calculateRoleUtilisation } from '../../domain/utilisation/utilisationCalculations'
 import { exportCsv, exportJson } from '../../utils/export'
 import { ROLE_LABELS, ALL_ROLES } from '../../types'
@@ -52,9 +53,7 @@ const ROLE_COLORS: Record<string, string> = {
 
 export function ReportsPage() {
   const { resources, projects, allocations, scenarios, activeScenarioId, leaveEntries } = usePlannerStore()
-  const defaultRange = defaultForecastRange()
-  const [startMonth, setStartMonth] = useState(defaultRange.startMonth)
-  const [endMonth, setEndMonth] = useState(defaultRange.endMonth)
+  const { startMonth, endMonth, setStartMonth, setEndMonth, minMonth, maxMonth } = useDateRange()
   const [brandFilter, setBrandFilter] = useState<'DCT' | 'PLK' | 'both'>('both')
   const [activeTab, setActiveTab] = useState<Tab>('person')
 
@@ -200,8 +199,8 @@ export function ReportsPage() {
     >
       {/* Filters */}
       <div className="flex flex-wrap gap-4 mb-8">
-        <Input label="From" type="month" value={startMonth} onChange={(e) => setStartMonth(e.target.value)} className="w-36" />
-        <Input label="To" type="month" value={endMonth} onChange={(e) => setEndMonth(e.target.value)} className="w-36" />
+        <Input label="From" type="month" value={startMonth} min={minMonth} max={maxMonth} onChange={(e) => setStartMonth(e.target.value)} className="w-36" />
+        <Input label="To" type="month" value={endMonth} min={minMonth} max={maxMonth} onChange={(e) => setEndMonth(e.target.value)} className="w-36" />
         <Select label="Brand" value={brandFilter} onChange={(e) => setBrandFilter(e.target.value as typeof brandFilter)} options={[{ value: 'both', label: 'Both' }, { value: 'DCT', label: 'DCT' }, { value: 'PLK', label: 'PLK' }]} />
       </div>
 
