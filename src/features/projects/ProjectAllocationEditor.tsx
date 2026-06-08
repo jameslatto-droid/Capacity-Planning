@@ -60,7 +60,7 @@ export function ProjectAllocationEditor() {
   const navigate = useNavigate()
   const { toggle, isDark } = useTheme()
   const { currentUser } = useAuth()
-  const { projects, resources, allocations, scenarios, activeScenarioId, setAllocations } = usePlannerStore()
+  const { projects, resources, allocations, scenarios, activeScenarioId, setAllocations, updateProject } = usePlannerStore()
 
   const project  = projects.find((p) => p.id === projectId)
   const scenario = scenarios.find((s) => s.id === activeScenarioId)
@@ -123,6 +123,7 @@ export function ProjectAllocationEditor() {
 
   const [isDirty, setIsDirty] = useState(false)
   const [addingPerson, setAddingPerson] = useState(false)
+  const [notes, setNotes] = useState(() => project?.notes ?? '')
 
   const assignedResources = useMemo(
     () => assignedResourceIds.map((id) => resources.find((r) => r.id === id)).filter(Boolean) as Resource[],
@@ -154,7 +155,7 @@ export function ProjectAllocationEditor() {
     setIsDirty(true)
   }
 
-  function handleSave() {
+  async function handleSave() {
     if (!assumptions) return
     const now = new Date().toISOString()
     const others = allocations.filter(
@@ -185,6 +186,7 @@ export function ProjectAllocationEditor() {
       })
     })
     setAllocations([...others, ...next])
+    await updateProject({ ...project!, notes })
     setLastSavedAt(now)
     setLastSavedBy(currentUser?.id ?? null)
     setIsDirty(false)
@@ -391,6 +393,36 @@ export function ProjectAllocationEditor() {
             <div className="text-xs mt-1 opacity-60">Click "+ Add person" to build the team.</div>
           </div>
         )}
+
+        {/* Notes */}
+        <div className="mt-10 pt-6" style={{ borderTop: '1px solid var(--border)' }}>
+          <div className="text-[10px] uppercase tracking-wider font-semibold mb-3" style={{ color: 'var(--text-faint)' }}>
+            Notes
+          </div>
+          <textarea
+            value={notes}
+            onChange={(e) => { setNotes(e.target.value); setIsDirty(true) }}
+            placeholder="Add project notes, assumptions, decisions…"
+            rows={6}
+            className="w-full rounded-lg px-4 py-3 text-sm resize-y transition-all"
+            style={{
+              background: 'var(--surface)',
+              color: 'var(--text)',
+              border: '1px solid var(--border)',
+              outline: 'none',
+              maxWidth: 780,
+              lineHeight: 1.6,
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = 'var(--accent)'
+              e.currentTarget.style.boxShadow = '0 0 0 3px var(--accent-light)'
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = 'var(--border)'
+              e.currentTarget.style.boxShadow = 'none'
+            }}
+          />
+        </div>
       </div>
     </div>
   )
