@@ -20,7 +20,7 @@ export function LoginPage() {
   }
 
   const pageStyle = {
-    '--login-bg-url': `url("${import.meta.env.BASE_URL}assets/WWTP.png")`,
+    '--login-bg-url': `url("${import.meta.env.BASE_URL}assets/9.png")`,
   } as CSSProperties
 
   return (

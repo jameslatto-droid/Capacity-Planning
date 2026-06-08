@@ -3,6 +3,7 @@ import { motion } from 'motion/react'
 import { usePlannerStore } from '../../store/plannerStore'
 import { PageLayout } from '../../components/layout/PageLayout'
 import { Button } from '../../components/ui/Button'
+import { usePageBackground } from '../../utils/usePageBackground'
 import { Badge } from '../../components/ui/Badge'
 import { calculateMonthlyProductiveCapacity } from '../../domain/capacity/capacityCalculations'
 import { formatHours } from '../../utils/format'
@@ -20,6 +21,7 @@ const employmentBadge: Record<string, 'violet' | 'amber' | 'blue' | 'default'> =
 }
 
 export function ResourcesPage() {
+  usePageBackground('2.png')
   const { resources, scenarios, activeScenarioId, addResource, updateResource, deleteResource } = usePlannerStore()
   const [editingResource, setEditingResource] = useState<Resource | null>(null)
   const [showForm, setShowForm] = useState(false)

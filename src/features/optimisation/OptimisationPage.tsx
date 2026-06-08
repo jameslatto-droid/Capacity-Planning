@@ -8,6 +8,7 @@ import { StatCard } from '../../components/ui/StatCard'
 import { formatHours, formatPercent, formatFte, utilisationGlow } from '../../utils/format'
 import { formatMonth, generateMonthRange } from '../../utils/months'
 import { useDateRange } from '../../utils/useDateRange'
+import { usePageBackground } from '../../utils/usePageBackground'
 import { calculatePersonUtilisation } from '../../domain/utilisation/utilisationCalculations'
 import { calculateMonthlyProductiveCapacity } from '../../domain/capacity/capacityCalculations'
 import {
@@ -28,6 +29,7 @@ function plainUtilisationColor(utilisation: number): string {
 }
 
 export function OptimisationPage() {
+  usePageBackground('7.png')
   const { resources, projects, allocations, scenarios, activeScenarioId, leaveEntries } = usePlannerStore()
   const { startMonth, endMonth, setStartMonth, setEndMonth, minMonth, maxMonth } = useDateRange()
   const [capacityLookAhead, setCapacityLookAhead] = useState<'4' | '6' | '12' | 'all'>('6')

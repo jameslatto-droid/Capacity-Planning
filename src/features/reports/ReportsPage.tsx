@@ -12,6 +12,7 @@ import { Button } from '../../components/ui/Button'
 import { formatHours, formatPercent } from '../../utils/format'
 import { formatMonth, generateMonthRange } from '../../utils/months'
 import { useDateRange } from '../../utils/useDateRange'
+import { usePageBackground } from '../../utils/usePageBackground'
 import { calculatePersonUtilisation, calculateRoleUtilisation } from '../../domain/utilisation/utilisationCalculations'
 import { exportCsv, exportJson } from '../../utils/export'
 import { ROLE_LABELS, ALL_ROLES } from '../../types'
@@ -52,6 +53,7 @@ const ROLE_COLORS: Record<string, string> = {
 }
 
 export function ReportsPage() {
+  usePageBackground('8.png')
   const { resources, projects, allocations, scenarios, activeScenarioId, leaveEntries } = usePlannerStore()
   const { startMonth, endMonth, setStartMonth, setEndMonth, minMonth, maxMonth } = useDateRange()
   const [brandFilter, setBrandFilter] = useState<'DCT' | 'PLK' | 'both'>('both')

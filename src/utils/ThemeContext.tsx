@@ -10,24 +10,21 @@ interface ThemeCtx {
 
 const Ctx = createContext<ThemeCtx>({ theme: 'dark', toggle: () => {}, isDark: true })
 
-function isCinematicPreviewEnabled() {
-  if (typeof window === 'undefined') return false
-  return new URLSearchParams(window.location.search).get('cinematic') === '1'
-}
-
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const cinematicPreview = isCinematicPreviewEnabled()
-  const [theme, setTheme] = useState<Theme>(() =>
-    cinematicPreview ? 'dark' : (localStorage.getItem('erp:theme') as Theme) ?? 'dark'
+  const [theme, setTheme] = useState<Theme>(
+    () => (localStorage.getItem('erp:theme') as Theme) ?? 'dark'
   )
 
   useEffect(() => {
     const root = document.documentElement
     root.classList.toggle('dark', theme === 'dark')
-    root.classList.toggle('login-theme-preview', cinematicPreview && theme === 'dark')
-    root.style.setProperty('--app-bg-url', `url("${import.meta.env.BASE_URL}assets/WWTP.png")`)
-    if (!cinematicPreview) localStorage.setItem('erp:theme', theme)
-  }, [cinematicPreview, theme])
+    if (theme === 'dark') {
+      root.style.setProperty('--app-bg-url', `url("${import.meta.env.BASE_URL}assets/WWTP.png")`)
+    } else {
+      root.style.removeProperty('--app-bg-url')
+    }
+    localStorage.setItem('erp:theme', theme)
+  }, [theme])
 
   const toggle = () => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))
 

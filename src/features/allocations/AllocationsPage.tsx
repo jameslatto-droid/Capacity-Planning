@@ -4,12 +4,14 @@ import { usePlannerStore } from '../../store/plannerStore'
 import { PageLayout } from '../../components/layout/PageLayout'
 import { Input } from '../../components/ui/Input'
 import { useDateRange } from '../../utils/useDateRange'
+import { usePageBackground } from '../../utils/usePageBackground'
 import { AllocationMatrixByPerson } from './AllocationMatrixByPerson'
 
 type ViewMode = 'person' | 'project' | 'role'
 type ValueMode = 'hours' | 'percent'
 
 export function AllocationsPage() {
+  usePageBackground('6.png')
   const { activeScenarioId } = usePlannerStore()
   const { startMonth, endMonth, setStartMonth, setEndMonth, minMonth, maxMonth } = useDateRange()
   const [viewMode, setViewMode] = useState<ViewMode>('person')

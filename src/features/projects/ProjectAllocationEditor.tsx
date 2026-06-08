@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'motion/react'
 import { v4 as uuidv4 } from 'uuid'
 import { usePlannerStore } from '../../store/plannerStore'
+import { usePageBackground } from '../../utils/usePageBackground'
 import { calculateMonthlyProductiveCapacity } from '../../domain/capacity/capacityCalculations'
 import { generateMonthRange, formatMonth, currentMonth, addMonths } from '../../utils/months'
 import { Button } from '../../components/ui/Button'
@@ -54,6 +55,7 @@ function projectMonthOptions(startMonth: string, endMonth: string) {
 }
 
 export function ProjectAllocationEditor() {
+  usePageBackground('5.png')
   const { projectId } = useParams<{ projectId: string }>()
   const navigate = useNavigate()
   const { toggle, isDark } = useTheme()

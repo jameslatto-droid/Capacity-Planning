@@ -13,6 +13,7 @@ import {
 } from '../../domain/capacity/leaveCalculations'
 import { generateMonthRange, formatMonth, currentMonth } from '../../utils/months'
 import { useDateRange } from '../../utils/useDateRange'
+import { usePageBackground } from '../../utils/usePageBackground'
 import type { LeaveEntry, LeaveType } from '../../types'
 import { LEAVE_TYPE_LABELS } from '../../types'
 
@@ -48,6 +49,7 @@ function emptyForm(defaultResourceId = ''): LeaveFormState {
 }
 
 export function LeavePage() {
+  usePageBackground('3.png')
   const { resources, leaveEntries, addLeaveEntry, updateLeaveEntry, deleteLeaveEntry } = usePlannerStore()
   const { startMonth: viewStart, endMonth: viewEnd, setStartMonth: setViewStart, setEndMonth: setViewEnd, minMonth, maxMonth } = useDateRange()
   const [showForm,  setShowForm]  = useState(false)

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { usePlannerStore } from '../../store/plannerStore'
 import { PageLayout } from '../../components/layout/PageLayout'
+import { usePageBackground } from '../../utils/usePageBackground'
 import { Button } from '../../components/ui/Button'
 import { Badge } from '../../components/ui/Badge'
 import { formatHours } from '../../utils/format'
@@ -19,6 +20,7 @@ const statusVariant: Record<string, 'emerald' | 'blue' | 'amber' | 'default' | '
 
 export function ProjectsPage() {
   const navigate = useNavigate()
+  usePageBackground('4.png')
   const { projects, allocations, resources, addProject, updateProject, deleteProject } = usePlannerStore()
   const [editingProject, setEditingProject] = useState<Project | null>(null)
   const [showForm, setShowForm] = useState(false)

@@ -6,6 +6,7 @@ import { Select } from '../../components/ui/Select'
 import { Input } from '../../components/ui/Input'
 import { addMonths, currentMonth, generateMonthRange } from '../../utils/months'
 import { useDateRange } from '../../utils/useDateRange'
+import { usePageBackground } from '../../utils/usePageBackground'
 import { calculateTeamUtilisation } from '../../domain/utilisation/utilisationCalculations'
 import { CapacityDemandChart } from './CapacityDemandChart'
 import { DisciplineCharts } from './DisciplineCharts'
@@ -14,6 +15,7 @@ import { filterResourceCalculationAllocations } from '../../domain/projects/proj
 import type { FrontendBrand } from '../../types'
 
 export function DashboardPage() {
+  usePageBackground('1.png')
   const { resources, projects, allocations, scenarios, leaveEntries, activeScenarioId } = usePlannerStore()
   const { startMonth, endMonth, setStartMonth, setEndMonth, minMonth, maxMonth } = useDateRange()
   const [brandFilter, setBrandFilter] = useState<'DCT' | 'PLK' | 'both'>('both')
