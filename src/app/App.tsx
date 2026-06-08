@@ -23,9 +23,9 @@ function AppBg() {
         zIndex: -1,
         pointerEvents: 'none',
         background: [
-          'radial-gradient(circle at 28% 28%, rgba(255,175,77,0.18), transparent 36%)',
-          'radial-gradient(circle at 74% 62%, rgba(255,128,36,0.12), transparent 34%)',
-          'linear-gradient(120deg, rgba(4,5,8,0.86) 0%, rgba(10,10,12,0.62) 48%, rgba(40,22,8,0.50) 100%)',
+          'radial-gradient(circle at 28% 28%, rgba(255,175,77,0.14), transparent 36%)',
+          'radial-gradient(circle at 74% 62%, rgba(255,128,36,0.09), transparent 34%)',
+          'linear-gradient(120deg, rgba(4,5,8,0.91) 0%, rgba(10,10,12,0.76) 48%, rgba(30,16,4,0.68) 100%)',
           `url("${BASE}assets/${bgImage}") center / cover no-repeat`,
           '#07080b',
         ].join(', '),

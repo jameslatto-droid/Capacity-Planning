@@ -31,9 +31,9 @@
   --surface-2:    rgba(255, 255, 255, 0.06);
   --border:       rgba(255, 185, 92, 0.12);
   --border-s:     rgba(255, 185, 92, 0.22);
-  --text:         #f6efe4;
-  --text-muted:   #b9aa98;
-  --text-faint:   #8f8170;
+  --text:         #faf5ec;
+  --text-muted:   #cfc3b0;
+  --text-faint:   #a89e8f;
   --sidebar-bg:   rgba(8, 8, 10, 0.78);
   --sidebar-bdr:  rgba(255, 185, 92, 0.18);
   --input-bg:     rgba(255, 255, 255, 0.08);
