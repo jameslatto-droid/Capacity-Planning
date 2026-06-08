@@ -32,7 +32,6 @@ export function LoginPage() {
         transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
         className="login-card"
       >
-        <div className="login-eyebrow">Skyforge Command</div>
         <div className="login-header">
           <h1 className="login-title">Resource Planner</h1>
           <p className="login-subtitle">Sign in to manage capacity, allocation and project demand.</p>
