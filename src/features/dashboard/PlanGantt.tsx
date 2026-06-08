@@ -14,8 +14,8 @@ interface Props {
 }
 
 const brandColor: Record<string, { bar: string; border: string; text: string }> = {
-  DCT: { bar: 'rgba(124,58,237,0.55)', border: '#7c3aed', text: '#ede9fe' },
-  PLK: { bar: 'rgba(37,99,235,0.55)',  border: '#2563eb', text: '#dbeafe' },
+  DCT: { bar: 'rgba(216,137,47,0.58)',  border: '#d8892f', text: '#fff3dc' },
+  PLK: { bar: 'rgba(91,155,213,0.55)', border: '#5b9bd5', text: '#dbeafe' },
 }
 
 const statusOpacity: Record<string, number> = {
@@ -197,8 +197,8 @@ export function PlanGantt({ projects, allocations, brandFilter, startMonth, endM
       {/* Legend */}
       <div className="flex items-center gap-5 mt-4 pl-0 flex-wrap">
         {[
-          { label: 'DCT', color: '#7c3aed' },
-          { label: 'PLK', color: '#2563eb' },
+          { label: 'DCT', color: '#d8892f' },
+          { label: 'PLK', color: '#5b9bd5' },
         ].map(({ label, color }) => (
           <div key={label} className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded-sm" style={{ background: color, opacity: 0.6, outline: `1.5px solid ${color}` }} />
@@ -207,7 +207,7 @@ export function PlanGantt({ projects, allocations, brandFilter, startMonth, endM
         ))}
         {[{ label: 'Planned' }, { label: 'Opportunity' }, { label: 'Excluded' }].map(({ label }) => (
           <div key={label} className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded-sm border border-dashed border-violet-500" style={{ opacity: label === 'Excluded' ? 0.25 : 0.5 }} />
+            <div className="w-3 h-3 rounded-sm border border-dashed" style={{ borderColor: '#9b72c1', opacity: label === 'Excluded' ? 0.25 : 0.5 }} />
             <span className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-faint)' }}>{label}</span>
           </div>
         ))}

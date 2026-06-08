@@ -31,9 +31,9 @@ interface RoleData {
 }
 
 function utilColor(avgUtil: number) {
-  if (avgUtil > 1) return '#ef4444'
-  if (avgUtil > 0.85) return '#f59e0b'
-  return '#7c3aed'
+  if (avgUtil > 1) return '#e45b4f'
+  if (avgUtil > 0.85) return '#e8703a'
+  return '#ffbd66'
 }
 
 function RolePanel({ role, data, avgUtil }: { role: ResourceRole; data: RoleData[]; avgUtil: number }) {

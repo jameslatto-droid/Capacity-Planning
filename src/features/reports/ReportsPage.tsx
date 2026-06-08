@@ -39,17 +39,17 @@ function DarkTooltip({ active, payload, label }: { active?: boolean; payload?: {
 }
 
 // Colour palette for stacked charts
-const PERSON_COLORS = ['#7c3aed','#2563eb','#0891b2','#059669','#d97706','#dc2626','#9333ea','#0284c7','#65a30d','#b45309']
+const PERSON_COLORS = ['#e8703a','#5b9bd5','#6cb86a','#d4a843','#d4515e','#4daacc','#c47c3a','#9b72c1','#78b87a','#e8a86b']
 const ROLE_COLORS: Record<string, string> = {
-  'project-management': '#7c3aed',
-  'process-engineering': '#2563eb',
-  'mechanical-engineering': '#0891b2',
-  'drafting': '#059669',
-  'procurement': '#d97706',
-  'quality': '#a855f7',
-  'technical-review': '#64748b',
-  'management': '#374151',
-  'other': '#1e293b',
+  'project-management': '#d8892f',
+  'process-engineering': '#5b9bd5',
+  'mechanical-engineering': '#6cb86a',
+  'drafting': '#d4a843',
+  'procurement': '#e8703a',
+  'quality': '#9b72c1',
+  'technical-review': '#4daacc',
+  'management': '#d4515e',
+  'other': '#8b9eb7',
 }
 
 export function ReportsPage() {
@@ -187,7 +187,7 @@ export function ReportsPage() {
     </motion.div>
   )
 
-  const axisProps = { tick: { fill: '#475569', fontSize: 11 }, axisLine: false, tickLine: false }
+  const axisProps = { tick: { fill: 'var(--text-faint)', fontSize: 11 }, axisLine: false, tickLine: false }
 
   return (
     <PageLayout
@@ -260,7 +260,7 @@ export function ReportsPage() {
                 <XAxis dataKey="month" {...axisProps} />
                 <YAxis {...axisProps} unit="h" />
                 <Tooltip content={<DarkTooltip />} />
-                <Legend wrapperStyle={{ fontSize: 11, color: '#475569' }} />
+                <Legend wrapperStyle={{ fontSize: 11, color: 'var(--text-muted)' }} />
                 {ALL_ROLES.filter((role) => filteredAllocations.some((a) => a.role === role)).map((role) => (
                   <Bar key={role} dataKey={ROLE_LABELS[role]} stackId="a" fill={ROLE_COLORS[role]} radius={[0, 0, 0, 0]} />
                 ))}
@@ -279,11 +279,11 @@ export function ReportsPage() {
               <ResponsiveContainer width="100%" height={280}>
                 <PieChart>
                   <Pie data={brandSplitData} cx="50%" cy="50%" innerRadius={70} outerRadius={110} dataKey="value" paddingAngle={3}>
-                    <Cell fill="#7c3aed" style={{ filter: 'drop-shadow(0 0 10px rgba(124,58,237,0.5))' }} />
-                    <Cell fill="#2563eb" style={{ filter: 'drop-shadow(0 0 10px rgba(37,99,235,0.4))' }} />
+                    <Cell fill="#d8892f" style={{ filter: 'drop-shadow(0 0 10px rgba(216,137,47,0.5))' }} />
+                    <Cell fill="#5b9bd5" style={{ filter: 'drop-shadow(0 0 10px rgba(91,155,213,0.4))' }} />
                   </Pie>
                   <Tooltip formatter={(v: number) => `${v}h`} contentStyle={{ background: 'var(--surface-2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 12 }} labelStyle={{ color: 'var(--text-muted)' }} itemStyle={{ color: 'var(--text)' }} />
-                  <Legend wrapperStyle={{ fontSize: 12, color: '#64748b' }} />
+                  <Legend wrapperStyle={{ fontSize: 12, color: 'var(--text-muted)' }} />
                 </PieChart>
               </ResponsiveContainer>
             </div>,
@@ -294,21 +294,21 @@ export function ReportsPage() {
               <AreaChart data={brandTimeData} margin={{ top: 0, right: 0, left: -16, bottom: 0 }}>
                 <defs>
                   <linearGradient id="gDCT" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#7c3aed" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#7c3aed" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#d8892f" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#d8892f" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="gPLK" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#2563eb" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#5b9bd5" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#5b9bd5" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="1 0" vertical={false} stroke="rgba(255,255,255,0.04)" />
                 <XAxis dataKey="month" {...axisProps} />
                 <YAxis {...axisProps} unit="h" />
                 <Tooltip content={<DarkTooltip />} />
-                <Legend wrapperStyle={{ fontSize: 11, color: '#475569' }} />
-                <Area type="monotone" dataKey="DCT" stroke="#7c3aed" strokeWidth={2} fill="url(#gDCT)" />
-                <Area type="monotone" dataKey="PLK" stroke="#2563eb" strokeWidth={2} fill="url(#gPLK)" />
+                <Legend wrapperStyle={{ fontSize: 11, color: 'var(--text-muted)' }} />
+                <Area type="monotone" dataKey="DCT" stroke="#d8892f" strokeWidth={2} fill="url(#gDCT)" />
+                <Area type="monotone" dataKey="PLK" stroke="#5b9bd5" strokeWidth={2} fill="url(#gPLK)" />
               </AreaChart>
             </ResponsiveContainer>,
             'Brand Demand Over Time'
@@ -324,7 +324,7 @@ export function ReportsPage() {
             <XAxis dataKey="month" {...axisProps} />
             <YAxis {...axisProps} unit="h" />
             <Tooltip content={<DarkTooltip />} />
-            <Legend wrapperStyle={{ fontSize: 11, color: '#475569' }} />
+            <Legend wrapperStyle={{ fontSize: 11, color: 'var(--text-muted)' }} />
             {activeProjectsForChart.map((p, i) => (
               <Bar key={p.id} dataKey={p.code} stackId="a" fill={PERSON_COLORS[i % PERSON_COLORS.length]} />
             ))}

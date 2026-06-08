@@ -59,12 +59,12 @@ export function CapacityDemandChart({ data, months, height = 260 }: Props) {
         <ComposedChart data={chartData} margin={{ top: 8, right: 12, left: -16, bottom: 0 }}>
           <defs>
             <linearGradient id="gradCapacity" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#64748b" stopOpacity={0.16} />
-              <stop offset="95%" stopColor="#64748b" stopOpacity={0.02} />
+              <stop offset="5%" stopColor="#8b9eb7" stopOpacity={0.16} />
+              <stop offset="95%" stopColor="#8b9eb7" stopOpacity={0.02} />
             </linearGradient>
             <linearGradient id="gradAllocation" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#7c3aed" stopOpacity={0.5} />
-              <stop offset="95%" stopColor="#7c3aed" stopOpacity={0.0} />
+              <stop offset="5%" stopColor="#ffbd66" stopOpacity={0.5} />
+              <stop offset="95%" stopColor="#ffbd66" stopOpacity={0.0} />
             </linearGradient>
           </defs>
           <CartesianGrid
@@ -74,12 +74,12 @@ export function CapacityDemandChart({ data, months, height = 260 }: Props) {
           />
           <XAxis
             dataKey="month"
-            tick={{ fill: '#475569', fontSize: 11 }}
+            tick={{ fill: 'var(--text-faint)', fontSize: 11 }}
             axisLine={false}
             tickLine={false}
           />
           <YAxis
-            tick={{ fill: '#475569', fontSize: 11 }}
+            tick={{ fill: 'var(--text-faint)', fontSize: 11 }}
             axisLine={false}
             tickLine={false}
             unit="h"
@@ -88,7 +88,7 @@ export function CapacityDemandChart({ data, months, height = 260 }: Props) {
           <Area
             type="monotone"
             dataKey="Capacity"
-            stroke="#64748b"
+            stroke="#8b9eb7"
             strokeWidth={1.5}
             fill="url(#gradCapacity)"
             strokeDasharray="5 4"
@@ -98,11 +98,11 @@ export function CapacityDemandChart({ data, months, height = 260 }: Props) {
           <Area
             type="monotone"
             dataKey="Allocation"
-            stroke="#7c3aed"
+            stroke="#ffbd66"
             strokeWidth={2.5}
             fill="url(#gradAllocation)"
-            dot={{ r: 2.5, fill: '#7c3aed', strokeWidth: 0 }}
-            activeDot={{ r: 5, fill: '#7c3aed', stroke: '#fff', strokeWidth: 1 }}
+            dot={{ r: 2.5, fill: '#ffbd66', strokeWidth: 0 }}
+            activeDot={{ r: 5, fill: '#ffbd66', stroke: '#1b1006', strokeWidth: 1 }}
           />
           <Bar
             dataKey="Overload"

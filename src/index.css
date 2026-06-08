@@ -26,7 +26,7 @@
 
 /* ── Dark theme — warm amber ────────────────────────── */
 .dark {
-  --bg:           rgba(7, 8, 11, 0.64);
+  --bg:           transparent;
   --surface:      rgba(16, 18, 22, 0.78);
   --surface-2:    rgba(255, 255, 255, 0.06);
   --border:       rgba(255, 185, 92, 0.12);
