@@ -22,19 +22,25 @@ https://jameslatto-droid.github.io/Capacity-Planning/#/allocations
 
 GitHub Pages only serves static files. It cannot provide a shared writable dataset, locking, or conflict prevention. `localStorage` data is private to each browser, so it is useful for solo testing only.
 
-Recommended architecture:
+The app should use GitHub Pages for the frontend and Supabase for shared planner data. In Supabase mode, all users read and write the same `planner_state` row containing:
 
-1. Keep GitHub Pages for the frontend.
-2. Add a small shared backend for planner data.
-3. Store every editable record with `version`, `lastModifiedAt`, and `lastModifiedBy`.
-4. Save with optimistic concurrency: the client sends the version it loaded, and the backend rejects stale saves with `409 Conflict`.
-5. Add short-lived edit locks for screens where conflict risk is high, especially project allocation editing.
+- resources
+- projects
+- allocations
+- scenarios
+- leave entries
 
-Good backend options:
+Run `docs/supabase-setup.sql` once in the Supabase SQL editor before enabling the deployed app. The app will create the initial `main` planner row from seed data when it first loads against an empty table.
 
-- Supabase: Postgres, realtime updates, row-level security, simple hosted setup.
-- Firebase Firestore: realtime documents and transactions.
-- A small Node API on Render/Railway/Azure backed by Postgres.
+Required frontend environment variables:
+
+```text
+VITE_STORAGE_MODE=supabase
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
+```
+
+For GitHub Pages, set these as repository secrets and expose them only to the build step in `.github/workflows/deploy-pages.yml`.
 
 The current app already has an `ApiPlannerRepository` interface. A backend can expose:
 

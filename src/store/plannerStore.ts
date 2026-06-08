@@ -3,11 +3,17 @@ import type { Resource, Project, Allocation, Scenario, LeaveEntry } from '../typ
 import type { PlannerRepository } from '../repositories/PlannerRepository'
 import { LocalStoragePlannerRepository } from '../repositories/LocalStoragePlannerRepository'
 import { ApiPlannerRepository } from '../repositories/ApiPlannerRepository'
+import { SupabasePlannerRepository } from '../repositories/SupabasePlannerRepository'
 import { getStoredUser } from '../utils/auth'
 
 function createRepository(): PlannerRepository {
   const mode = import.meta.env['VITE_STORAGE_MODE'] ?? 'local'
   const apiBase = import.meta.env['VITE_API_BASE_URL'] ?? ''
+  const supabaseUrl = import.meta.env['VITE_SUPABASE_URL'] ?? ''
+  const supabasePublishableKey = import.meta.env['VITE_SUPABASE_PUBLISHABLE_KEY'] ?? ''
+  if (mode === 'supabase' && supabaseUrl && supabasePublishableKey) {
+    return new SupabasePlannerRepository(supabaseUrl, supabasePublishableKey)
+  }
   if (mode === 'api' && apiBase) {
     return new ApiPlannerRepository(apiBase)
   }

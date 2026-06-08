@@ -35,6 +35,9 @@ jobs:
         run: npm run build
         env:
           VITE_BASE_PATH: /Capacity-Planning/
+          VITE_STORAGE_MODE: supabase
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
