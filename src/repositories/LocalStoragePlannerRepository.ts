@@ -17,18 +17,38 @@ const KEYS = {
   leave:     'erp:leave',
 } as const
 
+const SEED_DATA_KEYS = [KEYS.resources, KEYS.projects, KEYS.allocations, KEYS.scenarios] as const
+const ALL_DATA_KEYS = [...SEED_DATA_KEYS, KEYS.leave] as const
+
+function backupExistingData(storedVersion: string | null): void {
+  const backup: Record<string, string> = {}
+  for (const key of ALL_DATA_KEYS) {
+    const value = localStorage.getItem(key)
+    if (value !== null) backup[key] = value
+  }
+
+  if (Object.keys(backup).length === 0) return
+
+  const fromVersion = storedVersion ?? 'none'
+  localStorage.setItem(
+    `erp:migration-backup:${fromVersion}:to:${SEED_VERSION}:${new Date().toISOString()}`,
+    JSON.stringify(backup),
+  )
+}
+
+function clearSeedData(): void {
+  for (const key of SEED_DATA_KEYS) localStorage.removeItem(key)
+}
+
 function clearAll(): void {
-  localStorage.removeItem(KEYS.resources)
-  localStorage.removeItem(KEYS.projects)
-  localStorage.removeItem(KEYS.allocations)
-  localStorage.removeItem(KEYS.scenarios)
-  localStorage.removeItem(KEYS.leave)
+  for (const key of ALL_DATA_KEYS) localStorage.removeItem(key)
 }
 
 function migrateIfNeeded(): void {
   const stored = localStorage.getItem(KEYS.version)
   if (stored !== SEED_VERSION) {
-    clearAll()
+    backupExistingData(stored)
+    clearSeedData()
     localStorage.setItem(KEYS.version, SEED_VERSION)
   }
 }
