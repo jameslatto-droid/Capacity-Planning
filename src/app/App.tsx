@@ -3,9 +3,36 @@ import { HashRouter } from 'react-router-dom'
 import { TopBar } from '../components/layout/TopBar'
 import { AppRoutes } from './routes'
 import { usePlannerStore } from '../store/plannerStore'
-import { ThemeProvider } from '../utils/ThemeContext'
+import { ThemeProvider, useTheme } from '../utils/ThemeContext'
 import { AuthProvider, useAuth } from '../utils/AuthContext'
+import { BackgroundProvider, useBackground } from '../utils/BackgroundContext'
 import { LoginPage } from '../features/auth/LoginPage'
+
+const BASE = import.meta.env.BASE_URL as string
+
+function AppBg() {
+  const { bgImage } = useBackground()
+  const { isDark } = useTheme()
+  if (!isDark) return null
+  return (
+    <div
+      aria-hidden="true"
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: -1,
+        pointerEvents: 'none',
+        background: [
+          'radial-gradient(circle at 28% 28%, rgba(255,175,77,0.18), transparent 36%)',
+          'radial-gradient(circle at 74% 62%, rgba(255,128,36,0.12), transparent 34%)',
+          'linear-gradient(120deg, rgba(4,5,8,0.86) 0%, rgba(10,10,12,0.62) 48%, rgba(40,22,8,0.50) 100%)',
+          `url("${BASE}assets/${bgImage}") center / cover no-repeat`,
+          '#07080b',
+        ].join(', '),
+      }}
+    />
+  )
+}
 
 function Inner() {
   const { currentUser } = useAuth()
@@ -18,14 +45,14 @@ function Inner() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}>
+      <div className="min-h-screen flex items-center justify-center">
         <div style={{ color: 'var(--text-muted)' }} className="text-sm">Loading…</div>
       </div>
     )
   }
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}>
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-red-500 text-sm">Error: {error}</div>
       </div>
     )
@@ -34,7 +61,7 @@ function Inner() {
     <HashRouter>
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <TopBar />
-        <div style={{ flex: 1, overflow: 'auto', background: 'var(--bg)', minHeight: 0 }}>
+        <div style={{ flex: 1, overflow: 'auto', minHeight: 0 }}>
           <AppRoutes />
         </div>
       </div>
@@ -45,9 +72,12 @@ function Inner() {
 export function App() {
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <Inner />
-      </AuthProvider>
+      <BackgroundProvider>
+        <AuthProvider>
+          <AppBg />
+          <Inner />
+        </AuthProvider>
+      </BackgroundProvider>
     </ThemeProvider>
   )
 }

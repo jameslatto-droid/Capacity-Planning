@@ -16,13 +16,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   )
 
   useEffect(() => {
-    const root = document.documentElement
-    root.classList.toggle('dark', theme === 'dark')
-    if (theme === 'dark') {
-      root.style.setProperty('--app-bg-url', `url("${import.meta.env.BASE_URL}assets/WWTP.png")`)
-    } else {
-      root.style.removeProperty('--app-bg-url')
-    }
+    document.documentElement.classList.toggle('dark', theme === 'dark')
     localStorage.setItem('erp:theme', theme)
   }, [theme])
 
