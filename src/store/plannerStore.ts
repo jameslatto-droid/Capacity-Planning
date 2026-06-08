@@ -3,6 +3,7 @@ import type { Resource, Project, Allocation, Scenario, LeaveEntry } from '../typ
 import type { PlannerRepository } from '../repositories/PlannerRepository'
 import { LocalStoragePlannerRepository } from '../repositories/LocalStoragePlannerRepository'
 import { ApiPlannerRepository } from '../repositories/ApiPlannerRepository'
+import { getStoredUser } from '../utils/auth'
 
 function createRepository(): PlannerRepository {
   const mode = import.meta.env['VITE_STORAGE_MODE'] ?? 'local'
@@ -14,6 +15,66 @@ function createRepository(): PlannerRepository {
 }
 
 const repository = createRepository()
+
+type AuditedRecord = {
+  createdAt?: string
+  createdBy?: string
+  lastModifiedAt?: string
+  lastModifiedBy?: string
+}
+
+function currentUserId(): string | undefined {
+  return getStoredUser()?.id
+}
+
+function stampCreated<T extends AuditedRecord>(record: T): T {
+  const now = new Date().toISOString()
+  const userId = currentUserId()
+  return {
+    ...record,
+    createdAt: record.createdAt ?? now,
+    createdBy: record.createdBy ?? userId,
+    lastModifiedAt: now,
+    lastModifiedBy: userId ?? record.lastModifiedBy,
+  }
+}
+
+function stampModified<T extends AuditedRecord>(record: T): T {
+  const now = new Date().toISOString()
+  const userId = currentUserId()
+  return {
+    ...record,
+    lastModifiedAt: now,
+    lastModifiedBy: userId ?? record.lastModifiedBy,
+  }
+}
+
+function allocationChanged(previous: Allocation, next: Allocation): boolean {
+  return (
+    previous.scenarioId !== next.scenarioId ||
+    previous.projectId !== next.projectId ||
+    previous.resourceId !== next.resourceId ||
+    previous.role !== next.role ||
+    previous.month !== next.month ||
+    previous.hours !== next.hours ||
+    previous.locked !== next.locked ||
+    previous.notes !== next.notes
+  )
+}
+
+function stampChangedAllocations(previous: Allocation[], next: Allocation[]): Allocation[] {
+  const previousById = new Map(previous.map((allocation) => [allocation.id, allocation]))
+  return next.map((allocation) => {
+    const existing = previousById.get(allocation.id)
+    if (!existing) return stampCreated(allocation)
+    if (!allocationChanged(existing, allocation)) return existing
+    return stampModified({
+      ...allocation,
+      createdAt: allocation.createdAt ?? existing.createdAt,
+      createdBy: allocation.createdBy ?? existing.createdBy,
+    })
+  })
+}
 
 interface PlannerState {
   resources: Resource[]
@@ -87,12 +148,12 @@ export const usePlannerStore = create<PlannerState>((set, get) => ({
     set({ resources })
   },
   async addResource(resource) {
-    const resources = [...get().resources, resource]
+    const resources = [...get().resources, stampCreated(resource)]
     await repository.saveResources(resources)
     set({ resources })
   },
   async updateResource(resource) {
-    const resources = get().resources.map((r) => (r.id === resource.id ? resource : r))
+    const resources = get().resources.map((r) => (r.id === resource.id ? stampModified({ ...r, ...resource }) : r))
     await repository.saveResources(resources)
     set({ resources })
   },
@@ -107,12 +168,12 @@ export const usePlannerStore = create<PlannerState>((set, get) => ({
     set({ projects })
   },
   async addProject(project) {
-    const projects = [...get().projects, project]
+    const projects = [...get().projects, stampCreated(project)]
     await repository.saveProjects(projects)
     set({ projects })
   },
   async updateProject(project) {
-    const projects = get().projects.map((p) => (p.id === project.id ? project : p))
+    const projects = get().projects.map((p) => (p.id === project.id ? stampModified({ ...p, ...project }) : p))
     await repository.saveProjects(projects)
     set({ projects })
   },
@@ -123,16 +184,17 @@ export const usePlannerStore = create<PlannerState>((set, get) => ({
   },
 
   async setAllocations(allocations) {
-    await repository.saveAllocations(allocations)
-    set({ allocations })
+    const stampedAllocations = stampChangedAllocations(get().allocations, allocations)
+    await repository.saveAllocations(stampedAllocations)
+    set({ allocations: stampedAllocations })
   },
   async addAllocation(allocation) {
-    const allocations = [...get().allocations, allocation]
+    const allocations = [...get().allocations, stampCreated(allocation)]
     await repository.saveAllocations(allocations)
     set({ allocations })
   },
   async updateAllocation(allocation) {
-    const allocations = get().allocations.map((a) => (a.id === allocation.id ? allocation : a))
+    const allocations = get().allocations.map((a) => (a.id === allocation.id ? stampModified({ ...a, ...allocation }) : a))
     await repository.saveAllocations(allocations)
     set({ allocations })
   },
@@ -170,12 +232,12 @@ export const usePlannerStore = create<PlannerState>((set, get) => ({
     set({ leaveEntries: entries })
   },
   async addLeaveEntry(entry) {
-    const leaveEntries = [...get().leaveEntries, entry]
+    const leaveEntries = [...get().leaveEntries, stampCreated(entry)]
     await repository.saveLeaveEntries(leaveEntries)
     set({ leaveEntries })
   },
   async updateLeaveEntry(entry) {
-    const leaveEntries = get().leaveEntries.map((e) => (e.id === entry.id ? entry : e))
+    const leaveEntries = get().leaveEntries.map((e) => (e.id === entry.id ? stampModified({ ...e, ...entry }) : e))
     await repository.saveLeaveEntries(leaveEntries)
     set({ leaveEntries })
   },

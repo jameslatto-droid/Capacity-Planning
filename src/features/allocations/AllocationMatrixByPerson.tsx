@@ -6,6 +6,11 @@ import type { LeaveType } from '../../types'
 import { utilisationColor, utilisationTextColor } from '../../utils/format'
 import { isOutsideContract } from '../../utils/contractDates'
 import { ROLE_LABELS } from '../../types'
+import {
+  filterResourceCalculationAllocations,
+  getProjectType,
+  isProjectIncludedInResourceCalculations,
+} from '../../domain/projects/projectPlanning'
 
 interface Props {
   scenarioId: string
@@ -29,6 +34,10 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
     () => allocations.filter((a) => a.scenarioId === scenarioId && months.includes(a.month)),
     [allocations, scenarioId, months]
   )
+  const calculationAllocations = useMemo(
+    () => filterResourceCalculationAllocations(filteredAllocations, projects),
+    [filteredAllocations, projects]
+  )
 
   if (!assumptions) return <div style={{ color: 'var(--text-faint)' }}>No scenario found.</div>
 
@@ -49,6 +58,7 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
           <tbody>
             {resources.filter((r) => r.active).map((r) => {
               const personAllocs = filteredAllocations.filter((a) => a.resourceId === r.id)
+              const personCalcAllocs = calculationAllocations.filter((a) => a.resourceId === r.id)
               const projectIds = [...new Set(personAllocs.map((a) => a.projectId))]
               const personLeave = leaveEntries.filter((e) => e.resourceId === r.id)
               const hasLeaveInView = months.some((m) => getLeaveDaysInMonth(r, m, personLeave) > 0)
@@ -63,7 +73,7 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
                   <td className="py-2 font-semibold" style={{ color: 'var(--text)' }}>{r.displayName}</td>
                   {months.map((m) => {
                     const capacity = capByMonth[m] ?? 0
-                    const allocated = personAllocs.filter((a) => a.month === m).reduce((s, a) => s + a.hours, 0)
+                    const allocated = personCalcAllocs.filter((a) => a.month === m).reduce((s, a) => s + a.hours, 0)
                     const util = capacity > 0 ? allocated / capacity : 0
                     const outsideContract = allocated > 0 && isOutsideContract(r, m)
                     const label = isPct
@@ -143,9 +153,20 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
                 // ── Project sub-rows ─────────────────────────────────────
                 ...projectIds.map((pid) => {
                   const proj = projects.find((p) => p.id === pid)
+                  const excluded = proj ? !isProjectIncludedInResourceCalculations(proj) : false
                   return (
                     <tr key={`${r.id}-${pid}`} style={ROW}>
-                      <td className="py-1 pl-6" style={{ color: 'var(--text-faint)' }}>{proj?.code} — {proj?.name}</td>
+                      <td className="py-1 pl-6" style={{ color: excluded ? 'var(--text-faint)' : 'var(--text-muted)' }}>
+                        {proj?.code} — {proj?.name}
+                        {excluded && (
+                          <span
+                            className="ml-2 rounded-full px-1.5 py-0.5 text-[10px] font-semibold"
+                            style={{ background: 'var(--surface-2)', border: '1px solid var(--border-s)', color: 'var(--text-faint)' }}
+                          >
+                            Excluded
+                          </span>
+                        )}
+                      </td>
                       {months.map((m) => {
                         const hrs = personAllocs.filter((a) => a.projectId === pid && a.month === m).reduce((s, a) => s + a.hours, 0)
                         const cap = capByMonth[m] ?? 1
@@ -184,12 +205,29 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
               const projAllocs = filteredAllocations.filter((a) => a.projectId === proj.id)
               if (!projAllocs.length) return null
               const resourceIds = [...new Set(projAllocs.map((a) => a.resourceId).filter(Boolean))] as string[]
+              const projectType = getProjectType(proj)
+              const included = isProjectIncludedInResourceCalculations(proj)
+              const projectColor = included ? '#34d399' : 'var(--text-faint)'
               return [
                 <tr key={`${proj.id}-total`} style={{ ...ROW, background: 'rgba(16,185,129,0.04)' }}>
-                  <td className="py-2.5 font-semibold text-emerald-400">{proj.code} — {proj.name}</td>
+                  <td className="py-2.5 font-semibold" style={{ color: projectColor }}>
+                    {proj.code} — {proj.name}
+                    {projectType === 'opportunity' && (
+                      <span
+                        className="ml-2 rounded-full px-1.5 py-0.5 text-[10px] font-semibold"
+                        style={{
+                          background: included ? 'rgba(5,150,105,0.12)' : 'var(--surface-2)',
+                          border: `1px solid ${included ? 'rgba(5,150,105,0.3)' : 'var(--border-s)'}`,
+                          color: included ? '#059669' : 'var(--text-faint)',
+                        }}
+                      >
+                        {included ? 'Opportunity included' : 'Opportunity excluded'}
+                      </span>
+                    )}
+                  </td>
                   {months.map((m) => {
                     const hrs = projAllocs.filter((a) => a.month === m).reduce((s, a) => s + a.hours, 0)
-                    return <td key={m} className="px-2 py-2.5 text-right tabular font-semibold text-emerald-400/70">{hrs > 0 ? `${hrs}h` : <span style={{ color: 'var(--text-faint)' }}>—</span>}</td>
+                    return <td key={m} className="px-2 py-2.5 text-right tabular font-semibold" style={{ color: projectColor }}>{hrs > 0 ? `${hrs}h` : <span style={{ color: 'var(--text-faint)' }}>—</span>}</td>
                   })}
                 </tr>,
                 ...resourceIds.map((rid) => {
@@ -225,7 +263,7 @@ export function AllocationMatrixByPerson({ scenarioId, startMonth, endMonth, vie
         </thead>
         <tbody>
           {roles.map((role) => {
-            const roleAllocs = filteredAllocations.filter((a) => a.role === role)
+            const roleAllocs = calculationAllocations.filter((a) => a.role === role)
             const roleResources = activeResources.filter((r) => r.role === role || r.secondaryRoles?.includes(role))
             if (!roleAllocs.length && !roleResources.length) return null
             return (

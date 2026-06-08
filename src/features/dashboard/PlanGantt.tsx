@@ -3,6 +3,7 @@ import { motion } from 'motion/react'
 import type { Project, Allocation } from '../../types'
 import { generateMonthRange, currentMonth } from '../../utils/months'
 import { formatHours } from '../../utils/format'
+import { getProjectType, isProjectIncludedInResourceCalculations } from '../../domain/projects/projectPlanning'
 
 interface Props {
   projects: Project[]
@@ -28,6 +29,7 @@ const statusDash: Record<string, string> = {
 export function PlanGantt({ projects, allocations, brandFilter, startMonth, endMonth }: Props) {
   const months = useMemo(() => generateMonthRange(startMonth, endMonth), [startMonth, endMonth])
   const now = currentMonth()
+  const minWidth = Math.max(960, months.length * 58)
 
   const nowIdx = months.indexOf(now)
   const nowPct = nowIdx >= 0 ? ((nowIdx + 0.5) / months.length) * 100 : -1
@@ -86,108 +88,111 @@ export function PlanGantt({ projects, allocations, brandFilter, startMonth, endM
 
   return (
     <div className="overflow-x-auto select-none">
-      {/* Header — month labels */}
-      <div className="relative" style={{ marginLeft: 0 }}>
-        {/* Year markers */}
-        {yearBoundaries.map(({ label, pct }) => (
-          <div
-            key={label}
-            className="absolute top-0 text-[10px] font-bold uppercase tracking-wider"
-            style={{ left: `${pct}%`, color: 'var(--text-faint)', transform: 'translateX(-2px)' }}
-          >
-            {label}
-          </div>
-        ))}
-        {/* Month ticks */}
-        <div className="flex mt-4 mb-2">
-          {months.map((m) => (
+      <div style={{ minWidth }}>
+        {/* Header — month labels */}
+        <div className="relative" style={{ marginLeft: 0 }}>
+          {/* Year markers */}
+          {yearBoundaries.map(({ label, pct }) => (
             <div
-              key={m}
-              className="flex-1 text-center text-[9px] uppercase tracking-wide"
-              style={{ color: 'var(--text-faint)' }}
+              key={label}
+              className="absolute top-0 text-[10px] font-bold uppercase tracking-wider"
+              style={{ left: `${pct}%`, color: 'var(--text-faint)', transform: 'translateX(-2px)' }}
             >
-              {new Date(m + '-01').toLocaleDateString('en-GB', { month: 'short' })}
+              {label}
             </div>
           ))}
-        </div>
-      </div>
-
-      {/* Gantt body */}
-      <div className="relative" style={{ marginLeft: 0 }}>
-        {/* Month grid lines */}
-        <div className="absolute inset-0 flex pointer-events-none" style={{ zIndex: 0 }}>
-          {months.map((m, i) => (
-            <div
-              key={m}
-              className="flex-1 border-l"
-              style={{ borderColor: i === 0 ? 'transparent' : 'var(--border)' }}
-            />
-          ))}
-        </div>
-
-        {/* Current month line */}
-        {nowPct >= 0 && nowPct <= 100 && (
-          <div
-            className="absolute top-0 bottom-0 w-px z-10"
-            style={{
-              left: `${nowPct}%`,
-              background: 'rgba(124,58,237,0.6)',
-              boxShadow: '0 0 6px rgba(124,58,237,0.4)',
-            }}
-          />
-        )}
-
-        {/* Project rows */}
-        {visibleProjects.map((p, i) => {
-          const pos = barPosition(p)
-          if (!pos) return null
-
-          const col = brandColor[p.frontendBrand] ?? brandColor['DCT']!
-          const opacity = statusOpacity[p.status] ?? 0.6
-          const dash = statusDash[p.status] ?? '0'
-          const totalHours = allocations
-            .filter((a) => a.projectId === p.id)
-            .reduce((s, a) => s + a.hours, 0)
-
-          const isNarrow = pos.width < 12
-
-          return (
-            <motion.div
-              key={p.id}
-              initial={{ opacity: 0, scaleX: 0.85 }}
-              animate={{ opacity: 1, scaleX: 1 }}
-              transition={{ delay: i * 0.04, duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="relative"
-              style={{ height: ROW_H, marginBottom: 3 }}
-            >
+          {/* Month ticks */}
+          <div className="flex mt-4 mb-2">
+            {months.map((m) => (
               <div
-                className="absolute top-1 rounded-md flex items-center overflow-hidden group cursor-default"
-                style={{
-                  left: `${pos.left}%`,
-                  width: `${pos.width}%`,
-                  height: ROW_H - 8,
-                  background: col.bar,
-                  opacity,
-                  outline: `1.5px ${dash !== '0' ? 'dashed' : 'solid'} ${col.border}`,
-                  outlineOffset: -1,
-                  transition: 'opacity 0.12s',
-                }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = '1' }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = String(opacity) }}
-                title={`${p.code} ${p.name} · ${p.status} · ${formatHours(totalHours)}`}
+                key={m}
+                className="flex-1 text-center text-[9px] uppercase tracking-wide"
+                style={{ color: 'var(--text-faint)' }}
               >
-                <span
-                  className="px-2 text-[11px] font-semibold truncate whitespace-nowrap leading-none"
-                  style={{ color: col.text }}
-                >
-                  {isNarrow ? p.code : `${p.code}  ${p.name}`}
-                </span>
+                {new Date(m + '-01').toLocaleDateString('en-GB', { month: 'short' })}
               </div>
-            </motion.div>
-          )
-        })}
-      </div>
+            ))}
+          </div>
+        </div>
 
+        {/* Gantt body */}
+        <div className="relative" style={{ marginLeft: 0 }}>
+          {/* Month grid lines */}
+          <div className="absolute inset-0 flex pointer-events-none" style={{ zIndex: 0 }}>
+            {months.map((m, i) => (
+              <div
+                key={m}
+                className="flex-1 border-l"
+                style={{ borderColor: i === 0 ? 'transparent' : 'var(--border)' }}
+              />
+            ))}
+          </div>
+
+          {/* Current month line */}
+          {nowPct >= 0 && nowPct <= 100 && (
+            <div
+              className="absolute top-0 bottom-0 w-px z-10"
+              style={{
+                left: `${nowPct}%`,
+                background: 'rgba(124,58,237,0.6)',
+                boxShadow: '0 0 6px rgba(124,58,237,0.4)',
+              }}
+            />
+          )}
+
+          {/* Project rows */}
+          {visibleProjects.map((p, i) => {
+            const pos = barPosition(p)
+            if (!pos) return null
+
+            const col = brandColor[p.frontendBrand] ?? brandColor['DCT']!
+            const projectType = getProjectType(p)
+            const included = isProjectIncludedInResourceCalculations(p)
+            const opacity = !included ? 0.3 : projectType === 'opportunity' ? 0.55 : statusOpacity[p.status] ?? 0.6
+            const dash = projectType === 'opportunity' ? '4 3' : statusDash[p.status] ?? '0'
+            const totalHours = allocations
+              .filter((a) => a.projectId === p.id)
+              .reduce((s, a) => s + a.hours, 0)
+
+            const isNarrow = pos.width < 12
+
+            return (
+              <motion.div
+                key={p.id}
+                initial={{ opacity: 0, scaleX: 0.85 }}
+                animate={{ opacity: 1, scaleX: 1 }}
+                transition={{ delay: i * 0.04, duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="relative"
+                style={{ height: ROW_H, marginBottom: 3 }}
+              >
+                <div
+                  className="absolute top-1 rounded-md flex items-center overflow-hidden group cursor-default"
+                  style={{
+                    left: `${pos.left}%`,
+                    width: `${pos.width}%`,
+                    height: ROW_H - 8,
+                    background: col.bar,
+                    opacity,
+                    outline: `1.5px ${dash !== '0' ? 'dashed' : 'solid'} ${col.border}`,
+                    outlineOffset: -1,
+                    transition: 'opacity 0.12s',
+                  }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = '1' }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = String(opacity) }}
+                  title={`${p.code} ${p.name} · ${projectType} · ${included ? 'included' : 'excluded'} · ${formatHours(totalHours)}`}
+                >
+                  <span
+                    className="px-2 text-[11px] font-semibold truncate whitespace-nowrap leading-none"
+                    style={{ color: col.text }}
+                  >
+                    {isNarrow ? p.code : `${p.code}  ${p.name}`}
+                  </span>
+                </div>
+              </motion.div>
+            )
+          })}
+        </div>
+      </div>
 
       {/* Legend */}
       <div className="flex items-center gap-5 mt-4 pl-0 flex-wrap">
@@ -200,9 +205,9 @@ export function PlanGantt({ projects, allocations, brandFilter, startMonth, endM
             <span className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-faint)' }}>{label}</span>
           </div>
         ))}
-        {[{ label: 'Planned', border: 'dashed' }, { label: 'Opportunity', border: 'dashed', opacity: '0.4' }].map(({ label }) => (
+        {[{ label: 'Planned' }, { label: 'Opportunity' }, { label: 'Excluded' }].map(({ label }) => (
           <div key={label} className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded-sm border border-dashed border-violet-500" style={{ opacity: 0.5 }} />
+            <div className="w-3 h-3 rounded-sm border border-dashed border-violet-500" style={{ opacity: label === 'Excluded' ? 0.25 : 0.5 }} />
             <span className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-faint)' }}>{label}</span>
           </div>
         ))}

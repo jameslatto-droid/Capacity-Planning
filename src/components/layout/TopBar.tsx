@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { useTheme } from '../../utils/ThemeContext'
+import { useAuth } from '../../utils/AuthContext'
 
 const navItems = [
   { to: '/', label: 'Dashboard' },
@@ -14,6 +15,7 @@ const navItems = [
 
 export function TopBar() {
   const { toggle, isDark } = useTheme()
+  const { currentUser, logout } = useAuth()
   const appName = import.meta.env['VITE_APP_NAME'] ?? 'Resource Planner'
 
   return (
@@ -67,7 +69,21 @@ export function TopBar() {
       </nav>
 
       {/* Theme toggle */}
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        {currentUser && (
+          <div
+            className="hidden sm:flex items-center gap-2 rounded-lg px-2.5 py-1.5"
+            style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', color: 'var(--text-muted)' }}
+          >
+            <span
+              className="inline-flex items-center justify-center rounded-full text-[10px] font-bold"
+              style={{ width: 22, height: 22, background: 'var(--accent-light)', color: 'var(--accent-text)' }}
+            >
+              {currentUser.initials}
+            </span>
+            <span className="text-xs font-medium">{currentUser.displayName}</span>
+          </div>
+        )}
         <motion.button
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.96 }}
@@ -89,6 +105,26 @@ export function TopBar() {
         >
           <span>{isDark ? '☀' : '◑'}</span>
           <span>{isDark ? 'Light' : 'Dark'}</span>
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.96 }}
+          onClick={logout}
+          title="Sign out"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            padding: '4px 10px',
+            borderRadius: 7,
+            fontSize: 12,
+            fontWeight: 500,
+            cursor: 'pointer',
+            background: 'transparent',
+            color: 'var(--text-muted)',
+            border: '1px solid var(--border)',
+          }}
+        >
+          Sign out
         </motion.button>
       </div>
     </header>

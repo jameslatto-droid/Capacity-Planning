@@ -1,13 +1,20 @@
 import { useEffect } from 'react'
-import { BrowserRouter } from 'react-router-dom'
+import { HashRouter } from 'react-router-dom'
 import { TopBar } from '../components/layout/TopBar'
 import { AppRoutes } from './routes'
 import { usePlannerStore } from '../store/plannerStore'
 import { ThemeProvider } from '../utils/ThemeContext'
+import { AuthProvider, useAuth } from '../utils/AuthContext'
+import { LoginPage } from '../features/auth/LoginPage'
 
 function Inner() {
+  const { currentUser } = useAuth()
   const { loadAll, isLoading, error } = usePlannerStore()
-  useEffect(() => { loadAll() }, [loadAll])
+  useEffect(() => {
+    if (currentUser) loadAll()
+  }, [currentUser, loadAll])
+
+  if (!currentUser) return <LoginPage />
 
   if (isLoading) {
     return (
@@ -24,21 +31,23 @@ function Inner() {
     )
   }
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <TopBar />
         <div style={{ flex: 1, overflow: 'auto', background: 'var(--bg)', minHeight: 0 }}>
           <AppRoutes />
         </div>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 
 export function App() {
   return (
     <ThemeProvider>
-      <Inner />
+      <AuthProvider>
+        <Inner />
+      </AuthProvider>
     </ThemeProvider>
   )
 }

@@ -15,6 +15,8 @@ export type EmploymentType = 'employee' | 'contractor' | 'freelancer' | 'placeho
 
 export type ProjectStatus = 'opportunity' | 'planned' | 'active' | 'on-hold' | 'complete' | 'cancelled'
 
+export type ProjectType = 'live' | 'opportunity'
+
 export type ProjectPriority = 'critical' | 'high' | 'medium' | 'low'
 
 export type ProjectFlexibility = 'fixed' | 'limited' | 'flexible'
@@ -36,6 +38,10 @@ export interface Resource {
   notes?: string
   contractStart?: string  // YYYY-MM-DD, contractor/freelancer only
   contractEnd?: string    // YYYY-MM-DD, contractor/freelancer only
+  createdAt?: string
+  createdBy?: string
+  lastModifiedAt?: string
+  lastModifiedBy?: string
 }
 
 export interface Project {
@@ -45,12 +51,18 @@ export interface Project {
   frontendBrand: FrontendBrand
   client?: string
   projectManager?: string
+  projectType?: ProjectType
+  includeInResourceCalculations?: boolean
   status: ProjectStatus
   priority: ProjectPriority
   flexibility: ProjectFlexibility
   startMonth: string
   endMonth: string
   notes?: string
+  createdAt?: string
+  createdBy?: string
+  lastModifiedAt?: string
+  lastModifiedBy?: string
 }
 
 export interface Allocation {
@@ -63,7 +75,10 @@ export interface Allocation {
   hours: number
   locked: boolean
   notes?: string
+  createdAt?: string
+  createdBy?: string
   lastModifiedAt?: string
+  lastModifiedBy?: string
 }
 
 export type LeaveType = 'annual' | 'sick' | 'public-holiday' | 'unpaid' | 'other'
@@ -76,6 +91,9 @@ export interface LeaveEntry {
   endDate: string     // YYYY-MM-DD
   notes?: string
   createdAt: string
+  createdBy?: string
+  lastModifiedAt?: string
+  lastModifiedBy?: string
 }
 
 export const LEAVE_TYPE_LABELS: Record<LeaveType, string> = {

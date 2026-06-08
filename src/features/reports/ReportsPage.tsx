@@ -7,15 +7,15 @@ import {
 import { usePlannerStore } from '../../store/plannerStore'
 import { PageLayout } from '../../components/layout/PageLayout'
 import { Select } from '../../components/ui/Select'
+import { Input } from '../../components/ui/Input'
 import { Button } from '../../components/ui/Button'
 import { formatHours, formatPercent } from '../../utils/format'
-import { formatMonth, generateMonthRange } from '../../utils/months'
+import { defaultForecastRange, formatMonth, generateMonthRange } from '../../utils/months'
 import { calculatePersonUtilisation, calculateRoleUtilisation } from '../../domain/utilisation/utilisationCalculations'
 import { exportCsv, exportJson } from '../../utils/export'
 import { ROLE_LABELS, ALL_ROLES } from '../../types'
 import { UtilisationHeatmap } from './UtilisationHeatmap'
-
-const MONTHS = generateMonthRange('2026-01', '2026-12')
+import { filterResourceCalculationAllocations } from '../../domain/projects/projectPlanning'
 
 type Tab = 'person' | 'role' | 'brand' | 'project' | 'overload'
 
@@ -52,16 +52,16 @@ const ROLE_COLORS: Record<string, string> = {
 
 export function ReportsPage() {
   const { resources, projects, allocations, scenarios, activeScenarioId, leaveEntries } = usePlannerStore()
-  const [startMonth, setStartMonth] = useState('2026-06')
-  const [endMonth, setEndMonth] = useState('2026-12')
+  const defaultRange = defaultForecastRange()
+  const [startMonth, setStartMonth] = useState(defaultRange.startMonth)
+  const [endMonth, setEndMonth] = useState(defaultRange.endMonth)
   const [brandFilter, setBrandFilter] = useState<'DCT' | 'PLK' | 'both'>('both')
   const [activeTab, setActiveTab] = useState<Tab>('person')
-  const [displayMode, setDisplayMode] = useState<'percent' | 'hours'>('percent')
 
   const assumptions = scenarios.find((s) => s.id === activeScenarioId)?.assumptions
   const filteredMonths = useMemo(() => generateMonthRange(startMonth, endMonth), [startMonth, endMonth])
 
-  const filteredAllocations = useMemo(() =>
+  const visibleAllocations = useMemo(() =>
     allocations.filter((a) => {
       if (a.scenarioId !== activeScenarioId) return false
       if (!filteredMonths.includes(a.month)) return false
@@ -71,6 +71,10 @@ export function ReportsPage() {
       }
       return true
     }), [allocations, activeScenarioId, filteredMonths, brandFilter, projects])
+  const filteredAllocations = useMemo(
+    () => filterResourceCalculationAllocations(visibleAllocations, projects),
+    [visibleAllocations, projects]
+  )
 
   const activeResources = resources.filter((r) => r.active)
 
@@ -196,13 +200,13 @@ export function ReportsPage() {
     >
       {/* Filters */}
       <div className="flex flex-wrap gap-4 mb-8">
-        <Select label="From" value={startMonth} onChange={(e) => setStartMonth(e.target.value)} options={MONTHS.map((m) => ({ value: m, label: formatMonth(m) }))} />
-        <Select label="To" value={endMonth} onChange={(e) => setEndMonth(e.target.value)} options={MONTHS.map((m) => ({ value: m, label: formatMonth(m) }))} />
+        <Input label="From" type="month" value={startMonth} onChange={(e) => setStartMonth(e.target.value)} className="w-36" />
+        <Input label="To" type="month" value={endMonth} onChange={(e) => setEndMonth(e.target.value)} className="w-36" />
         <Select label="Brand" value={brandFilter} onChange={(e) => setBrandFilter(e.target.value as typeof brandFilter)} options={[{ value: 'both', label: 'Both' }, { value: 'DCT', label: 'DCT' }, { value: 'PLK', label: 'PLK' }]} />
       </div>
 
-      {/* Tabs + display mode toggle */}
-      <div className="flex items-center justify-between gap-3 mb-8 flex-wrap">
+      {/* Tabs */}
+      <div className="flex items-center gap-3 mb-8 flex-wrap">
         <div className="flex gap-1 flex-wrap">
           {tabs.map((t) => (
             <motion.button
@@ -222,32 +226,13 @@ export function ReportsPage() {
             </motion.button>
           ))}
         </div>
-
-        {/* Hours / % toggle — only shown on heatmap tabs */}
-        {(activeTab === 'person' || activeTab === 'role' || activeTab === 'overload') && (
-          <div className="flex rounded-lg overflow-hidden" style={{ border: '1px solid var(--border)' }}>
-            {(['percent', 'hours'] as const).map((mode) => (
-              <button
-                key={mode}
-                onClick={() => setDisplayMode(mode)}
-                className="px-3 py-1.5 text-xs font-semibold transition-all"
-                style={{
-                  background: displayMode === mode ? 'var(--accent-light)' : 'var(--surface-2)',
-                  color: displayMode === mode ? 'var(--accent-text)' : 'var(--text-muted)',
-                }}
-              >
-                {mode === 'percent' ? '%' : 'h'}
-              </button>
-            ))}
-          </div>
-        )}
       </div>
 
       {/* ── Person utilisation heatmap ── */}
       {activeTab === 'person' && (
         <div className="space-y-8">
           {chartWrapper(
-            <UtilisationHeatmap rows={personHeatmapRows} months={filteredMonths} displayMode={displayMode} />,
+            <UtilisationHeatmap rows={personHeatmapRows} months={filteredMonths} />,
             'Person Utilisation'
           )}
         </div>
@@ -257,7 +242,7 @@ export function ReportsPage() {
       {activeTab === 'role' && (
         <div className="space-y-8">
           {chartWrapper(
-            <UtilisationHeatmap rows={roleHeatmapRows} months={filteredMonths} displayMode={displayMode} />,
+            <UtilisationHeatmap rows={roleHeatmapRows} months={filteredMonths} />,
             'Role Utilisation'
           )}
           {chartWrapper(
@@ -354,7 +339,6 @@ export function ReportsPage() {
             <UtilisationHeatmap
               rows={personHeatmapRows.filter((row) => row.values.some((v) => v.utilisation > 1))}
               months={filteredMonths}
-              displayMode={displayMode}
             />,
             'Overloaded People'
           )}

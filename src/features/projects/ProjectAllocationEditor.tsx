@@ -8,6 +8,8 @@ import { generateMonthRange, formatMonth, currentMonth, addMonths } from '../../
 import { Button } from '../../components/ui/Button'
 import { Select } from '../../components/ui/Select'
 import { useTheme } from '../../utils/ThemeContext'
+import { useAuth } from '../../utils/AuthContext'
+import { formatAuditUser } from '../../utils/auth'
 import type { Resource, ResourceRole } from '../../types'
 import { ROLE_LABELS } from '../../types'
 
@@ -55,6 +57,7 @@ export function ProjectAllocationEditor() {
   const { projectId } = useParams<{ projectId: string }>()
   const navigate = useNavigate()
   const { toggle, isDark } = useTheme()
+  const { currentUser } = useAuth()
   const { projects, resources, allocations, scenarios, activeScenarioId, setAllocations } = usePlannerStore()
 
   const project  = projects.find((p) => p.id === projectId)
@@ -108,6 +111,12 @@ export function ProjectAllocationEditor() {
       .filter((a) => a.lastModifiedAt)
       .sort((a, b) => (b.lastModifiedAt ?? '').localeCompare(a.lastModifiedAt ?? ''))
     return latest[0]?.lastModifiedAt ?? null
+  })
+  const [lastSavedBy, setLastSavedBy] = useState<string | null>(() => {
+    const latest = [...existingAllocations]
+      .filter((a) => a.lastModifiedAt)
+      .sort((a, b) => (b.lastModifiedAt ?? '').localeCompare(a.lastModifiedAt ?? ''))
+    return latest[0]?.lastModifiedBy ?? null
   })
 
   const [isDirty, setIsDirty] = useState(false)
@@ -170,12 +179,12 @@ export function ProjectAllocationEditor() {
           hours,
           locked: existing?.locked ?? false,
           notes: existing?.notes,
-          lastModifiedAt: now,
         }]
       })
     })
     setAllocations([...others, ...next])
     setLastSavedAt(now)
+    setLastSavedBy(currentUser?.id ?? null)
     setIsDirty(false)
   }
 
@@ -216,7 +225,9 @@ export function ProjectAllocationEditor() {
         </div>
         <div className="flex items-center gap-3">
           {lastSavedAt && !isDirty && (
-            <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Saved {fmtSaved(lastSavedAt)}</span>
+            <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+              Saved by {formatAuditUser(lastSavedBy ?? undefined)} · {fmtSaved(lastSavedAt)}
+            </span>
           )}
           {isDirty && <span className="text-xs text-amber-500">Unsaved changes</span>}
           <Button variant="primary" onClick={handleSave} disabled={!isDirty}>Save</Button>

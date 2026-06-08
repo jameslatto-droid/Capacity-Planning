@@ -11,11 +11,9 @@ import {
   getEntryWorkingDays,
   countWorkingDays,
 } from '../../domain/capacity/leaveCalculations'
-import { generateMonthRange, formatMonth, currentMonth } from '../../utils/months'
+import { defaultForecastRange, generateMonthRange, formatMonth, currentMonth } from '../../utils/months'
 import type { LeaveEntry, LeaveType } from '../../types'
 import { LEAVE_TYPE_LABELS } from '../../types'
-
-const MONTHS = generateMonthRange('2026-01', '2026-12')
 
 const LEAVE_TYPES = Object.entries(LEAVE_TYPE_LABELS) as [LeaveType, string][]
 
@@ -50,9 +48,10 @@ function emptyForm(defaultResourceId = ''): LeaveFormState {
 
 export function LeavePage() {
   const { resources, leaveEntries, addLeaveEntry, updateLeaveEntry, deleteLeaveEntry } = usePlannerStore()
+  const defaultRange = defaultForecastRange()
 
-  const [viewStart, setViewStart] = useState('2026-06')
-  const [viewEnd,   setViewEnd]   = useState('2026-12')
+  const [viewStart, setViewStart] = useState(defaultRange.startMonth)
+  const [viewEnd,   setViewEnd]   = useState(defaultRange.endMonth)
   const [showForm,  setShowForm]  = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [form,      setForm]      = useState<LeaveFormState>(emptyForm)
@@ -231,8 +230,8 @@ export function LeavePage() {
       {/* Month-by-month grid */}
       <div className="mb-10">
         <div className="flex flex-wrap items-end gap-3 mb-4">
-          <Select label="From" value={viewStart} onChange={(e) => setViewStart(e.target.value)} options={MONTHS.map((m) => ({ value: m, label: formatMonth(m) }))} />
-          <Select label="To"   value={viewEnd}   onChange={(e) => setViewEnd(e.target.value)}   options={MONTHS.map((m) => ({ value: m, label: formatMonth(m) }))} />
+          <Input label="From" type="month" value={viewStart} onChange={(e) => setViewStart(e.target.value)} className="w-36" />
+          <Input label="To" type="month" value={viewEnd} onChange={(e) => setViewEnd(e.target.value)} className="w-36" />
           <Select label="Person" value={filterResource} onChange={(e) => setFilterResource(e.target.value)} options={resourceOptions} />
         </div>
 

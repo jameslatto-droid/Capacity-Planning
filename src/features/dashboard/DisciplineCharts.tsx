@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { type ReactNode, useMemo } from 'react'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import type { Resource, Allocation, CapacityAssumptions, LeaveEntry, ResourceRole } from '../../types'
 import { ROLE_LABELS } from '../../types'
@@ -21,6 +21,7 @@ interface Props {
   leaveEntries: LeaveEntry[]
   assumptions: CapacityAssumptions
   months: string[]
+  leadingPanel?: ReactNode
 }
 
 interface RoleData {
@@ -131,7 +132,7 @@ function RolePanel({ role, data, avgUtil }: { role: ResourceRole; data: RoleData
   )
 }
 
-export function DisciplineCharts({ resources, allocations, leaveEntries, assumptions, months }: Props) {
+export function DisciplineCharts({ resources, allocations, leaveEntries, assumptions, months, leadingPanel }: Props) {
   const activeResources = useMemo(() => resources.filter((r) => r.active), [resources])
 
   const roleData = useMemo(() => {
@@ -165,7 +166,8 @@ export function DisciplineCharts({ resources, allocations, leaveEntries, assumpt
   if (!roleData.length) return null
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 10 }}>
+      {leadingPanel}
       {roleData.map(({ role, data, avgUtil }) => (
         <RolePanel key={role} role={role} data={data} avgUtil={avgUtil} />
       ))}

@@ -2,28 +2,26 @@ import { useState } from 'react'
 import { motion } from 'motion/react'
 import { usePlannerStore } from '../../store/plannerStore'
 import { PageLayout } from '../../components/layout/PageLayout'
-import { Select } from '../../components/ui/Select'
-import { formatMonth, generateMonthRange } from '../../utils/months'
+import { Input } from '../../components/ui/Input'
+import { defaultForecastRange } from '../../utils/months'
 import { AllocationMatrixByPerson } from './AllocationMatrixByPerson'
 
 type ViewMode = 'person' | 'project' | 'role'
 type ValueMode = 'hours' | 'percent'
-const MONTHS = generateMonthRange('2026-01', '2026-12')
 
 export function AllocationsPage() {
   const { activeScenarioId } = usePlannerStore()
+  const defaultRange = defaultForecastRange()
   const [viewMode, setViewMode] = useState<ViewMode>('person')
   const [valueMode, setValueMode] = useState<ValueMode>('hours')
-  const [startMonth, setStartMonth] = useState('2026-06')
-  const [endMonth, setEndMonth] = useState('2026-12')
-
-  const monthOptions = MONTHS.map((m) => ({ value: m, label: formatMonth(m) }))
+  const [startMonth, setStartMonth] = useState(defaultRange.startMonth)
+  const [endMonth, setEndMonth] = useState(defaultRange.endMonth)
 
   return (
     <PageLayout title="Allocations">
       <div className="flex flex-wrap items-end gap-4 mb-8">
-        <Select label="From" value={startMonth} onChange={(e) => setStartMonth(e.target.value)} options={monthOptions} />
-        <Select label="To" value={endMonth} onChange={(e) => setEndMonth(e.target.value)} options={monthOptions} />
+        <Input label="From" type="month" value={startMonth} onChange={(e) => setStartMonth(e.target.value)} className="w-36" />
+        <Input label="To" type="month" value={endMonth} onChange={(e) => setEndMonth(e.target.value)} className="w-36" />
         <div className="flex gap-1 self-end">
           {(['person', 'project', 'role'] as ViewMode[]).map((m) => (
             <motion.button
