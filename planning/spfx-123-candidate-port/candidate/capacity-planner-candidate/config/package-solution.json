@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "capacity-planner-candidate-client-side-solution",
+    "id": "43114cf7-e9c4-4a6b-95dd-654abbb02d77",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.23.1"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "capacity-planner-candidate description"
+      },
+      "longDescription": {
+        "default": "capacity-planner-candidate description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "capacity-planner-candidate Feature",
+        "description": "The feature that activates elements of the capacity-planner-candidate solution.",
+        "id": "ee7069f7-dfd1-43bc-83af-003fc2dbbac0",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/capacity-planner-candidate.sppkg"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "capacity-planner-candidate-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/capacityPlannerCandidate/CapacityPlannerCandidateWebPart.js",
+          "manifest": "./src/webparts/capacityPlannerCandidate/CapacityPlannerCandidateWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "CapacityPlannerCandidateWebPartStrings": "lib/webparts/capacityPlannerCandidate/loc/{locale}.js"
+  }
+}

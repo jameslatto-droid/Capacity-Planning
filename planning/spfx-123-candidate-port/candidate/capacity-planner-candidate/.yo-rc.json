@@ -1,0 +1,23 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "whichFolder": "subdir",
+    "solutionName": "capacity-planner-candidate",
+    "environment": "spo",
+    "packageManager": "npm",
+    "useGulp": false,
+    "template": "react",
+    "componentName": "CapacityPlannerCandidate",
+    "componentDescription": "Capacity Planner candidate port",
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "22.19.0",
+    "sdksVersions": {},
+    "version": "1.23.1",
+    "libraryName": "capacity-planner-candidate",
+    "libraryId": "43114cf7-e9c4-4a6b-95dd-654abbb02d77",
+    "solutionShortDescription": "capacity-planner-candidate description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}
