@@ -1,7 +1,16 @@
-import { IAllocation, ILeaveEntry, IMonthSummary, IPerson, IPersonMonthSummary, IPlanningSnapshot, IProjectDemandSummary } from '../models/ResourcePlanningModels';
+import { IAllocation, IMonthSummary, IPerson, IPersonMonthSummary, IPlanningSnapshot, IProjectDemandSummary } from '../models/ResourcePlanningModels';
 import { buildMonthRange, firstDayOfMonthIso } from './dateUtils';
 
 const AVERAGE_WEEKS_PER_MONTH = 4.333;
+
+function getPersonById(people: IPerson[], personId: string | number): IPerson | undefined {
+  for (let index = 0; index < people.length; index++) {
+    if (String(people[index].id) === String(personId)) {
+      return people[index];
+    }
+  }
+  return undefined;
+}
 
 export function monthlyCapacityHours(person: IPerson): number {
   return Math.round((person.weeklyHours || 40) * (person.fte || 1) * AVERAGE_WEEKS_PER_MONTH);
@@ -20,10 +29,12 @@ export function buildMonthSummaries(snapshot: IPlanningSnapshot, monthsToShow: n
   return months.map((month) => {
     const activePeople = snapshot.people.filter((person) => person.isActive);
     const capacityHours = activePeople.reduce((sum, person) => sum + monthlyCapacityHours(person), 0);
-    const leaveHours = snapshot.leave.filter((entry) => firstDayOfMonthIso(entry.leaveDate) === month).reduce((sum, entry) => sum + entry.leaveHours, 0);
+    const leaveHours = snapshot.leave
+      .filter((entry) => firstDayOfMonthIso(entry.leaveDate) === month)
+      .reduce((sum, entry) => sum + entry.leaveHours, 0);
     const allocatedHours = snapshot.allocations
       .filter((allocation) => firstDayOfMonthIso(allocation.allocationMonth) === month && allocation.includeInCapacity)
-      .reduce((sum, allocation) => sum + allocationHours(allocation, snapshot.people.find((person) => String(person.id) === String(allocation.personId))), 0);
+      .reduce((sum, allocation) => sum + allocationHours(allocation, getPersonById(snapshot.people, allocation.personId)), 0);
     const availableHours = Math.max(capacityHours - leaveHours, 0);
     return {
       month,
@@ -68,8 +79,10 @@ export function buildPersonMonthSummaries(snapshot: IPlanningSnapshot, monthsToS
 export function buildProjectDemandSummaries(snapshot: IPlanningSnapshot): IProjectDemandSummary[] {
   return snapshot.projects.map((project) => {
     const allocations = snapshot.allocations.filter((allocation) => String(allocation.projectId) === String(project.id));
-    const totalHours = allocations.reduce((sum, allocation) => sum + allocationHours(allocation, snapshot.people.find((person) => String(person.id) === String(allocation.personId))), 0);
-    const includedHours = allocations.filter((allocation) => allocation.includeInCapacity && project.includeInCapacity).reduce((sum, allocation) => sum + allocationHours(allocation, snapshot.people.find((person) => String(person.id) === String(allocation.personId))), 0);
+    const totalHours = allocations.reduce((sum, allocation) => sum + allocationHours(allocation, getPersonById(snapshot.people, allocation.personId)), 0);
+    const includedHours = allocations
+      .filter((allocation) => allocation.includeInCapacity && project.includeInCapacity)
+      .reduce((sum, allocation) => sum + allocationHours(allocation, getPersonById(snapshot.people, allocation.personId)), 0);
     return {
       projectId: project.id,
       projectTitle: project.title,
