@@ -1,6 +1,8 @@
 export function firstDayOfMonthIso(value: Date | string): string {
   const date = typeof value === 'string' ? new Date(value) : value;
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-01`;
+  const month = date.getMonth() + 1;
+  const monthText = month < 10 ? `0${month}` : String(month);
+  return `${date.getFullYear()}-${monthText}-01`;
 }
 
 export function addMonths(value: Date | string, months: number): Date {
@@ -9,8 +11,12 @@ export function addMonths(value: Date | string, months: number): Date {
 }
 
 export function buildMonthRange(monthsToShow: number): string[] {
+  const months: string[] = [];
   const start = firstDayOfMonthIso(new Date());
-  return Array.from({ length: monthsToShow }, (_, index) => firstDayOfMonthIso(addMonths(start, index)));
+  for (let index = 0; index < monthsToShow; index++) {
+    months.push(firstDayOfMonthIso(addMonths(start, index)));
+  }
+  return months;
 }
 
 export function monthLabel(monthIso: string): string {
