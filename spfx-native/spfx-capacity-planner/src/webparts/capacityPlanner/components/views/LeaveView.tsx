@@ -8,6 +8,15 @@ export interface ILeaveViewProps {
   leave: ILeaveEntry[];
 }
 
+function getPersonById(people: IPerson[], personId: string | number): IPerson | undefined {
+  for (let index = 0; index < people.length; index++) {
+    if (String(people[index].id) === String(personId)) {
+      return people[index];
+    }
+  }
+  return undefined;
+}
+
 export const LeaveView: React.FC<ILeaveViewProps> = ({ people, leave }) => (
   <div>
     <table className={styles.table}>
@@ -22,11 +31,11 @@ export const LeaveView: React.FC<ILeaveViewProps> = ({ people, leave }) => (
       </thead>
       <tbody>
         {leave.map((entry) => {
-          const person = people.find((candidate) => String(candidate.id) === String(entry.personId));
+          const person = getPersonById(people, entry.personId);
           return (
             <tr key={String(entry.id)}>
               <td>{monthLabel(entry.leaveDate)}</td>
-              <td>{person?.title || entry.personId}</td>
+              <td>{person ? person.title : entry.personId}</td>
               <td>{entry.leaveType}</td>
               <td>{entry.leaveHours} h</td>
               <td>{entry.notes}</td>
