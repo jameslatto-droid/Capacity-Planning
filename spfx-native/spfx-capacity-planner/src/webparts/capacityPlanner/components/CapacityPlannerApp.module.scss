@@ -1,0 +1,115 @@
+.app {
+  color: var(--bodyText, #242424);
+  background: linear-gradient(135deg, rgba(32, 32, 32, 0.04), rgba(194, 124, 14, 0.08));
+  border: 1px solid rgba(120, 120, 120, 0.22);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+  margin: 0 0 4px;
+  color: #8a5a00;
+  font-weight: 700;
+}
+
+.subtle {
+  color: #666;
+  margin: 4px 0 0;
+}
+
+.userBox {
+  min-width: 220px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(120, 120, 120, 0.2);
+  text-align: right;
+}
+
+.userBox span,
+.userBox small {
+  display: block;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid rgba(120, 120, 120, 0.2);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.card h3 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+.metric {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  background: rgba(255, 255, 255, 0.86);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.table th,
+.table td {
+  border-bottom: 1px solid rgba(120, 120, 120, 0.18);
+  padding: 8px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.table th {
+  background: rgba(194, 124, 14, 0.12);
+  font-weight: 700;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(194, 124, 14, 0.14);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.overload {
+  color: #a4262c;
+  font-weight: 700;
+}
+
+.ok {
+  color: #107c10;
+  font-weight: 700;
+}
