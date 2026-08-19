@@ -121,6 +121,16 @@ function getProjectMonths(project: IProject | undefined, monthsToShow: number): 
   return months.filter((month) => (!start || month >= start) && (!end || month <= end));
 }
 
+function clampedMonthIndex(months: string[], value: string | undefined, fallback: number): number {
+  if (!value) { return fallback; }
+  const month = firstDayOfMonthIso(value);
+  const index = months.indexOf(month);
+  if (index >= 0) { return index; }
+  if (month < months[0]) { return 0; }
+  if (month > months[months.length - 1]) { return months.length - 1; }
+  return fallback;
+}
+
 export const CapacityPlannerApp: React.FC<ICapacityPlannerAppProps> = (props) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [loadResult, setLoadResult] = useState<IDataLoadResult>({ snapshot: emptySnapshot(), source: 'mock', warnings: [] });
@@ -362,7 +372,33 @@ export const CapacityPlannerApp: React.FC<ICapacityPlannerAppProps> = (props) =>
   }
 
   function renderPortfolioTimeline(): JSX.Element {
-    return <div className={styles.timeline}>{filteredSnapshot.projects.map((project) => <div key={String(project.id)} className={styles.timelineRow}><span>{project.projectCode}</span><div className={project.projectType === 'Opportunity' ? styles.timelineOpportunity : styles.timelineBar}>{project.title} · {project.brand} · {project.status}</div></div>)}</div>;
+    const trackColumns = `repeat(${months.length}, minmax(84px, 1fr))`;
+    return <div className={styles.gantt}>
+      <div className={styles.ganttHeader}>
+        <div className={styles.ganttProjectHeader}>Project</div>
+        <div className={styles.ganttMonthHeader} style={{ gridTemplateColumns: trackColumns }}>
+          {months.map((month) => <span key={month}>{monthLabel(month)}</span>)}
+        </div>
+      </div>
+      {filteredSnapshot.projects.map((project) => {
+        const startIndex = clampedMonthIndex(months, project.startDate, 0);
+        const endIndex = clampedMonthIndex(months, project.endDate, months.length - 1);
+        const left = Math.max(0, Math.min(startIndex, endIndex));
+        const right = Math.min(months.length - 1, Math.max(startIndex, endIndex));
+        const gridColumn = `${left + 1} / ${right + 2}`;
+        const title = `${project.title} · ${project.brand} · ${project.status}`;
+        const range = `${monthLabel(project.startDate || months[0])} to ${monthLabel(project.endDate || months[months.length - 1])}`;
+        return <div key={String(project.id)} className={styles.ganttRow}>
+          <div className={styles.ganttProject}><strong>{project.projectCode}</strong><span>{project.title}</span></div>
+          <div className={styles.ganttTrack} style={{ gridTemplateColumns: trackColumns }}>
+            {months.map((month) => <div key={`${project.id}-${month}`} className={styles.ganttCell} />)}
+            <div className={project.projectType === 'Opportunity' ? styles.ganttOpportunity : styles.ganttBar} style={{ gridColumn }} title={`${title} (${range})`}>
+              <span>{title}</span><small>{range}</small>
+            </div>
+          </div>
+        </div>;
+      })}
+    </div>;
   }
 
   function renderScenarioForm(): JSX.Element {
