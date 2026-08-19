@@ -3,7 +3,7 @@
   "id": "2e04a358-e65d-44c4-b7ef-5cc52c3e2a11",
   "alias": "CapacityPlannerWebPart",
   "componentType": "WebPart",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "manifestVersion": 2,
   "requiresCustomScript": false,
   "supportedHosts": [
