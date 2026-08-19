@@ -127,6 +127,7 @@ Connect-PnPOnline @connectParams
 
 $projectIdToCode = @{
   "p-cisec" = "P250002"
+  "p-cancun" = "P250002"
   "p-taqa" = "P260001"
   "p-adoc" = "P250001"
   "p-oxy" = "P230195"
