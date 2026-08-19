@@ -421,6 +421,138 @@
   border-style: dashed;
 }
 
+.gantt {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--erp-border);
+  border-radius: 2px;
+  background: var(--erp-surface);
+}
+
+.ganttHeader,
+.ganttRow {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  min-width: 1180px;
+}
+
+.ganttHeader {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  border-bottom: 1px solid var(--erp-border);
+  background: var(--erp-surface-muted);
+}
+
+.ganttProjectHeader,
+.ganttMonthHeader span {
+  padding: 8px 10px;
+  color: var(--erp-muted);
+  font-size: 11px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.ganttMonthHeader {
+  display: grid;
+}
+
+.ganttMonthHeader span {
+  border-left: 1px solid var(--erp-border);
+  text-align: center;
+}
+
+.ganttRow {
+  min-height: 46px;
+  border-bottom: 1px solid var(--erp-border);
+}
+
+.ganttRow:last-child {
+  border-bottom: 0;
+}
+
+.ganttProject {
+  padding: 8px 10px;
+  background: #ffffff;
+  border-right: 1px solid var(--erp-border);
+}
+
+.ganttProject strong,
+.ganttProject span {
+  display: block;
+}
+
+.ganttProject strong {
+  font-size: 12px;
+  color: var(--erp-text);
+}
+
+.ganttProject span {
+  max-width: 150px;
+  overflow: hidden;
+  color: var(--erp-muted);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ganttTrack {
+  position: relative;
+  display: grid;
+  align-items: center;
+  min-height: 46px;
+  background: linear-gradient(to right, rgba(0, 120, 212, 0.045), rgba(0, 120, 212, 0.015));
+}
+
+.ganttCell {
+  grid-row: 1;
+  min-height: 46px;
+  border-left: 1px solid var(--erp-border);
+}
+
+.ganttBar,
+.ganttOpportunity {
+  grid-row: 1;
+  z-index: 2;
+  align-self: center;
+  min-height: 28px;
+  margin: 0 4px;
+  padding: 4px 8px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: #0078d4;
+  color: #ffffff;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+  white-space: nowrap;
+}
+
+.ganttOpportunity {
+  background: #fff4ce;
+  border: 1px dashed #c19c00;
+  color: #3b3a39;
+  box-shadow: none;
+}
+
+.ganttBar span,
+.ganttOpportunity span {
+  display: block;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+}
+
+.ganttBar small,
+.ganttOpportunity small {
+  display: block;
+  overflow: hidden;
+  font-size: 10px;
+  line-height: 1.1;
+  opacity: 0.86;
+  text-overflow: ellipsis;
+}
+
 .underused {
   color: var(--erp-blue);
   font-weight: 600;
