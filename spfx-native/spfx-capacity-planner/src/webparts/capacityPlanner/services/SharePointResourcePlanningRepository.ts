@@ -4,7 +4,7 @@ import '@pnp/sp/lists';
 import '@pnp/sp/items';
 import '@pnp/sp/fields';
 
-import { IAllocation, IDataLoadResult, ILeaveEntry, IPerson, IProject } from '../models/ResourcePlanningModels';
+import { IAllocation, IDataLoadResult, ILeaveEntry, IPerson, IProject, IScenario, defaultScenario } from '../models/ResourcePlanningModels';
 import { IResourcePlanningRepository } from './IResourcePlanningRepository';
 import { RequiredSharePointLists, SharePointListNames } from './sharePointListNames';
 
@@ -31,7 +31,9 @@ export class SharePointResourcePlanningRepository implements IResourcePlanningRe
         people: peopleItems.map(this.mapPerson),
         projects: projectItems.map(this.mapProject),
         allocations: allocationItems.map(this.mapAllocation),
-        leave: leaveItems.map(this.mapLeave)
+        leave: leaveItems.map(this.mapLeave),
+        scenarios: [defaultScenario()],
+        activeScenarioId: 'baseline'
       }
     };
   }
@@ -39,14 +41,16 @@ export class SharePointResourcePlanningRepository implements IResourcePlanningRe
   public async savePerson(person: IPerson): Promise<IPerson> {
     const payload = {
       Title: person.title,
-      Email: person.email,
-      Discipline: person.discipline,
-      Role: person.role,
-      EmploymentType: person.employmentType,
-      FTE: person.fte,
-      WeeklyHours: person.weeklyHours,
-      IsActive: person.isActive,
-      Manager: person.manager || ''
+      Email: person.email || '',
+      Discipline: person.discipline || person.primaryRole || '',
+      Role: person.role || person.primaryRole || '',
+      EmploymentType: person.employmentType || 'Employee',
+      FTE: Number(person.fte || 1),
+      WeeklyHours: Number(person.weeklyHours || 40),
+      WorkingDaysPerWeek: Number(person.workingDaysPerWeek || 5),
+      IsActive: person.isActive !== false,
+      Manager: person.manager || '',
+      Notes: person.notes || ''
     };
     if (typeof person.id === 'number') {
       await this.sp.web.lists.getByTitle(SharePointListNames.people).items.getById(person.id).update(payload);
@@ -56,17 +60,25 @@ export class SharePointResourcePlanningRepository implements IResourcePlanningRe
     return { ...person, id: added.Id };
   }
 
+  public async deletePerson(id: number | string): Promise<void> {
+    if (typeof id !== 'number') { return; }
+    await this.sp.web.lists.getByTitle(SharePointListNames.people).items.getById(id).delete();
+  }
+
   public async saveProject(project: IProject): Promise<IProject> {
     const payload = {
       Title: project.title,
       ProjectCode: project.projectCode,
       ProjectType: project.projectType,
       Status: project.status,
+      Brand: project.brand || '',
+      Priority: project.priority || 'Normal',
       Client: project.client || '',
       StartDate: project.startDate || null,
       EndDate: project.endDate || null,
       IncludeInCapacity: project.includeInCapacity,
       Probability: project.probability || 0,
+      LastAllocationSavedAt: project.lastAllocationSavedAt || null,
       Notes: project.notes || ''
     };
     if (typeof project.id === 'number') {
@@ -77,16 +89,25 @@ export class SharePointResourcePlanningRepository implements IResourcePlanningRe
     return { ...project, id: added.Id };
   }
 
+  public async deleteProject(id: number | string): Promise<void> {
+    if (typeof id !== 'number') { return; }
+    await this.sp.web.lists.getByTitle(SharePointListNames.projects).items.getById(id).delete();
+  }
+
   public async saveAllocation(allocation: IAllocation): Promise<IAllocation> {
     const payload = {
       Title: allocation.title,
       PersonKey: String(allocation.personId),
       ProjectKey: String(allocation.projectId),
+      ScenarioKey: String(allocation.scenarioId || 'baseline'),
       AllocationMonth: allocation.allocationMonth,
-      AllocationFTE: allocation.allocationFte,
+      AllocationFTE: Number(allocation.allocationFte || 0),
       AllocationHours: allocation.allocationHours || null,
-      Discipline: allocation.discipline || '',
+      Discipline: allocation.discipline || allocation.role || '',
+      Role: allocation.role || allocation.discipline || '',
       IncludeInCapacity: allocation.includeInCapacity,
+      Locked: allocation.locked === true,
+      LastModifiedAt: allocation.lastModifiedAt || new Date().toISOString(),
       Notes: allocation.notes || ''
     };
     if (typeof allocation.id === 'number') {
@@ -97,12 +118,27 @@ export class SharePointResourcePlanningRepository implements IResourcePlanningRe
     return { ...allocation, id: added.Id };
   }
 
+  public async saveAllocations(allocations: IAllocation[]): Promise<IAllocation[]> {
+    const saved: IAllocation[] = [];
+    for (let index = 0; index < allocations.length; index++) {
+      saved.push(await this.saveAllocation(allocations[index]));
+    }
+    return saved;
+  }
+
+  public async deleteAllocation(id: number | string): Promise<void> {
+    if (typeof id !== 'number') { return; }
+    await this.sp.web.lists.getByTitle(SharePointListNames.allocations).items.getById(id).delete();
+  }
+
   public async saveLeaveEntry(leaveEntry: ILeaveEntry): Promise<ILeaveEntry> {
     const payload = {
       Title: leaveEntry.title,
       PersonKey: String(leaveEntry.personId),
       LeaveDate: leaveEntry.leaveDate,
-      LeaveHours: leaveEntry.leaveHours,
+      EndDate: leaveEntry.endDate || leaveEntry.leaveDate,
+      LeaveHours: Number(leaveEntry.leaveHours || 0),
+      LeaveDays: leaveEntry.leaveDays || null,
       LeaveType: leaveEntry.leaveType,
       Notes: leaveEntry.notes || ''
     };
@@ -114,9 +150,13 @@ export class SharePointResourcePlanningRepository implements IResourcePlanningRe
     return { ...leaveEntry, id: added.Id };
   }
 
-  public async deleteAllocation(id: number | string): Promise<void> {
+  public async deleteLeaveEntry(id: number | string): Promise<void> {
     if (typeof id !== 'number') { return; }
-    await this.sp.web.lists.getByTitle(SharePointListNames.allocations).items.getById(id).delete();
+    await this.sp.web.lists.getByTitle(SharePointListNames.leave).items.getById(id).delete();
+  }
+
+  public async saveScenario(scenario: IScenario): Promise<IScenario> {
+    return scenario;
   }
 
   private async getMissingLists(): Promise<string[]> {
@@ -131,12 +171,16 @@ export class SharePointResourcePlanningRepository implements IResourcePlanningRe
       title: item.Title,
       email: item.Email || '',
       discipline: item.Discipline || '',
-      role: item.Role || '',
+      role: item.Role || item.Discipline || '',
+      primaryRole: item.Role || item.Discipline || '',
+      secondaryRoles: item.SecondaryRoles ? String(item.SecondaryRoles).split(',').map((role) => role.trim()) : [],
       employmentType: item.EmploymentType || 'Employee',
       fte: Number(item.FTE || 1),
       weeklyHours: Number(item.WeeklyHours || 40),
+      workingDaysPerWeek: Number(item.WorkingDaysPerWeek || 5),
       isActive: item.IsActive !== false,
-      manager: item.Manager || ''
+      manager: item.Manager || '',
+      notes: item.Notes || ''
     };
   }
 
@@ -147,11 +191,14 @@ export class SharePointResourcePlanningRepository implements IResourcePlanningRe
       projectCode: item.ProjectCode || '',
       projectType: item.ProjectType || 'Live',
       status: item.Status || 'Active',
+      brand: item.Brand || 'Other',
+      priority: item.Priority || 'Normal',
       client: item.Client || '',
       startDate: item.StartDate || '',
       endDate: item.EndDate || '',
       includeInCapacity: item.IncludeInCapacity !== false,
       probability: Number(item.Probability || 0),
+      lastAllocationSavedAt: item.LastAllocationSavedAt || '',
       notes: item.Notes || ''
     };
   }
@@ -162,11 +209,15 @@ export class SharePointResourcePlanningRepository implements IResourcePlanningRe
       title: item.Title,
       personId: item.PersonKey,
       projectId: item.ProjectKey,
+      scenarioId: item.ScenarioKey || 'baseline',
       allocationMonth: item.AllocationMonth,
       allocationFte: Number(item.AllocationFTE || 0),
       allocationHours: Number(item.AllocationHours || 0),
-      discipline: item.Discipline || '',
+      discipline: item.Discipline || item.Role || '',
+      role: item.Role || item.Discipline || '',
       includeInCapacity: item.IncludeInCapacity !== false,
+      locked: item.Locked === true,
+      lastModifiedAt: item.LastModifiedAt || '',
       notes: item.Notes || ''
     };
   }
@@ -177,7 +228,9 @@ export class SharePointResourcePlanningRepository implements IResourcePlanningRe
       title: item.Title,
       personId: item.PersonKey,
       leaveDate: item.LeaveDate,
+      endDate: item.EndDate || item.LeaveDate,
       leaveHours: Number(item.LeaveHours || 0),
+      leaveDays: Number(item.LeaveDays || 0),
       leaveType: item.LeaveType || 'Other',
       notes: item.Notes || ''
     };
