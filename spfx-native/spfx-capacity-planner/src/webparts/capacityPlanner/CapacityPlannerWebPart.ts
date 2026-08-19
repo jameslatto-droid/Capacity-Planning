@@ -28,6 +28,12 @@ export default class CapacityPlannerWebPart extends BaseClientSideWebPart<ICapac
   }
 
   public render(): void {
+    this.domElement.classList.add('capacityPlannerWebPartHost');
+    this.domElement.style.width = '100%';
+    this.domElement.style.maxWidth = '100%';
+    this.domElement.style.boxSizing = 'border-box';
+    this.domElement.style.overflowX = 'hidden';
+
     const sharePointRepository = new SharePointResourcePlanningRepository(this._sp, this.context.pageContext.web.absoluteUrl);
     const fallbackRepository = new MockResourcePlanningRepository();
 
