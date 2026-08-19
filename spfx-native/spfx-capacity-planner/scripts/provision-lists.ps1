@@ -6,21 +6,51 @@ Provision site-scoped SharePoint Lists for the Capacity Planner SPFx app.
 - PowerShell 7+
 - PnP.PowerShell
 - Permission to create lists and fields in the target SharePoint site
+- A PnP-compatible Entra ID app registration client ID
 
 .EXAMPLE
 Install-Module PnP.PowerShell -Scope CurrentUser
+./provision-lists.ps1 -SiteUrl "https://narwal.sharepoint.com/sites/ProjectsandEngineeringNotes" -ClientId "00000000-0000-0000-0000-000000000000"
+
+.EXAMPLE
+$env:ENTRAID_CLIENT_ID = "00000000-0000-0000-0000-000000000000"
 ./provision-lists.ps1 -SiteUrl "https://narwal.sharepoint.com/sites/ProjectsandEngineeringNotes"
 #>
 
 param(
   [Parameter(Mandatory=$true)]
-  [string]$SiteUrl
+  [string]$SiteUrl,
+
+  [Parameter(Mandatory=$false)]
+  [string]$ClientId = "",
+
+  [Parameter(Mandatory=$false)]
+  [string]$Tenant = ""
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-Connect-PnPOnline -Url $SiteUrl -Interactive
+function Resolve-PnPClientId {
+  param([string]$ExplicitClientId)
+
+  if (-not [string]::IsNullOrWhiteSpace($ExplicitClientId)) { return $ExplicitClientId }
+  if (-not [string]::IsNullOrWhiteSpace($env:ENTRAID_APP_ID)) { return $env:ENTRAID_APP_ID }
+  if (-not [string]::IsNullOrWhiteSpace($env:ENTRAID_CLIENT_ID)) { return $env:ENTRAID_CLIENT_ID }
+  if (-not [string]::IsNullOrWhiteSpace($env:AZURE_CLIENT_ID)) { return $env:AZURE_CLIENT_ID }
+
+  throw "PnP.PowerShell now requires a ClientId for interactive login. Pass -ClientId or set ENTRAID_CLIENT_ID to your Entra ID app registration client ID."
+}
+
+$resolvedClientId = Resolve-PnPClientId -ExplicitClientId $ClientId
+$connectParams = @{
+  Url = $SiteUrl
+  Interactive = $true
+  ClientId = $resolvedClientId
+}
+if (-not [string]::IsNullOrWhiteSpace($Tenant)) { $connectParams.Tenant = $Tenant }
+
+Connect-PnPOnline @connectParams
 
 function Ensure-List {
   param([Parameter(Mandatory=$true)] [string]$Title,[string]$Description = "")
