@@ -15,6 +15,7 @@ export interface IMyAllocationsViewProps {
   snapshot: IPlanningSnapshot;
   monthsToShow: number;
   currentUserEmail: string;
+  personId?: number | string;
 }
 
 function normaliseEmail(value: string | undefined): string {
@@ -45,14 +46,17 @@ function projectLabel(project: IProject | undefined, projectId: number | string)
 }
 
 export const MyAllocationsView: React.FC<IMyAllocationsViewProps> = (props) => {
-  const matches = peopleMatchingEmail(props.snapshot.people, props.currentUserEmail);
+  const hasSelectedPerson = props.personId !== undefined && String(props.personId) !== '';
+  const matches = hasSelectedPerson
+    ? props.snapshot.people.filter((person) => String(person.id) === String(props.personId))
+    : peopleMatchingEmail(props.snapshot.people, props.currentUserEmail);
 
-  if (!normaliseEmail(props.currentUserEmail)) {
+  if (!hasSelectedPerson && !normaliseEmail(props.currentUserEmail)) {
     return <MessageBar messageBarType={MessageBarType.warning}>SharePoint did not provide an email address for the current user. The personal allocation view cannot be resolved.</MessageBar>;
   }
 
   if (matches.length === 0) {
-    return <MessageBar messageBarType={MessageBarType.warning}>No active planning profile is linked to {props.currentUserEmail}. Ask the planner to check the Email field in ERP_People.</MessageBar>;
+    return <MessageBar messageBarType={MessageBarType.warning}>{hasSelectedPerson ? 'The selected person could not be found in ERP_People.' : `No active planning profile is linked to ${props.currentUserEmail}. Ask the planner to check the Email field in ERP_People.`}</MessageBar>;
   }
 
   if (matches.length > 1) {
