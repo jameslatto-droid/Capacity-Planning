@@ -47,7 +47,7 @@ const roles: ResourceRole[] = ['Project Management', 'Process Engineering', 'Mec
 const priorities: string[] = ['Low', 'Normal', 'High', 'Critical'];
 const brands: string[] = ['DCT', 'PLK', 'Internal', 'Other'];
 
-type PlannerTab = 'dashboard' | 'team' | 'leave' | 'projects' | 'allocate' | 'planning' | 'optimisation' | 'reports' | 'data';
+type PlannerTab = 'dashboard' | 'team' | 'leave' | 'projects' | 'allocate' | 'planning' | 'optimisation' | 'reports' | 'data' | 'myAllocations';
 type MatrixMode = 'person' | 'project' | 'role';
 type ReportMode = 'person' | 'detail' | 'role' | 'brand' | 'projects' | 'overloads';
 
@@ -142,19 +142,11 @@ function requestedView(): 'planner' | 'myAllocations' | undefined {
   return undefined;
 }
 
-function navigateToView(view?: 'my-allocations'): void {
-  if (typeof window === 'undefined') { return; }
-  const url = new URL(window.location.href);
-  if (view) { url.searchParams.set('view', view); }
-  else { url.searchParams.delete('view'); }
-  window.location.assign(url.toString());
-}
-
 export const CapacityPlannerApp: React.FC<ICapacityPlannerAppProps> = (props) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [loadResult, setLoadResult] = useState<IDataLoadResult>({ snapshot: emptySnapshot(), source: 'mock', warnings: [] });
   const [error, setError] = useState<string>('');
-  const [activeTab, setActiveTab] = useState<PlannerTab>('dashboard');
+  const [activeTab, setActiveTab] = useState<PlannerTab>(requestedView() === 'myAllocations' ? 'myAllocations' : 'dashboard');
   const [matrixMode, setMatrixMode] = useState<MatrixMode>('person');
   const [reportMode, setReportMode] = useState<ReportMode>('person');
   const [detailPersonId, setDetailPersonId] = useState<string>('');
@@ -165,6 +157,7 @@ export const CapacityPlannerApp: React.FC<ICapacityPlannerAppProps> = (props) =>
   const [projectForm, setProjectForm] = useState<IProject>(newProject());
   const [leaveForm, setLeaveForm] = useState<ILeaveEntry>(newLeave([]));
   const [scenarioForm, setScenarioForm] = useState<IScenario>(defaultScenario());
+  const [personalPersonId, setPersonalPersonId] = useState<string>('');
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
   const activeRepository = loadResult.source === 'sharepoint' ? props.repository : props.fallbackRepository;
@@ -193,6 +186,13 @@ export const CapacityPlannerApp: React.FC<ICapacityPlannerAppProps> = (props) =>
     if (snapshot.projects.length > 0 && !selectedProjectId) { setSelectedProjectId(String(snapshot.projects[0].id)); }
     if (snapshot.people.length > 0) { setLeaveForm(newLeave(snapshot.people)); }
     if (snapshot.people.length > 0 && !detailPersonId) { setDetailPersonId(String(snapshot.people[0].id)); }
+    if (!personalPersonId) {
+      const currentEmail = String(props.currentUserEmail || '').trim().toLowerCase();
+      const viewer = snapshot.people.filter((person) => String(person.email || '').trim().toLowerCase() === currentEmail)[0];
+      const firstActivePerson = snapshot.people.filter((person) => person.isActive)[0];
+      const defaultPerson = viewer || firstActivePerson || snapshot.people[0];
+      if (defaultPerson) { setPersonalPersonId(String(defaultPerson.id)); }
+    }
     const scenarios = snapshot.scenarios || [defaultScenario()];
     for (let index = 0; index < scenarios.length; index++) {
       if (scenarios[index].isActive || String(scenarios[index].id) === String(snapshot.activeScenarioId)) { setScenarioForm(scenarios[index]); return; }
@@ -219,9 +219,6 @@ export const CapacityPlannerApp: React.FC<ICapacityPlannerAppProps> = (props) =>
   const roleMonths = buildRoleMonthSummaries(filteredSnapshot, props.monthsToShow);
   const overloads = buildOverloads(filteredSnapshot, props.monthsToShow);
   const recommendations = buildReallocationRecommendations(filteredSnapshot, props.monthsToShow);
-  const routeView = requestedView();
-  const isMyAllocationsView = routeView === 'myAllocations' || (!routeView && props.defaultView === 'myAllocations');
-
   useEffect(() => {
     if (!selectedProject) { return; }
     const draft: { [key: string]: string } = {};
@@ -365,7 +362,15 @@ export const CapacityPlannerApp: React.FC<ICapacityPlannerAppProps> = (props) =>
   }
 
   function renderNavButton(tab: PlannerTab, label: string): JSX.Element {
-    return <button className={activeTab === tab ? styles.navActive : styles.navButton} onClick={() => setActiveTab(tab)}>{label}</button>;
+    return <button className={activeTab === tab ? styles.navActive : styles.navButton} onClick={() => {
+      setActiveTab(tab);
+      if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href);
+        if (tab === 'myAllocations') { url.searchParams.set('view', 'my-allocations'); }
+        else { url.searchParams.delete('view'); }
+        window.history.replaceState({}, '', url.toString());
+      }
+    }}>{label}</button>;
   }
 
   function metric(label: string, value: string, hint?: string): JSX.Element {
@@ -585,6 +590,18 @@ export const CapacityPlannerApp: React.FC<ICapacityPlannerAppProps> = (props) =>
     return <section className={styles.panel}><h3>Data and setup</h3><p>This SPFx version stores live data in site-scoped SharePoint Lists. If the ERP_* lists are missing, the app falls back to mock data for layout and workflow testing.</p><pre className={styles.code}>{JSON.stringify({ source: loadResult.source, people: snapshot.people.length, projects: snapshot.projects.length, allocations: snapshot.allocations.length, leave: snapshot.leave.length }, null, 2)}</pre></section>;
   }
 
+  function renderMyAllocations(): JSX.Element {
+    const activePeople = snapshot.people.filter((person) => person.isActive);
+    return <div className={styles.stack}>
+      <section className={styles.panel}>
+        <div className={styles.toolbar}>
+          <label>Person <select className={styles.input} value={personalPersonId} onChange={(event) => setPersonalPersonId(event.currentTarget.value)}>{activePeople.map((person) => <option key={String(person.id)} value={String(person.id)}>{person.title} · {person.primaryRole || person.role || person.discipline}</option>)}</select></label>
+        </div>
+      </section>
+      <MyAllocationsView snapshot={snapshot} monthsToShow={props.monthsToShow} currentUserEmail={props.currentUserEmail} personId={personalPersonId} />
+    </div>;
+  }
+
   if (isLoading) { return <div className={styles.app}><Spinner label="Loading capacity planner" size={SpinnerSize.large} /></div>; }
 
   return <section className={styles.app}>
@@ -593,23 +610,17 @@ export const CapacityPlannerApp: React.FC<ICapacityPlannerAppProps> = (props) =>
     {isSaving && <MessageBar messageBarType={MessageBarType.info}>Saving changes...</MessageBar>}
     {loadResult.source === 'mock' && <MessageBar messageBarType={MessageBarType.warning}>Using mock data until the SharePoint ERP_* lists are provisioned.</MessageBar>}
     {loadResult.warnings.map((warning, index) => <MessageBar key={index} messageBarType={MessageBarType.info}>{warning}</MessageBar>)}
-    {isMyAllocationsView
-      ? <>
-        <div className={styles.toolbar}><button className={styles.secondaryButton} onClick={() => navigateToView()}>Back to planner</button></div>
-        <MyAllocationsView snapshot={snapshot} monthsToShow={props.monthsToShow} currentUserEmail={props.currentUserEmail} />
-      </>
-      : <>
-        <div className={styles.toolbar}><label>Brand filter <select className={styles.input} value={brandFilter} onChange={(e) => setBrandFilter(e.currentTarget.value)}><option>All</option>{brands.map((brand) => <option key={brand}>{brand}</option>)}</select></label><button className={styles.secondaryButton} onClick={() => navigateToView('my-allocations')}>My allocations</button><button className={styles.secondaryButton} onClick={() => load()}>Reload</button></div>
-        <nav className={styles.nav}>{renderNavButton('dashboard', 'Dashboard')}{renderNavButton('team', 'Team')}{renderNavButton('leave', 'Leave')}{renderNavButton('projects', 'Projects')}{renderNavButton('allocate', 'Allocate')}{renderNavButton('planning', 'Planning')}{renderNavButton('optimisation', 'Optimisation')}{renderNavButton('reports', 'Reports')}{renderNavButton('data', 'Data')}</nav>
-        {activeTab === 'dashboard' && renderDashboard()}
-        {activeTab === 'team' && renderTeam()}
-        {activeTab === 'leave' && renderLeave()}
-        {activeTab === 'projects' && renderProjects()}
-        {activeTab === 'allocate' && renderAllocationEditor()}
-        {activeTab === 'planning' && renderPlanning()}
-        {activeTab === 'optimisation' && renderOptimisation()}
-        {activeTab === 'reports' && renderReports()}
-        {activeTab === 'data' && renderData()}
-      </>}
+    <div className={styles.toolbar}><label>Brand filter <select className={styles.input} value={brandFilter} onChange={(e) => setBrandFilter(e.currentTarget.value)}><option>All</option>{brands.map((brand) => <option key={brand}>{brand}</option>)}</select></label><button className={styles.secondaryButton} onClick={() => load()}>Reload</button></div>
+    <nav className={styles.nav}>{renderNavButton('dashboard', 'Dashboard')}{renderNavButton('team', 'Team')}{renderNavButton('leave', 'Leave')}{renderNavButton('projects', 'Projects')}{renderNavButton('allocate', 'Allocate')}{renderNavButton('planning', 'Planning')}{renderNavButton('optimisation', 'Optimisation')}{renderNavButton('reports', 'Reports')}{renderNavButton('data', 'Data')}{renderNavButton('myAllocations', 'My allocations')}</nav>
+    {activeTab === 'dashboard' && renderDashboard()}
+    {activeTab === 'team' && renderTeam()}
+    {activeTab === 'leave' && renderLeave()}
+    {activeTab === 'projects' && renderProjects()}
+    {activeTab === 'allocate' && renderAllocationEditor()}
+    {activeTab === 'planning' && renderPlanning()}
+    {activeTab === 'optimisation' && renderOptimisation()}
+    {activeTab === 'reports' && renderReports()}
+    {activeTab === 'data' && renderData()}
+    {activeTab === 'myAllocations' && renderMyAllocations()}
   </section>;
 };
