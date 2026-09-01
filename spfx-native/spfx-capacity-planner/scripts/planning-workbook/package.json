@@ -1,0 +1,13 @@
+{
+  "name": "planning-workbook-generator",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Generates the per-person expected-loading Excel workbook for capacity planning info-gathering.",
+  "scripts": {
+    "generate": "node generate.js",
+    "parse": "node parse-loading-input.js"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0"
+  }
+}

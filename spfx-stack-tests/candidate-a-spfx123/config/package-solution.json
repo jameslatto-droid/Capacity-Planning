@@ -1,0 +1,36 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "candidate-a-spfx123-client-side-solution",
+    "id": "04124642-c3d8-4dcd-b47f-a57c003d2eaa",
+    "version": "1.0.0.1",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "Capacity Planner Bake-off",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.23.1"
+    },
+    "metadata": {
+      "shortDescription": { "default": "Stack bake-off candidate 1.23.1" },
+      "longDescription": { "default": "Stack bake-off candidate 1.23.1" },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "Stack Test 1.23.1 Feature",
+        "description": "Deploys the Stack Test 1.23.1 web part",
+        "id": "e8740fb6-a79c-46f0-9f97-8e7c9f5e5ccb",
+        "version": "1.0.0.1"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/candidate-a-spfx123.sppkg"
+  }
+}

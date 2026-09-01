@@ -1,0 +1,19 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
+  "id": "c3000003-0003-0003-0003-000000000003",
+  "alias": "StackTestWebPart",
+  "componentType": "WebPart",
+  "version": "*",
+  "manifestVersion": 2,
+  "requiresCustomScript": false,
+  "supportedHosts": ["SharePointWebPart"],
+  "supportsThemeVariants": false,
+  "preconfiguredEntries": [{
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+    "group": { "default": "Advanced" },
+    "title": { "default": "Stack Test C — SPFx 1.20.0" },
+    "description": { "default": "Stack bake-off harness — Candidate C" },
+    "officeFabricIconFontName": "Page",
+    "properties": {}
+  }]
+}

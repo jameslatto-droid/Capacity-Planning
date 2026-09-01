@@ -145,7 +145,7 @@ Add-ProjectIfMissing $projects "TAQA" "P260001" "Live" "Active" "PLK" "TAQA" "20
 Add-ProjectIfMissing $projects "ADOC" "P250001" "Live" "Active" "PLK" "ADOC" "2025-01-01" "2026-12-31" $true 100 "Active PLK project."
 Add-ProjectIfMissing $projects "OXY Oman" "P230195" "Live" "Active" "PLK" "OXY" "2023-01-01" "2026-09-30" $true 100 "Wind-down project."
 Add-ProjectIfMissing $projects "Almansoori" "P230073" "Live" "Active" "PLK" "Almansoori" "2023-01-01" "2026-07-31" $true 100 "Near close-out."
-Add-ProjectIfMissing $projects "Spare Parts Zeeland" "P260002" "Live" "On Hold" "PLK" "Zeeland" "2026-01-01" "2026-12-31" $false 100 "On hold, excluded by default."
+Add-ProjectIfMissing $projects "Spare Parts Zeeland" "P260002" "Live" "On Hold" "PLK" "Zeeland" "2026-01-01" "2026-12-31" $true 100 "On hold, but re-included in capacity since the team is actively reporting real time against it."
 Add-ProjectIfMissing $projects "SARAT" "QDG2600002" "Opportunity" "Pipeline" "DCT" "SARAT" "2026-04-01" "2026-09-30" $true 60 "Pipeline opportunity included in manpower planning."
 Add-ProjectIfMissing $projects "Sales and Quotations Effort" "SALES" "Opportunity" "Pipeline" "Internal" "Internal" "2026-08-01" "2027-08-31" $true 100 "Separate time consumer for sales and quotations effort."
 

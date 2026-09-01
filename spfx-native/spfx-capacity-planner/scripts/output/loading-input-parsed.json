@@ -1,0 +1,810 @@
+[
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "P260001",
+    "projectTitle": "TAQA",
+    "month": "2026-08-01",
+    "percent": 20,
+    "notes": "Planned to finish by December for delivery, however more commissioning activities and support may be required in JAN."
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "P260001",
+    "projectTitle": "TAQA",
+    "month": "2026-09-01",
+    "percent": 20,
+    "notes": "Planned to finish by December for delivery, however more commissioning activities and support may be required in JAN."
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "P260001",
+    "projectTitle": "TAQA",
+    "month": "2026-10-01",
+    "percent": 10,
+    "notes": "Planned to finish by December for delivery, however more commissioning activities and support may be required in JAN."
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "P260001",
+    "projectTitle": "TAQA",
+    "month": "2026-11-01",
+    "percent": 10,
+    "notes": "Planned to finish by December for delivery, however more commissioning activities and support may be required in JAN."
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "P260001",
+    "projectTitle": "TAQA",
+    "month": "2026-12-01",
+    "percent": 5,
+    "notes": "Planned to finish by December for delivery, however more commissioning activities and support may be required in JAN."
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "P250001",
+    "projectTitle": "ADOC",
+    "month": "2026-08-01",
+    "percent": 10,
+    "notes": ""
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "P250001",
+    "projectTitle": "ADOC",
+    "month": "2026-09-01",
+    "percent": 10,
+    "notes": ""
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "P250001",
+    "projectTitle": "ADOC",
+    "month": "2026-10-01",
+    "percent": 10,
+    "notes": ""
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "P250001",
+    "projectTitle": "ADOC",
+    "month": "2026-11-01",
+    "percent": 10,
+    "notes": ""
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "P250001",
+    "projectTitle": "ADOC",
+    "month": "2026-12-01",
+    "percent": 10,
+    "notes": ""
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "P250001",
+    "projectTitle": "ADOC",
+    "month": "2027-01-01",
+    "percent": 10,
+    "notes": ""
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "P230195",
+    "projectTitle": "OXY Oman",
+    "month": "2026-10-01",
+    "percent": 10,
+    "notes": "Oxy expected to pick back up in October for commissioning"
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "P230195",
+    "projectTitle": "OXY Oman",
+    "month": "2026-11-01",
+    "percent": 10,
+    "notes": "Oxy expected to pick back up in October for commissioning"
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "P230073",
+    "projectTitle": "Almansoori",
+    "month": "2026-08-01",
+    "percent": 20,
+    "notes": "Unknown when the package problems will subside"
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "P230073",
+    "projectTitle": "Almansoori",
+    "month": "2026-09-01",
+    "percent": 20,
+    "notes": "Unknown when the package problems will subside"
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "P230073",
+    "projectTitle": "Almansoori",
+    "month": "2026-10-01",
+    "percent": 20,
+    "notes": "Unknown when the package problems will subside"
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "P230073",
+    "projectTitle": "Almansoori",
+    "month": "2026-11-01",
+    "percent": 20,
+    "notes": "Unknown when the package problems will subside"
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "P230073",
+    "projectTitle": "Almansoori",
+    "month": "2026-12-01",
+    "percent": 20,
+    "notes": "Unknown when the package problems will subside"
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "P230073",
+    "projectTitle": "Almansoori",
+    "month": "2027-01-01",
+    "percent": 20,
+    "notes": "Unknown when the package problems will subside"
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "SALES",
+    "projectTitle": "Sales and Quotations Effort",
+    "month": "2026-08-01",
+    "percent": 50,
+    "notes": "✌ Sales effort is limited by engineering on actual projects, however since we don't have anything firmly lined up after TAQA/ADOC, the sales effort will increase by DEC."
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "SALES",
+    "projectTitle": "Sales and Quotations Effort",
+    "month": "2026-09-01",
+    "percent": 50,
+    "notes": "✌ Sales effort is limited by engineering on actual projects, however since we don't have anything firmly lined up after TAQA/ADOC, the sales effort will increase by DEC."
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "SALES",
+    "projectTitle": "Sales and Quotations Effort",
+    "month": "2026-10-01",
+    "percent": 50,
+    "notes": "✌ Sales effort is limited by engineering on actual projects, however since we don't have anything firmly lined up after TAQA/ADOC, the sales effort will increase by DEC."
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "SALES",
+    "projectTitle": "Sales and Quotations Effort",
+    "month": "2026-11-01",
+    "percent": 50,
+    "notes": "✌ Sales effort is limited by engineering on actual projects, however since we don't have anything firmly lined up after TAQA/ADOC, the sales effort will increase by DEC."
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "SALES",
+    "projectTitle": "Sales and Quotations Effort",
+    "month": "2026-12-01",
+    "percent": 65,
+    "notes": "✌ Sales effort is limited by engineering on actual projects, however since we don't have anything firmly lined up after TAQA/ADOC, the sales effort will increase by DEC."
+  },
+  {
+    "personName": "Onur Kavakli",
+    "projectCode": "SALES",
+    "projectTitle": "Sales and Quotations Effort",
+    "month": "2027-01-01",
+    "percent": 65,
+    "notes": "✌ Sales effort is limited by engineering on actual projects, however since we don't have anything firmly lined up after TAQA/ADOC, the sales effort will increase by DEC."
+  },
+  {
+    "personName": "Jacobo Ramirez",
+    "projectCode": "P250002",
+    "projectTitle": "Cancun CISEC",
+    "month": "2026-08-01",
+    "percent": 100,
+    "notes": ""
+  },
+  {
+    "personName": "Jacobo Ramirez",
+    "projectCode": "P250002",
+    "projectTitle": "Cancun CISEC",
+    "month": "2026-09-01",
+    "percent": 100,
+    "notes": ""
+  },
+  {
+    "personName": "Jacobo Ramirez",
+    "projectCode": "P250002",
+    "projectTitle": "Cancun CISEC",
+    "month": "2026-10-01",
+    "percent": 100,
+    "notes": ""
+  },
+  {
+    "personName": "Jacobo Ramirez",
+    "projectCode": "P250002",
+    "projectTitle": "Cancun CISEC",
+    "month": "2026-11-01",
+    "percent": 100,
+    "notes": ""
+  },
+  {
+    "personName": "Jacobo Ramirez",
+    "projectCode": "P250002",
+    "projectTitle": "Cancun CISEC",
+    "month": "2026-12-01",
+    "percent": 100,
+    "notes": ""
+  },
+  {
+    "personName": "Jacobo Ramirez",
+    "projectCode": "P250002",
+    "projectTitle": "Cancun CISEC",
+    "month": "2027-01-01",
+    "percent": 100,
+    "notes": ""
+  },
+  {
+    "personName": "Rutger Reij",
+    "projectCode": "P260001",
+    "projectTitle": "TAQA",
+    "month": "2026-09-01",
+    "percent": 10,
+    "notes": ""
+  },
+  {
+    "personName": "Rutger Reij",
+    "projectCode": "P260001",
+    "projectTitle": "TAQA",
+    "month": "2026-10-01",
+    "percent": 10,
+    "notes": ""
+  },
+  {
+    "personName": "Rutger Reij",
+    "projectCode": "P260001",
+    "projectTitle": "TAQA",
+    "month": "2026-11-01",
+    "percent": 10,
+    "notes": ""
+  },
+  {
+    "personName": "Rutger Reij",
+    "projectCode": "P260001",
+    "projectTitle": "TAQA",
+    "month": "2026-12-01",
+    "percent": 10,
+    "notes": ""
+  },
+  {
+    "personName": "Rutger Reij",
+    "projectCode": "P250001",
+    "projectTitle": "ADOC",
+    "month": "2026-09-01",
+    "percent": 55,
+    "notes": ""
+  },
+  {
+    "personName": "Rutger Reij",
+    "projectCode": "P250001",
+    "projectTitle": "ADOC",
+    "month": "2026-10-01",
+    "percent": 40,
+    "notes": ""
+  },
+  {
+    "personName": "Rutger Reij",
+    "projectCode": "P250001",
+    "projectTitle": "ADOC",
+    "month": "2026-11-01",
+    "percent": 40,
+    "notes": ""
+  },
+  {
+    "personName": "Rutger Reij",
+    "projectCode": "P250001",
+    "projectTitle": "ADOC",
+    "month": "2026-12-01",
+    "percent": 40,
+    "notes": ""
+  },
+  {
+    "personName": "Rutger Reij",
+    "projectCode": "P230195",
+    "projectTitle": "OXY Oman",
+    "month": "2026-09-01",
+    "percent": 30,
+    "notes": ""
+  },
+  {
+    "personName": "Rutger Reij",
+    "projectCode": "P230195",
+    "projectTitle": "OXY Oman",
+    "month": "2026-10-01",
+    "percent": 40,
+    "notes": ""
+  },
+  {
+    "personName": "Rutger Reij",
+    "projectCode": "P230195",
+    "projectTitle": "OXY Oman",
+    "month": "2026-11-01",
+    "percent": 40,
+    "notes": ""
+  },
+  {
+    "personName": "Rutger Reij",
+    "projectCode": "P230195",
+    "projectTitle": "OXY Oman",
+    "month": "2026-12-01",
+    "percent": 40,
+    "notes": ""
+  },
+  {
+    "personName": "Rutger Reij",
+    "projectCode": "P230073",
+    "projectTitle": "Almansoori",
+    "month": "2026-09-01",
+    "percent": 5,
+    "notes": ""
+  },
+  {
+    "personName": "Rutger Reij",
+    "projectCode": "P230073",
+    "projectTitle": "Almansoori",
+    "month": "2026-10-01",
+    "percent": 5,
+    "notes": ""
+  },
+  {
+    "personName": "Rutger Reij",
+    "projectCode": "P230073",
+    "projectTitle": "Almansoori",
+    "month": "2026-11-01",
+    "percent": 5,
+    "notes": ""
+  },
+  {
+    "personName": "Rutger Reij",
+    "projectCode": "P230073",
+    "projectTitle": "Almansoori",
+    "month": "2026-12-01",
+    "percent": 5,
+    "notes": ""
+  },
+  {
+    "personName": "Rutger Reij",
+    "projectCode": "RND",
+    "projectTitle": "Other / New Opportunity (specify in Notes) -> RND",
+    "month": "2026-10-01",
+    "percent": 5,
+    "notes": "R&D, future projects, mechanical library"
+  },
+  {
+    "personName": "Rutger Reij",
+    "projectCode": "RND",
+    "projectTitle": "Other / New Opportunity (specify in Notes) -> RND",
+    "month": "2026-11-01",
+    "percent": 5,
+    "notes": "R&D, future projects, mechanical library"
+  },
+  {
+    "personName": "Rutger Reij",
+    "projectCode": "RND",
+    "projectTitle": "Other / New Opportunity (specify in Notes) -> RND",
+    "month": "2026-12-01",
+    "percent": 5,
+    "notes": "R&D, future projects, mechanical library"
+  },
+  {
+    "personName": "Ajitha Karuppiah",
+    "projectCode": "P260001",
+    "projectTitle": "TAQA",
+    "month": "2026-08-01",
+    "percent": 30,
+    "notes": ""
+  },
+  {
+    "personName": "Ajitha Karuppiah",
+    "projectCode": "P260001",
+    "projectTitle": "TAQA",
+    "month": "2026-09-01",
+    "percent": 35,
+    "notes": ""
+  },
+  {
+    "personName": "Ajitha Karuppiah",
+    "projectCode": "P260001",
+    "projectTitle": "TAQA",
+    "month": "2026-10-01",
+    "percent": 40,
+    "notes": ""
+  },
+  {
+    "personName": "Ajitha Karuppiah",
+    "projectCode": "P260001",
+    "projectTitle": "TAQA",
+    "month": "2026-11-01",
+    "percent": 45,
+    "notes": ""
+  },
+  {
+    "personName": "Ajitha Karuppiah",
+    "projectCode": "P260001",
+    "projectTitle": "TAQA",
+    "month": "2026-12-01",
+    "percent": 50,
+    "notes": ""
+  },
+  {
+    "personName": "Ajitha Karuppiah",
+    "projectCode": "P250001",
+    "projectTitle": "ADOC",
+    "month": "2026-08-01",
+    "percent": 20,
+    "notes": ""
+  },
+  {
+    "personName": "Ajitha Karuppiah",
+    "projectCode": "P250001",
+    "projectTitle": "ADOC",
+    "month": "2026-09-01",
+    "percent": 20,
+    "notes": ""
+  },
+  {
+    "personName": "Ajitha Karuppiah",
+    "projectCode": "P250001",
+    "projectTitle": "ADOC",
+    "month": "2026-10-01",
+    "percent": 30,
+    "notes": ""
+  },
+  {
+    "personName": "Ajitha Karuppiah",
+    "projectCode": "P250001",
+    "projectTitle": "ADOC",
+    "month": "2026-11-01",
+    "percent": 30,
+    "notes": ""
+  },
+  {
+    "personName": "Ajitha Karuppiah",
+    "projectCode": "P250001",
+    "projectTitle": "ADOC",
+    "month": "2026-12-01",
+    "percent": 25,
+    "notes": ""
+  },
+  {
+    "personName": "Ajitha Karuppiah",
+    "projectCode": "P230195",
+    "projectTitle": "OXY Oman",
+    "month": "2026-08-01",
+    "percent": 30,
+    "notes": ""
+  },
+  {
+    "personName": "Ajitha Karuppiah",
+    "projectCode": "P230195",
+    "projectTitle": "OXY Oman",
+    "month": "2026-09-01",
+    "percent": 20,
+    "notes": ""
+  },
+  {
+    "personName": "Ajitha Karuppiah",
+    "projectCode": "P230195",
+    "projectTitle": "OXY Oman",
+    "month": "2026-10-01",
+    "percent": 15,
+    "notes": ""
+  },
+  {
+    "personName": "Ajitha Karuppiah",
+    "projectCode": "P230195",
+    "projectTitle": "OXY Oman",
+    "month": "2026-11-01",
+    "percent": 15,
+    "notes": ""
+  },
+  {
+    "personName": "Ajitha Karuppiah",
+    "projectCode": "P230195",
+    "projectTitle": "OXY Oman",
+    "month": "2026-12-01",
+    "percent": 15,
+    "notes": ""
+  },
+  {
+    "personName": "Ajitha Karuppiah",
+    "projectCode": "P260002",
+    "projectTitle": "Spare Parts Zeeland",
+    "month": "2026-08-01",
+    "percent": 10,
+    "notes": ""
+  },
+  {
+    "personName": "Ajitha Karuppiah",
+    "projectCode": "P260002",
+    "projectTitle": "Spare Parts Zeeland",
+    "month": "2026-09-01",
+    "percent": 15,
+    "notes": ""
+  },
+  {
+    "personName": "Ajitha Karuppiah",
+    "projectCode": "P260002",
+    "projectTitle": "Spare Parts Zeeland",
+    "month": "2026-10-01",
+    "percent": 5,
+    "notes": ""
+  },
+  {
+    "personName": "Ajitha Karuppiah",
+    "projectCode": "SALES",
+    "projectTitle": "Other / New Opportunity (specify in Notes) -> SALES",
+    "month": "2026-08-01",
+    "percent": 10,
+    "notes": "For Quotation"
+  },
+  {
+    "personName": "Ajitha Karuppiah",
+    "projectCode": "SALES",
+    "projectTitle": "Other / New Opportunity (specify in Notes) -> SALES",
+    "month": "2026-09-01",
+    "percent": 10,
+    "notes": "For Quotation"
+  },
+  {
+    "personName": "Ajitha Karuppiah",
+    "projectCode": "SALES",
+    "projectTitle": "Other / New Opportunity (specify in Notes) -> SALES",
+    "month": "2026-10-01",
+    "percent": 10,
+    "notes": "For Quotation"
+  },
+  {
+    "personName": "Ajitha Karuppiah",
+    "projectCode": "SALES",
+    "projectTitle": "Other / New Opportunity (specify in Notes) -> SALES",
+    "month": "2026-11-01",
+    "percent": 10,
+    "notes": "For Quotation"
+  },
+  {
+    "personName": "Ajitha Karuppiah",
+    "projectCode": "SALES",
+    "projectTitle": "Other / New Opportunity (specify in Notes) -> SALES",
+    "month": "2026-12-01",
+    "percent": 10,
+    "notes": "For Quotation"
+  },
+  {
+    "personName": "Neville Cory",
+    "projectCode": "P260001",
+    "projectTitle": "TAQA",
+    "month": "2026-08-01",
+    "percent": 9,
+    "notes": ""
+  },
+  {
+    "personName": "Neville Cory",
+    "projectCode": "P260001",
+    "projectTitle": "TAQA",
+    "month": "2026-09-01",
+    "percent": 10,
+    "notes": ""
+  },
+  {
+    "personName": "Neville Cory",
+    "projectCode": "P260001",
+    "projectTitle": "TAQA",
+    "month": "2026-10-01",
+    "percent": 5,
+    "notes": ""
+  },
+  {
+    "personName": "Neville Cory",
+    "projectCode": "P260001",
+    "projectTitle": "TAQA",
+    "month": "2026-11-01",
+    "percent": 5,
+    "notes": ""
+  },
+  {
+    "personName": "Neville Cory",
+    "projectCode": "P250001",
+    "projectTitle": "ADOC",
+    "month": "2026-08-01",
+    "percent": 90,
+    "notes": ""
+  },
+  {
+    "personName": "Neville Cory",
+    "projectCode": "P250001",
+    "projectTitle": "ADOC",
+    "month": "2026-09-01",
+    "percent": 45,
+    "notes": ""
+  },
+  {
+    "personName": "Neville Cory",
+    "projectCode": "P250001",
+    "projectTitle": "ADOC",
+    "month": "2026-10-01",
+    "percent": 45,
+    "notes": ""
+  },
+  {
+    "personName": "Neville Cory",
+    "projectCode": "P250001",
+    "projectTitle": "ADOC",
+    "month": "2026-11-01",
+    "percent": 25,
+    "notes": ""
+  },
+  {
+    "personName": "Neville Cory",
+    "projectCode": "P250001",
+    "projectTitle": "ADOC",
+    "month": "2026-12-01",
+    "percent": 10,
+    "notes": ""
+  },
+  {
+    "personName": "Neville Cory",
+    "projectCode": "P250001",
+    "projectTitle": "ADOC",
+    "month": "2027-01-01",
+    "percent": 10,
+    "notes": ""
+  },
+  {
+    "personName": "Neville Cory",
+    "projectCode": "P230195",
+    "projectTitle": "OXY Oman",
+    "month": "2026-09-01",
+    "percent": 45,
+    "notes": ""
+  },
+  {
+    "personName": "Neville Cory",
+    "projectCode": "P230195",
+    "projectTitle": "OXY Oman",
+    "month": "2026-10-01",
+    "percent": 50,
+    "notes": ""
+  },
+  {
+    "personName": "Neville Cory",
+    "projectCode": "P230195",
+    "projectTitle": "OXY Oman",
+    "month": "2026-11-01",
+    "percent": 70,
+    "notes": ""
+  },
+  {
+    "personName": "Neville Cory",
+    "projectCode": "P230195",
+    "projectTitle": "OXY Oman",
+    "month": "2026-12-01",
+    "percent": 90,
+    "notes": ""
+  },
+  {
+    "personName": "Neville Cory",
+    "projectCode": "P230195",
+    "projectTitle": "OXY Oman",
+    "month": "2027-01-01",
+    "percent": 90,
+    "notes": ""
+  },
+  {
+    "personName": "Neville Cory",
+    "projectCode": "P260002",
+    "projectTitle": "Spare Parts Zeeland",
+    "month": "2026-08-01",
+    "percent": 1,
+    "notes": ""
+  },
+  {
+    "personName": "Fatemeh Rashidashmagh",
+    "projectCode": "P250002",
+    "projectTitle": "Cancun CISEC",
+    "month": "2026-08-01",
+    "percent": 3.75,
+    "notes": ""
+  },
+  {
+    "personName": "Fatemeh Rashidashmagh",
+    "projectCode": "P260001",
+    "projectTitle": "TAQA",
+    "month": "2026-08-01",
+    "percent": 81.56,
+    "notes": ""
+  },
+  {
+    "personName": "Fatemeh Rashidashmagh",
+    "projectCode": "P260001",
+    "projectTitle": "TAQA",
+    "month": "2026-09-01",
+    "percent": 40,
+    "notes": ""
+  },
+  {
+    "personName": "Fatemeh Rashidashmagh",
+    "projectCode": "P250001",
+    "projectTitle": "ADOC",
+    "month": "2026-08-01",
+    "percent": 3.44,
+    "notes": ""
+  },
+  {
+    "personName": "Fatemeh Rashidashmagh",
+    "projectCode": "SALES",
+    "projectTitle": "Sales and Quotations Effort",
+    "month": "2026-08-01",
+    "percent": 10,
+    "notes": ""
+  },
+  {
+    "personName": "Fatemeh Rashidashmagh",
+    "projectCode": "SALES",
+    "projectTitle": "Sales and Quotations Effort",
+    "month": "2026-09-01",
+    "percent": 10,
+    "notes": ""
+  },
+  {
+    "personName": "Fatemeh Rashidashmagh",
+    "projectCode": "LEAVE",
+    "projectTitle": "Other / New Opportunity (specify in Notes) -> LEAVE",
+    "month": "2026-08-01",
+    "percent": 1.25,
+    "notes": "Holiday"
+  },
+  {
+    "personName": "Fatemeh Rashidashmagh",
+    "projectCode": "LEAVE",
+    "projectTitle": "Other / New Opportunity (specify in Notes) -> LEAVE",
+    "month": "2026-09-01",
+    "percent": 50,
+    "notes": "Holiday"
+  },
+  {
+    "personName": "William Garcia",
+    "projectCode": "P250002",
+    "projectTitle": "Cancun CISEC",
+    "month": "2026-09-01",
+    "percent": 25,
+    "notes": ""
+  },
+  {
+    "personName": "William Garcia",
+    "projectCode": "P260001",
+    "projectTitle": "TAQA",
+    "month": "2026-09-01",
+    "percent": 50,
+    "notes": ""
+  },
+  {
+    "personName": "William Garcia",
+    "projectCode": "SALES",
+    "projectTitle": "Sales and Quotations Effort",
+    "month": "2026-09-01",
+    "percent": 10,
+    "notes": ""
+  },
+  {
+    "personName": "William Garcia",
+    "projectCode": "PROC",
+    "projectTitle": "Other / New Opportunity (specify in Notes) -> PROC",
+    "month": "2026-09-01",
+    "percent": 15,
+    "notes": "Working in new documentation such as templates for SOPs, HAZID report, workshops, etc"
+  }
+]

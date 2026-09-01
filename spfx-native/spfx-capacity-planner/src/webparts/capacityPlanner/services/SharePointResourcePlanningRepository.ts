@@ -18,10 +18,10 @@ export class SharePointResourcePlanningRepository implements IResourcePlanningRe
     }
 
     const [peopleItems, projectItems, allocationItems, leaveItems] = await Promise.all([
-      this.sp.web.lists.getByTitle(SharePointListNames.people).items.select('*')(),
-      this.sp.web.lists.getByTitle(SharePointListNames.projects).items.select('*')(),
-      this.sp.web.lists.getByTitle(SharePointListNames.allocations).items.select('*')(),
-      this.sp.web.lists.getByTitle(SharePointListNames.leave).items.select('*')()
+      this.sp.web.lists.getByTitle(SharePointListNames.people).items.select('*').top(5000)(),
+      this.sp.web.lists.getByTitle(SharePointListNames.projects).items.select('*').top(5000)(),
+      this.sp.web.lists.getByTitle(SharePointListNames.allocations).items.select('*').top(5000)(),
+      this.sp.web.lists.getByTitle(SharePointListNames.leave).items.select('*').top(5000)()
     ]);
 
     return {

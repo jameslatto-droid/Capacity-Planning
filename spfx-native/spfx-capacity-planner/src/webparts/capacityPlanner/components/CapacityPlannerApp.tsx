@@ -31,6 +31,7 @@ import {
   getActiveAssumptions,
   getPersonById,
   getProjectById,
+  leaveHoursForPersonMonth,
   monthlyCapacityHours,
   monthlyCapacityWithLeave,
   utilisationBand
@@ -47,7 +48,7 @@ const brands: string[] = ['DCT', 'PLK', 'Internal', 'Other'];
 
 type PlannerTab = 'dashboard' | 'team' | 'leave' | 'projects' | 'allocate' | 'planning' | 'optimisation' | 'reports' | 'data';
 type MatrixMode = 'person' | 'project' | 'role';
-type ReportMode = 'person' | 'role' | 'brand' | 'projects' | 'overloads';
+type ReportMode = 'person' | 'detail' | 'role' | 'brand' | 'projects' | 'overloads';
 
 function newPerson(): IPerson {
   return { id: `new-person-${new Date().getTime()}`, title: '', email: '', discipline: 'Process Engineering', role: 'Process Engineering', primaryRole: 'Process Engineering', secondaryRoles: [], employmentType: 'Employee', fte: 1, weeklyHours: 40, workingDaysPerWeek: 5, isActive: true };
@@ -138,6 +139,7 @@ export const CapacityPlannerApp: React.FC<ICapacityPlannerAppProps> = (props) =>
   const [activeTab, setActiveTab] = useState<PlannerTab>('dashboard');
   const [matrixMode, setMatrixMode] = useState<MatrixMode>('person');
   const [reportMode, setReportMode] = useState<ReportMode>('person');
+  const [detailPersonId, setDetailPersonId] = useState<string>('');
   const [brandFilter, setBrandFilter] = useState<string>('All');
   const [selectedProjectId, setSelectedProjectId] = useState<string>('');
   const [allocationDraft, setAllocationDraft] = useState<{ [key: string]: string }>({});
@@ -172,6 +174,7 @@ export const CapacityPlannerApp: React.FC<ICapacityPlannerAppProps> = (props) =>
   function initialiseSelection(snapshot: IPlanningSnapshot): void {
     if (snapshot.projects.length > 0 && !selectedProjectId) { setSelectedProjectId(String(snapshot.projects[0].id)); }
     if (snapshot.people.length > 0) { setLeaveForm(newLeave(snapshot.people)); }
+    if (snapshot.people.length > 0 && !detailPersonId) { setDetailPersonId(String(snapshot.people[0].id)); }
     const scenarios = snapshot.scenarios || [defaultScenario()];
     for (let index = 0; index < scenarios.length; index++) {
       if (scenarios[index].isActive || String(scenarios[index].id) === String(snapshot.activeScenarioId)) { setScenarioForm(scenarios[index]); return; }
@@ -486,7 +489,68 @@ export const CapacityPlannerApp: React.FC<ICapacityPlannerAppProps> = (props) =>
   }
 
   function renderReports(): JSX.Element {
-    return <div className={styles.stack}><section className={styles.panel}><div className={styles.toolbar}><h3>Reports</h3>{(['person', 'role', 'brand', 'projects', 'overloads'] as ReportMode[]).map((mode) => <button key={mode} className={reportMode === mode ? styles.navActive : styles.navButton} onClick={() => setReportMode(mode)}>{mode}</button>)}<button className={styles.secondaryButton} onClick={() => downloadText('person-utilisation.csv', exportPersonCsv(filteredSnapshot, props.monthsToShow), 'text/csv')}>Export person CSV</button><button className={styles.secondaryButton} onClick={() => downloadText('planning-data.json', JSON.stringify(filteredSnapshot, null, 2), 'application/json')}>Export JSON</button></div>{reportMode === 'person' && renderPersonMatrix()}{reportMode === 'role' && renderRoleMatrix()}{reportMode === 'brand' && renderBrandReport()}{reportMode === 'projects' && renderProjectDemandTable()}{reportMode === 'overloads' && renderOptimisation()}</section></div>;
+    return <div className={styles.stack}><section className={styles.panel}><div className={styles.toolbar}><h3>Reports</h3>{(['person', 'detail', 'role', 'brand', 'projects', 'overloads'] as ReportMode[]).map((mode) => <button key={mode} className={reportMode === mode ? styles.navActive : styles.navButton} onClick={() => setReportMode(mode)}>{mode}</button>)}<button className={styles.secondaryButton} onClick={() => downloadText('person-utilisation.csv', exportPersonCsv(filteredSnapshot, props.monthsToShow), 'text/csv')}>Export person CSV</button><button className={styles.secondaryButton} onClick={() => downloadText('planning-data.json', JSON.stringify(filteredSnapshot, null, 2), 'application/json')}>Export JSON</button></div>{reportMode === 'person' && renderPersonMatrix()}{reportMode === 'detail' && renderPersonDetail()}{reportMode === 'role' && renderRoleMatrix()}{reportMode === 'brand' && renderBrandReport()}{reportMode === 'projects' && renderProjectDemandTable()}{reportMode === 'overloads' && renderOptimisation()}</section></div>;
+  }
+
+  function renderPersonDetail(): JSX.Element {
+    const person = getPersonById(snapshot.people, detailPersonId);
+    if (!person) { return <p className={styles.subtle}>No people found.</p>; }
+    const assumptions = getActiveAssumptions(snapshot);
+    const personAllocations = snapshot.allocations
+      .filter((allocation) => String(allocation.personId) === String(person.id))
+      .sort((a, b) => (a.allocationMonth < b.allocationMonth ? -1 : a.allocationMonth > b.allocationMonth ? 1 : 0));
+    const personLeave = snapshot.leave
+      .filter((entry) => String(entry.personId) === String(person.id))
+      .sort((a, b) => (a.leaveDate < b.leaveDate ? -1 : a.leaveDate > b.leaveDate ? 1 : 0));
+    return <div className={styles.stack}>
+      <div className={styles.toolbar}>
+        <label>Person <select className={styles.input} value={detailPersonId} onChange={(e) => setDetailPersonId(e.currentTarget.value)}>{snapshot.people.map((p) => <option key={String(p.id)} value={String(p.id)}>{p.title}</option>)}</select></label>
+        <span className={styles.subtle}>{person.discipline || person.primaryRole} · {person.role} · {person.weeklyHours}h/week</span>
+      </div>
+      <h4>Monthly capacity vs. allocated</h4>
+      <table className={styles.table}>
+        <thead><tr><th>Month</th><th>Nominal capacity</th><th>Leave</th><th>Available (after leave)</th><th>Allocated</th><th>Utilisation</th></tr></thead>
+        <tbody>{months.map((month) => {
+          const nominalCapacity = monthlyCapacityHours(person, assumptions);
+          const datedLeaveHours = Math.round(leaveHoursForPersonMonth(snapshot, person.id, month));
+          const weeklyHours = Number(person.weeklyHours || 40);
+          const workingDays = Number(person.workingDaysPerWeek || (weeklyHours >= 40 ? 5 : 4));
+          const hoursPerDay = workingDays <= 0 ? 8 : weeklyHours / workingDays;
+          const assumedLeaveHours = Math.round((assumptions.defaultLeaveDaysPerYear / 12) * hoursPerDay);
+          const availableHours = monthlyCapacityWithLeave(snapshot, person, month);
+          const allocatedHours = personAllocations
+            .filter((allocation) => allocation.includeInCapacity && firstDayOfMonthIso(allocation.allocationMonth) === month)
+            .reduce((sum, allocation) => sum + allocationHours(allocation, person, snapshot), 0);
+          const utilisation = availableHours === 0 ? 0 : Math.round((allocatedHours / availableHours) * 100);
+          return <tr key={month}><td>{monthLabel(month)}</td><td>{nominalCapacity} h</td><td>{datedLeaveHours > 0 ? <>{datedLeaveHours} h<br /><small>dated leave</small></> : <>{assumedLeaveHours} h<br /><small>assumed ({assumptions.defaultLeaveDaysPerYear}d/yr)</small></>}</td><td>{availableHours} h</td><td>{allocatedHours} h</td><td><span className={styles[utilisationBand(utilisation)]}>{utilisation}%</span></td></tr>;
+        })}</tbody>
+      </table>
+      <h4>Allocations by project</h4>
+      <table className={styles.matrix}>
+        <thead><tr><th>Project</th>{months.map((month) => <th key={month}>{monthLabel(month)}</th>)}</tr></thead>
+        <tbody>{snapshot.projects.map((project) => <tr key={String(project.id)}>
+          <th>{project.projectCode}<small>{project.title}</small></th>
+          {months.map((month) => {
+            const allocation = personAllocations.filter((item) => String(item.projectId) === String(project.id) && firstDayOfMonthIso(item.allocationMonth) === month)[0];
+            if (!allocation) { return <td key={month}></td>; }
+            const percent = Math.round(Number(allocation.allocationFte || 0) * 100);
+            const hours = allocationHours(allocation, person, snapshot);
+            return <td key={month} className={styles[utilisationBand(percent)]}>{percent}%<br /><small>{hours} h{!allocation.includeInCapacity ? ' (excluded)' : ''}</small></td>;
+          })}
+        </tr>)}</tbody>
+        <tfoot><tr><th>Total</th>{months.map((month) => {
+          const monthAllocations = personAllocations.filter((allocation) => firstDayOfMonthIso(allocation.allocationMonth) === month);
+          const totalPercent = Math.round(monthAllocations.reduce((sum, allocation) => sum + Number(allocation.allocationFte || 0), 0) * 100);
+          const totalHours = monthAllocations.reduce((sum, allocation) => sum + allocationHours(allocation, person, snapshot), 0);
+          return <th key={month} className={styles[utilisationBand(totalPercent)]}>{totalPercent}%<br /><small>{totalHours} h</small></th>;
+        })}</tr></tfoot>
+      </table>
+      <h4>Leave</h4>
+      <table className={styles.table}>
+        <thead><tr><th>Start date</th><th>End date</th><th>Type</th><th>Hours</th><th>Notes</th></tr></thead>
+        <tbody>{personLeave.map((entry) => <tr key={String(entry.id)}><td>{new Date(entry.leaveDate).toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' })}</td><td>{new Date(entry.endDate || entry.leaveDate).toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' })}</td><td>{entry.leaveType}</td><td>{entry.leaveHours} h</td><td>{entry.notes}</td></tr>)}</tbody>
+      </table>
+    </div>;
   }
 
   function renderBrandReport(): JSX.Element {

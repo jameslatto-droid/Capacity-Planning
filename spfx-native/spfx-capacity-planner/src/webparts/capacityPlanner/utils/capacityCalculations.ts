@@ -62,10 +62,34 @@ export function monthlyCapacityHours(person: IPerson, assumptions?: ICapacityAss
   return Math.round(annualProductiveCapacity(person, assumptions) / 12);
 }
 
+function countWeekdays(start: Date, end: Date): number {
+  let count = 0;
+  const cursor = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+  const last = new Date(end.getFullYear(), end.getMonth(), end.getDate());
+  while (cursor <= last) {
+    const day = cursor.getDay();
+    if (day !== 0 && day !== 6) { count++; }
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  return count;
+}
+
 export function leaveHoursForPersonMonth(snapshot: IPlanningSnapshot, personId: string | number, month: string): number {
+  const monthStart = new Date(month);
+  const monthEnd = new Date(monthStart.getFullYear(), monthStart.getMonth() + 1, 0);
   return (snapshot.leave || [])
-    .filter((entry) => String(entry.personId) === String(personId) && firstDayOfMonthIso(entry.leaveDate) === month)
-    .reduce((sum, entry) => sum + Number(entry.leaveHours || 0), 0);
+    .filter((entry) => String(entry.personId) === String(personId))
+    .reduce((sum, entry) => {
+      const entryStart = new Date(entry.leaveDate);
+      const entryEnd = new Date(entry.endDate || entry.leaveDate);
+      const overlapStart = entryStart > monthStart ? entryStart : monthStart;
+      const overlapEnd = entryEnd < monthEnd ? entryEnd : monthEnd;
+      if (overlapStart > overlapEnd) { return sum; }
+      const totalWeekdays = countWeekdays(entryStart, entryEnd);
+      const overlapWeekdays = countWeekdays(overlapStart, overlapEnd);
+      if (totalWeekdays <= 0 || overlapWeekdays <= 0) { return sum; }
+      return sum + Number(entry.leaveHours || 0) * (overlapWeekdays / totalWeekdays);
+    }, 0);
 }
 
 export function monthlyCapacityWithLeave(snapshot: IPlanningSnapshot, person: IPerson, month: string): number {
@@ -141,13 +165,13 @@ export function buildRoleMonthSummaries(snapshot: IPlanningSnapshot, monthsToSho
   const months = buildMonthRange(monthsToShow);
   const roles: string[] = [];
   getPeople(snapshot).forEach((person) => {
-    const role = person.primaryRole || person.discipline || person.role || 'Other';
+    const role = person.discipline || person.primaryRole || person.role || 'Other';
     if (roles.indexOf(role) < 0) { roles.push(role); }
   });
   const rows: IRoleMonthSummary[] = [];
   roles.forEach((role) => {
     months.forEach((month) => {
-      const peopleInRole = getPeople(snapshot).filter((person) => (person.primaryRole || person.discipline || person.role || 'Other') === role && person.isActive);
+      const peopleInRole = getPeople(snapshot).filter((person) => (person.discipline || person.primaryRole || person.role || 'Other') === role && person.isActive);
       const capacityHours = peopleInRole.reduce((sum, person) => sum + monthlyCapacityWithLeave(snapshot, person, month), 0);
       const allocatedHours = getAllocations(snapshot)
         .filter((allocation) => firstDayOfMonthIso(allocation.allocationMonth) === month && allocation.includeInCapacity && (allocation.role || allocation.discipline || 'Other') === role)

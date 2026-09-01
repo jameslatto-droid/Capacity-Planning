@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { ILeaveEntry, IPerson } from '../../models/ResourcePlanningModels';
-import { monthLabel } from '../../utils/dateUtils';
 import styles from '../CapacityPlannerApp.module.scss';
+
+function formatDate(value?: string): string {
+  if (!value) { return ''; }
+  return new Date(value).toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' });
+}
 
 export interface ILeaveViewProps {
   people: IPerson[];
@@ -22,7 +26,8 @@ export const LeaveView: React.FC<ILeaveViewProps> = ({ people, leave }) => (
     <table className={styles.table}>
       <thead>
         <tr>
-          <th>Month</th>
+          <th>Start date</th>
+          <th>End date</th>
           <th>Person</th>
           <th>Type</th>
           <th>Hours</th>
@@ -34,7 +39,8 @@ export const LeaveView: React.FC<ILeaveViewProps> = ({ people, leave }) => (
           const person = getPersonById(people, entry.personId);
           return (
             <tr key={String(entry.id)}>
-              <td>{monthLabel(entry.leaveDate)}</td>
+              <td>{formatDate(entry.leaveDate)}</td>
+              <td>{formatDate(entry.endDate || entry.leaveDate)}</td>
               <td>{person ? person.title : entry.personId}</td>
               <td>{entry.leaveType}</td>
               <td>{entry.leaveHours} h</td>

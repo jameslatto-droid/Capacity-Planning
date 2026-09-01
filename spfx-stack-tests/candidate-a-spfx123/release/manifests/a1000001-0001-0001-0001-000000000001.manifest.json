@@ -1,0 +1,55 @@
+{
+  "id": "a1000001-0001-0001-0001-000000000001",
+  "alias": "StackTestWebPart",
+  "componentType": "WebPart",
+  "version": "1.0.0",
+  "manifestVersion": 2,
+  "requiresCustomScript": false,
+  "supportedHosts": [
+    "SharePointWebPart"
+  ],
+  "supportsThemeVariants": false,
+  "preconfiguredEntries": [
+    {
+      "groupId": "5c03119e-3074-46fd-976b-c60198311f70",
+      "group": {
+        "default": "Advanced"
+      },
+      "title": {
+        "default": "Stack Test A — SPFx 1.23.1"
+      },
+      "description": {
+        "default": "Stack bake-off harness — Candidate A"
+      },
+      "officeFabricIconFontName": "Page",
+      "properties": {}
+    }
+  ],
+  "loaderConfig": {
+    "internalModuleBaseUrls": [
+      "<!-- PATH TO CDN -->"
+    ],
+    "entryModuleId": "stack-test-web-part",
+    "scriptResources": {
+      "stack-test-web-part": {
+        "type": "path",
+        "path": "stack-test-web-part_2185273ccc6f0d81558d.js"
+      },
+      "react": {
+        "type": "component",
+        "id": "0d910c1c-13b9-4e1c-9aa4-b008c5e42d7d",
+        "version": "17.0.2"
+      },
+      "react-dom": {
+        "type": "component",
+        "id": "aa0a46ec-1505-43cd-a44a-93f3a5aa460a",
+        "version": "17.0.2"
+      },
+      "@microsoft/sp-webpart-base": {
+        "type": "component",
+        "id": "974a7777-0990-4136-8fa6-95d80114c2e0",
+        "version": "1.23.1"
+      }
+    }
+  }
+}
