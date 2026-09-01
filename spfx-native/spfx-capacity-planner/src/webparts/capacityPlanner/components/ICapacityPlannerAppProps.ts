@@ -3,6 +3,7 @@ import { IResourcePlanningRepository } from '../services/IResourcePlanningReposi
 export interface ICapacityPlannerAppProps {
   title: string;
   monthsToShow: number;
+  defaultView: 'planner' | 'myAllocations';
   repository: IResourcePlanningRepository;
   fallbackRepository: IResourcePlanningRepository;
   useMockDataWhenListsMissing: boolean;

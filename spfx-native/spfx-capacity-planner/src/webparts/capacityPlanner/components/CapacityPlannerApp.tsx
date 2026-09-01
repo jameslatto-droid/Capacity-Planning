@@ -37,6 +37,7 @@ import {
   utilisationBand
 } from '../utils/capacityCalculations';
 import { buildMonthRange, firstDayOfMonthIso, monthLabel } from '../utils/dateUtils';
+import { MyAllocationsView } from './views/MyAllocationsView';
 import styles from './CapacityPlannerApp.module.scss';
 
 const projectTypes: ProjectType[] = ['Live', 'Opportunity'];
@@ -201,6 +202,7 @@ export const CapacityPlannerApp: React.FC<ICapacityPlannerAppProps> = (props) =>
   const roleMonths = buildRoleMonthSummaries(filteredSnapshot, props.monthsToShow);
   const overloads = buildOverloads(filteredSnapshot, props.monthsToShow);
   const recommendations = buildReallocationRecommendations(filteredSnapshot, props.monthsToShow);
+  const isMyAllocationsView = props.defaultView === 'myAllocations';
 
   useEffect(() => {
     if (!selectedProject) { return; }
@@ -573,16 +575,20 @@ export const CapacityPlannerApp: React.FC<ICapacityPlannerAppProps> = (props) =>
     {isSaving && <MessageBar messageBarType={MessageBarType.info}>Saving changes...</MessageBar>}
     {loadResult.source === 'mock' && <MessageBar messageBarType={MessageBarType.warning}>Using mock data until the SharePoint ERP_* lists are provisioned.</MessageBar>}
     {loadResult.warnings.map((warning, index) => <MessageBar key={index} messageBarType={MessageBarType.info}>{warning}</MessageBar>)}
-    <div className={styles.toolbar}><label>Brand filter <select className={styles.input} value={brandFilter} onChange={(e) => setBrandFilter(e.currentTarget.value)}><option>All</option>{brands.map((brand) => <option key={brand}>{brand}</option>)}</select></label><button className={styles.secondaryButton} onClick={() => load()}>Reload</button></div>
-    <nav className={styles.nav}>{renderNavButton('dashboard', 'Dashboard')}{renderNavButton('team', 'Team')}{renderNavButton('leave', 'Leave')}{renderNavButton('projects', 'Projects')}{renderNavButton('allocate', 'Allocate')}{renderNavButton('planning', 'Planning')}{renderNavButton('optimisation', 'Optimisation')}{renderNavButton('reports', 'Reports')}{renderNavButton('data', 'Data')}</nav>
-    {activeTab === 'dashboard' && renderDashboard()}
-    {activeTab === 'team' && renderTeam()}
-    {activeTab === 'leave' && renderLeave()}
-    {activeTab === 'projects' && renderProjects()}
-    {activeTab === 'allocate' && renderAllocationEditor()}
-    {activeTab === 'planning' && renderPlanning()}
-    {activeTab === 'optimisation' && renderOptimisation()}
-    {activeTab === 'reports' && renderReports()}
-    {activeTab === 'data' && renderData()}
+    {isMyAllocationsView
+      ? <MyAllocationsView snapshot={snapshot} monthsToShow={props.monthsToShow} currentUserEmail={props.currentUserEmail} />
+      : <>
+        <div className={styles.toolbar}><label>Brand filter <select className={styles.input} value={brandFilter} onChange={(e) => setBrandFilter(e.currentTarget.value)}><option>All</option>{brands.map((brand) => <option key={brand}>{brand}</option>)}</select></label><button className={styles.secondaryButton} onClick={() => load()}>Reload</button></div>
+        <nav className={styles.nav}>{renderNavButton('dashboard', 'Dashboard')}{renderNavButton('team', 'Team')}{renderNavButton('leave', 'Leave')}{renderNavButton('projects', 'Projects')}{renderNavButton('allocate', 'Allocate')}{renderNavButton('planning', 'Planning')}{renderNavButton('optimisation', 'Optimisation')}{renderNavButton('reports', 'Reports')}{renderNavButton('data', 'Data')}</nav>
+        {activeTab === 'dashboard' && renderDashboard()}
+        {activeTab === 'team' && renderTeam()}
+        {activeTab === 'leave' && renderLeave()}
+        {activeTab === 'projects' && renderProjects()}
+        {activeTab === 'allocate' && renderAllocationEditor()}
+        {activeTab === 'planning' && renderPlanning()}
+        {activeTab === 'optimisation' && renderOptimisation()}
+        {activeTab === 'reports' && renderReports()}
+        {activeTab === 'data' && renderData()}
+      </>}
   </section>;
 };

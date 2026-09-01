@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
-import { IPropertyPaneConfiguration, PropertyPaneSlider, PropertyPaneTextField, PropertyPaneToggle } from '@microsoft/sp-property-pane';
+import { IPropertyPaneConfiguration, PropertyPaneDropdown, PropertyPaneSlider, PropertyPaneTextField, PropertyPaneToggle } from '@microsoft/sp-property-pane';
 import { spfi, SPFI, SPFx } from '@pnp/sp';
 import '@pnp/sp/webs';
 import '@pnp/sp/lists';
@@ -16,6 +16,7 @@ import { MockResourcePlanningRepository } from './services/MockResourcePlanningR
 export interface ICapacityPlannerWebPartProps {
   title: string;
   monthsToShow: number;
+  defaultView: 'planner' | 'myAllocations';
   useMockDataWhenListsMissing: boolean;
 }
 
@@ -40,6 +41,7 @@ export default class CapacityPlannerWebPart extends BaseClientSideWebPart<ICapac
     const element: React.ReactElement<ICapacityPlannerAppProps> = React.createElement(CapacityPlannerApp, {
       title: this.properties.title || 'Engineering Capacity Planner',
       monthsToShow: this.properties.monthsToShow || 12,
+      defaultView: this.properties.defaultView || 'planner',
       repository: sharePointRepository,
       fallbackRepository,
       useMockDataWhenListsMissing: this.properties.useMockDataWhenListsMissing !== false,
@@ -69,6 +71,14 @@ export default class CapacityPlannerWebPart extends BaseClientSideWebPart<ICapac
               groupName: 'Display',
               groupFields: [
                 PropertyPaneTextField('title', { label: 'Web part title' }),
+                PropertyPaneDropdown('defaultView', {
+                  label: 'Page experience',
+                  options: [
+                    { key: 'planner', text: 'Full planner' },
+                    { key: 'myAllocations', text: 'My allocations' }
+                  ],
+                  selectedKey: this.properties.defaultView || 'planner'
+                }),
                 PropertyPaneSlider('monthsToShow', { label: 'Planning horizon in months', min: 3, max: 24, step: 1 }),
                 PropertyPaneToggle('useMockDataWhenListsMissing', { label: 'Use mock data when SharePoint lists are missing', onText: 'Yes', offText: 'No' })
               ]
