@@ -3,7 +3,7 @@
   "solution": {
     "name": "capacity-planner-spfx-client-side-solution",
     "id": "72ec5e9e-10e7-4a5d-a2f3-36eec8ddfb48",
-    "version": "0.3.9.0",
+    "version": "0.3.10.0",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": false,
     "isDomainIsolated": false,
