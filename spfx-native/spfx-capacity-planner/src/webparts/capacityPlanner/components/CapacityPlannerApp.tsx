@@ -133,6 +133,23 @@ function clampedMonthIndex(months: string[], value: string | undefined, fallback
   return fallback;
 }
 
+
+function requestedView(): 'planner' | 'myAllocations' | undefined {
+  if (typeof window === 'undefined') { return undefined; }
+  const value = new URLSearchParams(window.location.search).get('view');
+  if (value === 'my-allocations' || value === 'myAllocations') { return 'myAllocations'; }
+  if (value === 'planner') { return 'planner'; }
+  return undefined;
+}
+
+function navigateToView(view?: 'my-allocations'): void {
+  if (typeof window === 'undefined') { return; }
+  const url = new URL(window.location.href);
+  if (view) { url.searchParams.set('view', view); }
+  else { url.searchParams.delete('view'); }
+  window.location.assign(url.toString());
+}
+
 export const CapacityPlannerApp: React.FC<ICapacityPlannerAppProps> = (props) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [loadResult, setLoadResult] = useState<IDataLoadResult>({ snapshot: emptySnapshot(), source: 'mock', warnings: [] });
@@ -202,7 +219,8 @@ export const CapacityPlannerApp: React.FC<ICapacityPlannerAppProps> = (props) =>
   const roleMonths = buildRoleMonthSummaries(filteredSnapshot, props.monthsToShow);
   const overloads = buildOverloads(filteredSnapshot, props.monthsToShow);
   const recommendations = buildReallocationRecommendations(filteredSnapshot, props.monthsToShow);
-  const isMyAllocationsView = props.defaultView === 'myAllocations';
+  const routeView = requestedView();
+  const isMyAllocationsView = routeView === 'myAllocations' || (!routeView && props.defaultView === 'myAllocations');
 
   useEffect(() => {
     if (!selectedProject) { return; }
@@ -576,9 +594,12 @@ export const CapacityPlannerApp: React.FC<ICapacityPlannerAppProps> = (props) =>
     {loadResult.source === 'mock' && <MessageBar messageBarType={MessageBarType.warning}>Using mock data until the SharePoint ERP_* lists are provisioned.</MessageBar>}
     {loadResult.warnings.map((warning, index) => <MessageBar key={index} messageBarType={MessageBarType.info}>{warning}</MessageBar>)}
     {isMyAllocationsView
-      ? <MyAllocationsView snapshot={snapshot} monthsToShow={props.monthsToShow} currentUserEmail={props.currentUserEmail} />
+      ? <>
+        <div className={styles.toolbar}><button className={styles.secondaryButton} onClick={() => navigateToView()}>Back to planner</button></div>
+        <MyAllocationsView snapshot={snapshot} monthsToShow={props.monthsToShow} currentUserEmail={props.currentUserEmail} />
+      </>
       : <>
-        <div className={styles.toolbar}><label>Brand filter <select className={styles.input} value={brandFilter} onChange={(e) => setBrandFilter(e.currentTarget.value)}><option>All</option>{brands.map((brand) => <option key={brand}>{brand}</option>)}</select></label><button className={styles.secondaryButton} onClick={() => load()}>Reload</button></div>
+        <div className={styles.toolbar}><label>Brand filter <select className={styles.input} value={brandFilter} onChange={(e) => setBrandFilter(e.currentTarget.value)}><option>All</option>{brands.map((brand) => <option key={brand}>{brand}</option>)}</select></label><button className={styles.secondaryButton} onClick={() => navigateToView('my-allocations')}>My allocations</button><button className={styles.secondaryButton} onClick={() => load()}>Reload</button></div>
         <nav className={styles.nav}>{renderNavButton('dashboard', 'Dashboard')}{renderNavButton('team', 'Team')}{renderNavButton('leave', 'Leave')}{renderNavButton('projects', 'Projects')}{renderNavButton('allocate', 'Allocate')}{renderNavButton('planning', 'Planning')}{renderNavButton('optimisation', 'Optimisation')}{renderNavButton('reports', 'Reports')}{renderNavButton('data', 'Data')}</nav>
         {activeTab === 'dashboard' && renderDashboard()}
         {activeTab === 'team' && renderTeam()}
